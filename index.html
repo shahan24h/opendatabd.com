@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OpenDataBD — Bangladesh's Open Data Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:     #0d1117;
+      --muted:   #5e6573;
+      --border:  #e4e7ed;
+      --bg:      #f7f8fa;
+      --white:   #ffffff;
+      --teal:    #00897b;
+      --teal-lt: #e0f2f0;
+      --red:     #c0392b; /* BD flag red */
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ─────────────────────────────────────────────── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
+      height: 64px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .logo-mark {
+      width: 34px; height: 34px;
+      background: var(--ink);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-mark span {
+      color: white;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .logo-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+
+    .logo-text em { color: var(--red); font-style: normal; }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.875rem;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--ink); }
+
+    .nav-cta {
+      background: var(--ink);
+      color: var(--white) !important;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-weight: 500 !important;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--teal) !important; color: white !important; }
+
+    /* ── HERO ────────────────────────────────────────────── */
+    .hero {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 100px 5vw 80px;
+      text-align: center;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--teal-lt);
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--teal);
+      border-radius: 50%;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 24px;
+      letter-spacing: -0.01em;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--teal);
+    }
+
+    .hero-sub {
+      font-size: 1.125rem;
+      color: var(--muted);
+      max-width: 580px;
+      margin: 0 auto 40px;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: white;
+    }
+
+    .btn-primary:hover { background: var(--teal); transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover { border-color: var(--ink); transform: translateY(-1px); }
+
+    /* ── STATS STRIP ─────────────────────────────────────── */
+    .stats {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      max-width: 860px;
+      margin: 0 auto 90px;
+      animation: fadeUp 0.8s 0.15s ease both;
+    }
+
+    .stat {
+      padding: 30px 20px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      color: var(--ink);
+      display: block;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── DATASETS SECTION ────────────────────────────────── */
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 5vw 90px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 36px;
+    }
+
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.9rem;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .view-all {
+      text-decoration: none;
+      color: var(--teal);
+      font-size: 0.875rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .view-all:hover { text-decoration: underline; }
+
+    /* ── DATASET GRID ────────────────────────────────────── */
+    .dataset-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .dataset-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      background: var(--white);
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .dataset-card:hover {
+      border-color: var(--teal);
+      box-shadow: 0 4px 20px rgba(0,137,123,0.08);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .card-title {
+      font-weight: 500;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: var(--ink);
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .tag-csv  { background: #e8f5e9; color: #2e7d32; }
+    .tag-json { background: #fff8e1; color: #f57f17; }
+    .tag-api  { background: #e3f2fd; color: #1565c0; }
+    .tag-xls  { background: #fce4ec; color: #880e4f; }
+
+    .card-rows {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    /* ── CATEGORIES ──────────────────────────────────────── */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .cat-card {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 20px;
+      text-decoration: none;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .cat-card:hover {
+      background: var(--white);
+      border-color: var(--border);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      transform: translateY(-1px);
+    }
+
+    .cat-emoji { font-size: 1.5rem; }
+
+    .cat-name {
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .cat-count {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* ── CTA BANNER ──────────────────────────────────────── */
+    .cta-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 5vw 90px;
+    }
+
+    .cta-banner {
+      background: var(--ink);
+      border-radius: 16px;
+      padding: 60px 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .cta-banner h2 {
+      color: white;
+      font-size: 2rem;
+    }
+
+    .cta-banner p {
+      color: rgba(255,255,255,0.55);
+      margin-top: 8px;
+      font-size: 0.95rem;
+      font-weight: 300;
+    }
+
+    .btn-white {
+      background: white;
+      color: var(--ink);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .btn-white:hover { background: var(--teal-lt); transform: translateY(-1px); }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-left { font-size: 0.85rem; color: var(--muted); }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--ink); }
+
+    /* ── ANIMATIONS ──────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .dataset-card:nth-child(1) { animation-delay: 0.05s; }
+    .dataset-card:nth-child(2) { animation-delay: 0.12s; }
+    .dataset-card:nth-child(3) { animation-delay: 0.19s; }
+    .dataset-card:nth-child(4) { animation-delay: 0.26s; }
+    .dataset-card:nth-child(5) { animation-delay: 0.33s; }
+    .dataset-card:nth-child(6) { animation-delay: 0.40s; }
+
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .stats      { grid-template-columns: repeat(2, 1fr); }
+      .stat:nth-child(2) { border-right: none; }
+      .dataset-grid { grid-template-columns: 1fr; }
+      .cat-grid   { grid-template-columns: repeat(2, 1fr); }
+      .cta-banner { flex-direction: column; padding: 40px 28px; }
+      .nav-links  { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-mark"><span>BD</span></div>
+    <span class="logo-text">Open<em>Data</em>BD</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Datasets</a></li>
+    <li><a href="#">Categories</a></li>
+    <li><a href="#">API Docs</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#" class="nav-cta">Get API Key</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">Bangladesh's Open Data Initiative</div>
+  <h1>Public data,<br><em>freely accessible.</em></h1>
+  <p class="hero-sub">
+    OpenDataBD aggregates government, demographic, economic, and environmental datasets from Bangladesh — all in one place, ready to use.
+  </p>
+  <div class="hero-actions">
+    <a href="#" class="btn btn-primary">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Explore Datasets
+    </a>
+    <a href="#" class="btn btn-outline">View API Docs →</a>
+  </div>
+</div>
+
+<!-- STATS STRIP -->
+<div class="stats">
+  <div class="stat">
+    <span class="stat-num">4,200+</span>
+    <span class="stat-label">Datasets</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">38</span>
+    <span class="stat-label">Categories</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">120+</span>
+    <span class="stat-label">Gov. Sources</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num">Free</span>
+    <span class="stat-label">Always Open</span>
+  </div>
+</div>
+
+<!-- FEATURED DATASETS -->
+<section>
+  <div class="section-header">
+    <h2>Featured Datasets</h2>
+    <a href="#" class="view-all">View all →</a>
+  </div>
+  <div class="dataset-grid">
+
+    <a href="#" class="dataset-card">
+      <div class="card-icon" style="background:#e0f2f0;">🌾</div>
+      <div class="card-title">Bangladesh Agricultural Production by Division (2000–2023)</div>
+      <div class="card-meta">
+        <span class="tag tag-csv">CSV</span>
+        <span class="card-rows">1.2M rows</span>
+      </div>
+    </a>
+
+    <a href="#" class="dataset-card">
+      <div class="card-icon" style="background:#e3f2fd;">🏙️</div>
+      <div class="card-title">Urban Population Growth — Dhaka Metro Region</div>
+      <div class="card-meta">
+        <span class="tag tag-json">JSON</span>
+        <span class="card-rows">48K rows</span>
+      </div>
+    </a>
+
+    <a href="#" class="dataset-card">
+      <div class="card-icon" style="background:#fff8e1;">⚡</div>
+      <div class="card-title">National Electricity Generation & Distribution Data</div>
+      <div class="card-meta">
+        <span class="tag tag-api">API</span>
+        <span class="card-rows">Live</span>
+      </div>
+    </a>
+
+    <a href="#" class="dataset-card">
+      <div class="card-icon" style="background:#fce4ec;">💧</div>
+      <div class="card-title">River Water Level & Flood Risk Monitoring</div>
+      <div class="card-meta">
+        <span class="tag tag-api">API</span>
+        <span class="card-rows">Live</span>
+      </div>
+    </a>
+
+    <a href="#" class="dataset-card">
+      <div class="card-icon" style="background:#f3e5f5;">🏥</div>
+      <div class="card-title">Public Health Facilities & Bed Capacity by Upazila</div>
+      <div class="card-meta">
+        <span class="tag tag-xls">XLS</span>
+        <span class="card-rows">6.4K rows</span>
+      </div>
+    </a>
+
+    <a href="#" class="dataset-card">
+      <div class="card-icon" style="background:#e8f5e9;">💹</div>
+      <div class="card-title">Dhaka Stock Exchange Historical Prices</div>
+      <div class="card-meta">
+        <span class="tag tag-csv">CSV</span>
+        <span class="card-rows">980K rows</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section>
+  <div class="section-header">
+    <h2>Browse by Category</h2>
+    <a href="#" class="view-all">All categories →</a>
+  </div>
+  <div class="cat-grid">
+    <a href="#" class="cat-card">
+      <span class="cat-emoji">🌿</span>
+      <span class="cat-name">Environment</span>
+      <span class="cat-count">312 datasets</span>
+    </a>
+    <a href="#" class="cat-card">
+      <span class="cat-emoji">📊</span>
+      <span class="cat-name">Economy & Finance</span>
+      <span class="cat-count">428 datasets</span>
+    </a>
+    <a href="#" class="cat-card">
+      <span class="cat-emoji">👨‍👩‍👧</span>
+      <span class="cat-name">Demographics</span>
+      <span class="cat-count">195 datasets</span>
+    </a>
+    <a href="#" class="cat-card">
+      <span class="cat-emoji">🏫</span>
+      <span class="cat-name">Education</span>
+      <span class="cat-count">267 datasets</span>
+    </a>
+    <a href="#" class="cat-card">
+      <span class="cat-emoji">🏥</span>
+      <span class="cat-name">Health</span>
+      <span class="cat-count">341 datasets</span>
+    </a>
+    <a href="#" class="cat-card">
+      <span class="cat-emoji">🚉</span>
+      <span class="cat-name">Infrastructure</span>
+      <span class="cat-count">189 datasets</span>
+    </a>
+    <a href="#" class="cat-card">
+      <span class="cat-emoji">🌾</span>
+      <span class="cat-name">Agriculture</span>
+      <span class="cat-count">213 datasets</span>
+    </a>
+    <a href="#" class="cat-card">
+      <span class="cat-emoji">⚖️</span>
+      <span class="cat-name">Governance</span>
+      <span class="cat-count">154 datasets</span>
+    </a>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-section">
+  <div class="cta-banner">
+    <div>
+      <h2>Build with Bangladesh's data.</h2>
+      <p>Free API access. No rate limits for non-commercial use. Start in minutes.</p>
+    </div>
+    <a href="#" class="btn btn-white">Get API Key →</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-left">© 2025 OpenDataBD — A public initiative for open data access in Bangladesh.</span>
+  <ul class="footer-links">
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">License</a></li>
+    <li><a href="#">Contact</a></li>
+    <li><a href="#">GitHub</a></li>
+  </ul>
+</footer>
+
+</body>
+</html>
