@@ -200,14 +200,22 @@
       return missing;
     }
 
-    async function postJSON(payload) {
-      const res = await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type":"application/json" },
-        body: JSON.stringify(payload),
-      });
-      return res.json();
-    }
+      async function postForm(payload) {
+    const body = new URLSearchParams();
+    Object.keys(payload).forEach((k) => {
+      const v = payload[k];
+      body.set(k, typeof v === "object" ? JSON.stringify(v) : String(v));
+    });
+
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      body, // form-encoded (no custom headers)
+    });
+
+    // Apps Script returns JSON text
+    const txt = await res.text();
+    return JSON.parse(txt);
+  }
 
     async function validateCode() {
       const code = document.getElementById("accessCode").value.trim();
