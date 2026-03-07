@@ -5,217 +5,228 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OpenDataBD Survey</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 24px; max-width: 900px; }
-    h1 { margin-bottom: 6px; }
-    .muted { color:#555; margin-top:0; }
-    .card { border:1px solid #ddd; border-radius:10px; padding:16px; margin:14px 0; }
-    label { font-weight: 600; display:block; margin-bottom:6px; }
+    body { font-family: Arial, sans-serif; margin: 24px; max-width: 900px; color:#111; }
+    h1 { margin: 0 0 8px; }
+    p { margin: 0 0 16px; }
+    .box { border: 1px solid #ddd; border-radius: 10px; padding: 16px; margin: 14px 0; }
+    label { font-weight: 700; display:block; margin: 10px 0 6px; }
     input[type="text"], input[type="number"], select, textarea {
-      width: 100%; padding: 10px; border:1px solid #ccc; border-radius:8px;
+      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px;
+      font-size: 14px;
     }
     textarea { min-height: 90px; }
-    .row { display:flex; gap:10px; flex-wrap:wrap; }
-    .row > * { flex: 1 1 280px; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; }
+    .row > div { flex: 1 1 280px; }
     .btn {
-      padding: 10px 14px; border:1px solid #111; background:#fff; cursor:pointer;
-      border-radius:8px; font-weight:600;
+      padding: 10px 14px; border: 1px solid #111; background:#fff; cursor:pointer;
+      border-radius: 8px; font-weight: 700;
     }
     .btn.primary { background:#111; color:#fff; }
-    .status { margin-top:10px; font-size: 14px; }
-    .status.ok { color: #0a7a2f; }
-    .status.err { color: #b00020; }
-    .q { margin-top: 10px; }
-    .choices { display:grid; gap:8px; }
-    .choices label { font-weight: 400; display:flex; gap:8px; align-items:center; margin:0; }
-    .disabled { opacity: .5; pointer-events:none; }
-    .req { color:#b00020; font-weight:700; margin-left:6px; }
+    .status { margin-top: 10px; font-size: 14px; }
+    .ok { color: #0a7a2f; }
+    .err { color: #b00020; }
+    fieldset { border: 0; padding: 0; margin: 0; }
+    .choices { display:grid; gap:8px; margin-top: 6px; }
+    .choices label { font-weight: 400; display:flex; gap:8px; align-items:center; margin: 0; }
+    .hidden { display:none; }
+    .req { color:#b00020; font-weight: 800; margin-left: 6px; }
   </style>
 </head>
 <body>
   <h1>OpenDataBD Survey</h1>
-  <p class="muted">Enter your access code to begin.</p>
+  <p>Please enter your access code to begin.</p>
 
-  <div class="card">
+  <!-- Code Gate -->
+  <div class="box">
     <div class="row">
       <div>
-        <label for="accessCode">Access Code <span class="req">*</span></label>
+        <label for="accessCode">Access Code<span class="req">*</span></label>
         <input id="accessCode" type="text" placeholder="e.g., AB12CD34" autocomplete="off" />
       </div>
-      <div style="display:flex; align-items:flex-end; gap:10px;">
+      <div style="flex:0 0 auto;">
         <button class="btn primary" id="btnValidate" type="button">Validate Code</button>
       </div>
     </div>
     <div id="codeStatus" class="status"></div>
   </div>
 
-  <form id="surveyForm" class="disabled">
-    <div id="questions"></div>
+  <!-- Survey Form (hidden until code validated) -->
+  <form id="surveyForm" class="hidden">
+    <div class="box">
+      <h2 style="margin:0 0 10px;">Survey Questions</h2>
 
-    <div class="card">
-      <button class="btn primary" type="submit">Submit Survey</button>
+      <label for="q1">1) Full name (optional)</label>
+      <input id="q1" type="text" />
+
+      <label for="q2">2) City / District<span class="req">*</span></label>
+      <input id="q2" type="text" />
+
+      <label for="q3">3) Age group<span class="req">*</span></label>
+      <select id="q3">
+        <option value="">Select…</option>
+        <option>18–24</option>
+        <option>25–34</option>
+        <option>35–44</option>
+        <option>45–54</option>
+        <option>55+</option>
+      </select>
+
+      <label>4) Gender (optional)</label>
+      <fieldset class="choices" id="q4">
+        <label><input type="radio" name="q4" value="Female"> Female</label>
+        <label><input type="radio" name="q4" value="Male"> Male</label>
+        <label><input type="radio" name="q4" value="Non-binary"> Non-binary</label>
+        <label><input type="radio" name="q4" value="Prefer not to say"> Prefer not to say</label>
+      </fieldset>
+
+      <label>5) Are you currently employed?<span class="req">*</span></label>
+      <fieldset class="choices" id="q5">
+        <label><input type="radio" name="q5" value="Yes"> Yes</label>
+        <label><input type="radio" name="q5" value="No"> No</label>
+        <label><input type="radio" name="q5" value="Student"> Student</label>
+        <label><input type="radio" name="q5" value="Other"> Other</label>
+      </fieldset>
+
+      <label for="q6">6) Household size (number of people)<span class="req">*</span></label>
+      <input id="q6" type="number" min="1" max="30" />
+
+      <label>7) Do you have reliable internet access?<span class="req">*</span></label>
+      <fieldset class="choices" id="q7">
+        <label><input type="radio" name="q7" value="Yes"> Yes</label>
+        <label><input type="radio" name="q7" value="No"> No</label>
+        <label><input type="radio" name="q7" value="Sometimes"> Sometimes</label>
+      </fieldset>
+
+      <label>8) Rate public service quality (1=low, 5=high)<span class="req">*</span></label>
+      <fieldset class="choices" id="q8">
+        <label><input type="radio" name="q8" value="1"> 1</label>
+        <label><input type="radio" name="q8" value="2"> 2</label>
+        <label><input type="radio" name="q8" value="3"> 3</label>
+        <label><input type="radio" name="q8" value="4"> 4</label>
+        <label><input type="radio" name="q8" value="5"> 5</label>
+      </fieldset>
+
+      <label>9) Which topics interest you most? (Select all)<span class="req">*</span></label>
+      <fieldset class="choices" id="q9">
+        <label><input type="checkbox" value="Economy"> Economy</label>
+        <label><input type="checkbox" value="Education"> Education</label>
+        <label><input type="checkbox" value="Health"> Health</label>
+        <label><input type="checkbox" value="Environment"> Environment</label>
+        <label><input type="checkbox" value="Transport"> Transport</label>
+        <label><input type="checkbox" value="Governance"> Governance</label>
+        <label><input type="checkbox" value="Crime/Safety"> Crime/Safety</label>
+      </fieldset>
+
+      <label for="q10">10) Biggest challenge in your community<span class="req">*</span></label>
+      <textarea id="q10"></textarea>
+
+      <label for="q11">11) Public transport usage frequency<span class="req">*</span></label>
+      <select id="q11">
+        <option value="">Select…</option>
+        <option>Daily</option>
+        <option>Weekly</option>
+        <option>Monthly</option>
+        <option>Rarely</option>
+        <option>Never</option>
+      </select>
+
+      <label>12) Do you feel safe at night in your area?<span class="req">*</span></label>
+      <fieldset class="choices" id="q12">
+        <label><input type="radio" name="q12" value="Yes"> Yes</label>
+        <label><input type="radio" name="q12" value="No"> No</label>
+        <label><input type="radio" name="q12" value="Sometimes"> Sometimes</label>
+      </fieldset>
+
+      <label>13) Rate access to healthcare (1–5)<span class="req">*</span></label>
+      <fieldset class="choices" id="q13">
+        <label><input type="radio" name="q13" value="1"> 1</label>
+        <label><input type="radio" name="q13" value="2"> 2</label>
+        <label><input type="radio" name="q13" value="3"> 3</label>
+        <label><input type="radio" name="q13" value="4"> 4</label>
+        <label><input type="radio" name="q13" value="5"> 5</label>
+      </fieldset>
+
+      <label>14) Rate education services (1–5)<span class="req">*</span></label>
+      <fieldset class="choices" id="q14">
+        <label><input type="radio" name="q14" value="1"> 1</label>
+        <label><input type="radio" name="q14" value="2"> 2</label>
+        <label><input type="radio" name="q14" value="3"> 3</label>
+        <label><input type="radio" name="q14" value="4"> 4</label>
+        <label><input type="radio" name="q14" value="5"> 5</label>
+      </fieldset>
+
+      <label>15) Government data should be openly available?<span class="req">*</span></label>
+      <fieldset class="choices" id="q15">
+        <label><input type="radio" name="q15" value="Yes"> Yes</label>
+        <label><input type="radio" name="q15" value="No"> No</label>
+        <label><input type="radio" name="q15" value="Not sure"> Not sure</label>
+      </fieldset>
+
+      <label>16) Which data would you use if available? (optional)</label>
+      <fieldset class="choices" id="q16">
+        <label><input type="checkbox" value="Budget/Spending"> Budget/Spending</label>
+        <label><input type="checkbox" value="Elections"> Elections</label>
+        <label><input type="checkbox" value="Health"> Health</label>
+        <label><input type="checkbox" value="Prices/Inflation"> Prices/Inflation</label>
+        <label><input type="checkbox" value="Climate/Disaster"> Climate/Disaster</label>
+        <label><input type="checkbox" value="Jobs/Employment"> Jobs/Employment</label>
+      </fieldset>
+
+      <label for="q17">17) What dataset should OpenDataBD publish first?<span class="req">*</span></label>
+      <textarea id="q17"></textarea>
+
+      <label>18) Would you participate in future surveys?<span class="req">*</span></label>
+      <fieldset class="choices" id="q18">
+        <label><input type="radio" name="q18" value="Yes"> Yes</label>
+        <label><input type="radio" name="q18" value="No"> No</label>
+        <label><input type="radio" name="q18" value="Maybe"> Maybe</label>
+      </fieldset>
+
+      <label>19) Do you want email updates? (optional)</label>
+      <fieldset class="choices" id="q19">
+        <label><input type="radio" name="q19" value="Yes"> Yes</label>
+        <label><input type="radio" name="q19" value="No"> No</label>
+      </fieldset>
+
+      <label for="q20">20) Additional comments (optional)</label>
+      <textarea id="q20"></textarea>
+    </div>
+
+    <div class="box">
+      <button class="btn primary" type="submit">Submit</button>
       <div id="submitStatus" class="status"></div>
     </div>
   </form>
 
   <script>
-    // 1) PASTE your Apps Script Web App URL here:
-    // Example: https://script.google.com/macros/s/XXXX/exec
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz67BdVjBhK9nAkfFaptucssnp3ehb0eG4xgvfsf9X4ZbcSsQxTw55Qg--Q-Xogd7A/exec';
-
-    // 2) Define your questions here (edit texts/options anytime)
-    const QUESTIONS = [
-      { id:"q1",  type:"text",     label:"1) What is your full name?", required:false },
-      { id:"q2",  type:"text",     label:"2) What city/district are you in?", required:true },
-      { id:"q3",  type:"select",   label:"3) Your age group?", required:true, options:["18–24","25–34","35–44","45–54","55+"] },
-      { id:"q4",  type:"radio",    label:"4) Your gender?", required:false, options:["Female","Male","Non-binary","Prefer not to say"] },
-      { id:"q5",  type:"radio",    label:"5) Are you currently employed?", required:true, options:["Yes","No","Student","Other"] },
-      { id:"q6",  type:"number",   label:"6) Household size (number of people)?", required:true, min:1, max:30 },
-      { id:"q7",  type:"radio",    label:"7) Do you have reliable internet access?", required:true, options:["Yes","No","Sometimes"] },
-      { id:"q8",  type:"rating",   label:"8) Rate public service quality in your area (1=low, 5=high).", required:true, scale:5 },
-      { id:"q9",  type:"checkbox", label:"9) Which topics interest you most? (Select all that apply)", required:true,
-        options:["Economy","Education","Health","Environment","Transport","Governance","Crime/Safety"] },
-      { id:"q10", type:"textarea", label:"10) What is the biggest challenge in your community?", required:true },
-
-      { id:"q11", type:"radio",    label:"11) How often do you use public transportation?", required:true,
-        options:["Daily","Weekly","Monthly","Rarely","Never"] },
-      { id:"q12", type:"radio",    label:"12) Do you feel safe in your neighborhood at night?", required:true,
-        options:["Yes","No","Sometimes"] },
-      { id:"q13", type:"rating",   label:"13) Rate access to healthcare (1–5).", required:true, scale:5 },
-      { id:"q14", type:"rating",   label:"14) Rate quality of education services (1–5).", required:true, scale:5 },
-      { id:"q15", type:"radio",    label:"15) Do you think government data should be openly available?", required:true,
-        options:["Yes","No","Not sure"] },
-
-      { id:"q16", type:"checkbox", label:"16) Which data would you use if available? (Select all that apply)", required:false,
-        options:["Budget/Spending","Elections","Health","Prices/Inflation","Climate/Disaster","Jobs/Employment"] },
-      { id:"q17", type:"textarea", label:"17) What dataset would you want OpenDataBD to publish first?", required:true },
-      { id:"q18", type:"radio",    label:"18) Would you participate in future surveys?", required:true,
-        options:["Yes","No","Maybe"] },
-      { id:"q19", type:"radio",    label:"19) Do you want email updates from OpenDataBD?", required:false,
-        options:["Yes","No"] },
-      { id:"q20", type:"textarea", label:"20) Any additional comments or suggestions?", required:false },
-    ];
-
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz67BdVjBhK9nAkfFaptucssnp3ehb0eG4xgvfsf9X4ZbcSsQxTw55Qg--Q-Xogd7A/exec";
     let codeValidated = false;
 
-    function el(tag, attrs={}, children=[]) {
-      const n = document.createElement(tag);
-      Object.entries(attrs).forEach(([k,v]) => {
-        if (k === "class") n.className = v;
-        else if (k === "html") n.innerHTML = v;
-        else n.setAttribute(k, v);
-      });
-      (Array.isArray(children) ? children : [children]).forEach(c => {
-        if (c === null || c === undefined) return;
-        if (typeof c === "string") n.appendChild(document.createTextNode(c));
-        else n.appendChild(c);
-      });
-      return n;
-    }
-
-    function renderQuestions() {
-      const host = document.getElementById("questions");
-      host.innerHTML = "";
-      QUESTIONS.forEach(q => {
-        const card = el("div", { class:"card q" });
-
-        const label = el("label", { for:q.id }, [
-          q.label,
-          q.required ? el("span", { class:"req" }, " *") : null
-        ]);
-        card.appendChild(label);
-
-        let inputBlock;
-
-        if (q.type === "text") {
-          inputBlock = el("input", { id:q.id, type:"text", "data-qid":q.id });
-        } else if (q.type === "number") {
-          inputBlock = el("input", { id:q.id, type:"number", min:q.min ?? "", max:q.max ?? "", "data-qid":q.id });
-        } else if (q.type === "textarea") {
-          inputBlock = el("textarea", { id:q.id, "data-qid":q.id });
-        } else if (q.type === "select") {
-          const sel = el("select", { id:q.id, "data-qid":q.id });
-          sel.appendChild(el("option", { value:"" }, "Select..."));
-          q.options.forEach(opt => sel.appendChild(el("option", { value:opt }, opt)));
-          inputBlock = sel;
-        } else if (q.type === "radio") {
-          const wrap = el("div", { class:"choices" });
-          q.options.forEach((opt, idx) => {
-            const rid = `${q.id}_${idx}`;
-            const inp = el("input", { type:"radio", name:q.id, id:rid, value:opt, "data-qid":q.id });
-            const lab = el("label", { for:rid }, [inp, opt]);
-            wrap.appendChild(lab);
-          });
-          inputBlock = wrap;
-        } else if (q.type === "checkbox") {
-          const wrap = el("div", { class:"choices" });
-          q.options.forEach((opt, idx) => {
-            const cid = `${q.id}_${idx}`;
-            const inp = el("input", { type:"checkbox", id:cid, value:opt, "data-qid":q.id });
-            const lab = el("label", { for:cid }, [inp, opt]);
-            wrap.appendChild(lab);
-          });
-          inputBlock = wrap;
-        } else if (q.type === "rating") {
-          const wrap = el("div", { class:"choices" });
-          for (let i=1; i<=q.scale; i++) {
-            const rid = `${q.id}_${i}`;
-            const inp = el("input", { type:"radio", name:q.id, id:rid, value:String(i), "data-qid":q.id });
-            const lab = el("label", { for:rid }, [inp, ` ${i}`]);
-            wrap.appendChild(lab);
-          }
-          inputBlock = wrap;
-        }
-
-        card.appendChild(inputBlock);
-        host.appendChild(card);
-      });
-    }
-
-    function getAnswers() {
-      const answers = {};
-      for (const q of QUESTIONS) {
-        if (q.type === "radio" || q.type === "rating") {
-          const checked = document.querySelector(`input[name="${q.id}"]:checked`);
-          answers[q.id] = checked ? checked.value : "";
-        } else if (q.type === "checkbox") {
-          const checked = Array.from(document.querySelectorAll(`input[data-qid="${q.id}"]:checked`))
-            .map(x => x.value);
-          answers[q.id] = checked;
-        } else {
-          const node = document.querySelector(`[data-qid="${q.id}"]`);
-          answers[q.id] = node ? (node.value ?? "").trim() : "";
-        }
+    async function postForm(payload) {
+      const body = new URLSearchParams();
+      for (const [k, v] of Object.entries(payload)) {
+        body.set(k, typeof v === "object" ? JSON.stringify(v) : String(v));
       }
-      return answers;
+      const res = await fetch(APPS_SCRIPT_URL, { method: "POST", body });
+      const txt = await res.text();
+      return JSON.parse(txt);
     }
 
-    function validateRequired(answers) {
-      const missing = [];
-      for (const q of QUESTIONS) {
-        if (!q.required) continue;
-        const v = answers[q.id];
-        const ok = Array.isArray(v) ? v.length > 0 : String(v).trim().length > 0;
-        if (!ok) missing.push(q.label);
-      }
-      return missing;
+    function pickedRadio(name) {
+      const el = document.querySelector(`input[name="${name}"]:checked`);
+      return el ? el.value : "";
     }
 
-      async function postForm(payload) {
-    const body = new URLSearchParams();
-    Object.keys(payload).forEach((k) => {
-      const v = payload[k];
-      body.set(k, typeof v === "object" ? JSON.stringify(v) : String(v));
-    });
+    function pickedCheckboxes(containerId) {
+      return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`))
+        .map(x => x.value);
+    }
 
-    const res = await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      body, // form-encoded (no custom headers)
-    });
-
-    // Apps Script returns JSON text
-    const txt = await res.text();
-    return JSON.parse(txt);
-  }
+    function setStatus(id, msg, ok) {
+      const el = document.getElementById(id);
+      el.className = "status " + (ok ? "ok" : "err");
+      el.textContent = msg;
+    }
 
     async function validateCode() {
       const code = document.getElementById("accessCode").value.trim();
@@ -223,78 +234,98 @@
       status.className = "status";
       status.textContent = "";
 
-      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("PASTE_YOUR_WEB_APP_URL_HERE")) {
-        status.className = "status err";
-        status.textContent = "Missing APPS_SCRIPT_URL. Paste your Apps Script Web App URL at the top of this file.";
-        return;
-      }
-
-      if (!code) {
-        status.className = "status err";
-        status.textContent = "Please enter your access code.";
-        return;
-      }
+      if (!code) { setStatus("codeStatus", "Please enter an access code.", false); return; }
 
       status.textContent = "Validating code...";
-
-      // This expects your Apps Script to support action=validateCode (POST)
-      const result = await postJSON({ action:"validateCode", code });
-
-      if (result && result.valid) {
-        codeValidated = true;
-        status.className = "status ok";
-        status.textContent = "Code accepted. You may start the survey.";
-        document.getElementById("surveyForm").classList.remove("disabled");
-      } else {
-        status.className = "status err";
-        status.textContent = (result && result.message) ? result.message : "Invalid code.";
-        document.getElementById("surveyForm").classList.add("disabled");
+      try {
+        const result = await postForm({ action: "validateCode", code });
+        if (result && result.valid) {
+          codeValidated = true;
+          setStatus("codeStatus", "Code accepted. You may start the survey.", true);
+          document.getElementById("surveyForm").classList.remove("hidden");
+        } else {
+          codeValidated = false;
+          setStatus("codeStatus", (result && result.message) ? result.message : "Invalid code.", false);
+          document.getElementById("surveyForm").classList.add("hidden");
+        }
+      } catch (e) {
         codeValidated = false;
+        setStatus("codeStatus", "Could not reach the server. Try again.", false);
       }
+    }
+
+    function collectAnswers() {
+      return {
+        q1: document.getElementById("q1").value.trim(),
+        q2: document.getElementById("q2").value.trim(),
+        q3: document.getElementById("q3").value.trim(),
+        q4: pickedRadio("q4"),
+        q5: pickedRadio("q5"),
+        q6: document.getElementById("q6").value.trim(),
+        q7: pickedRadio("q7"),
+        q8: pickedRadio("q8"),
+        q9: pickedCheckboxes("q9"),
+        q10: document.getElementById("q10").value.trim(),
+        q11: document.getElementById("q11").value.trim(),
+        q12: pickedRadio("q12"),
+        q13: pickedRadio("q13"),
+        q14: pickedRadio("q14"),
+        q15: pickedRadio("q15"),
+        q16: pickedCheckboxes("q16"),
+        q17: document.getElementById("q17").value.trim(),
+        q18: pickedRadio("q18"),
+        q19: pickedRadio("q19"),
+        q20: document.getElementById("q20").value.trim(),
+      };
+    }
+
+    function validateRequired(a) {
+      if (!a.q2) return "Question 2 is required.";
+      if (!a.q3) return "Question 3 is required.";
+      if (!a.q5) return "Question 5 is required.";
+      if (!a.q6) return "Question 6 is required.";
+      if (!a.q7) return "Question 7 is required.";
+      if (!a.q8) return "Question 8 is required.";
+      if (!a.q9 || a.q9.length === 0) return "Question 9 is required.";
+      if (!a.q10) return "Question 10 is required.";
+      if (!a.q11) return "Question 11 is required.";
+      if (!a.q12) return "Question 12 is required.";
+      if (!a.q13) return "Question 13 is required.";
+      if (!a.q14) return "Question 14 is required.";
+      if (!a.q15) return "Question 15 is required.";
+      if (!a.q17) return "Question 17 is required.";
+      if (!a.q18) return "Question 18 is required.";
+      return "";
     }
 
     document.getElementById("btnValidate").addEventListener("click", validateCode);
 
     document.getElementById("surveyForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const submitStatus = document.getElementById("submitStatus");
-      submitStatus.className = "status";
-      submitStatus.textContent = "";
-
-      if (!codeValidated) {
-        submitStatus.className = "status err";
-        submitStatus.textContent = "Please validate your code first.";
-        return;
-      }
+      if (!codeValidated) { setStatus("submitStatus", "Validate your code first.", false); return; }
 
       const code = document.getElementById("accessCode").value.trim();
-      const answers = getAnswers();
+      const answers = collectAnswers();
       const missing = validateRequired(answers);
+      if (missing) { setStatus("submitStatus", missing, false); return; }
 
-      if (missing.length) {
-        submitStatus.className = "status err";
-        submitStatus.textContent = "Missing required answers. Please complete the required questions.";
-        return;
-      }
+      document.getElementById("submitStatus").className = "status";
+      document.getElementById("submitStatus").textContent = "Submitting...";
 
-      submitStatus.textContent = "Submitting...";
-
-      // This expects your Apps Script to accept {code, answers} and save it
-      const result = await postJSON({ code, answers });
-
-      if (result && (result.success === true || result.ok === true)) {
-        submitStatus.className = "status ok";
-        submitStatus.textContent = "Submitted successfully. Thank you!";
-        e.target.reset();
-        document.getElementById("surveyForm").classList.add("disabled");
-        codeValidated = false;
-      } else {
-        submitStatus.className = "status err";
-        submitStatus.textContent = (result && result.message) ? result.message : "Submission failed.";
+      try {
+        const result = await postForm({ code, answers });
+        if (result && result.success) {
+          setStatus("submitStatus", "Submitted successfully. Thank you!", true);
+          e.target.reset();
+          document.getElementById("surveyForm").classList.add("hidden");
+          codeValidated = false;
+        } else {
+          setStatus("submitStatus", (result && result.message) ? result.message : "Submission failed.", false);
+        }
+      } catch (e2) {
+        setStatus("submitStatus", "Could not reach the server. Try again.", false);
       }
     });
-
-    renderQuestions();
   </script>
 </body>
 </html>
