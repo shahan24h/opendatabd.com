@@ -1,652 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Survey</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-/* ─── DESIGN TOKENS ──────────────────────────────── */
-:root {
-  --cream:   #f5f0e8;
-  --paper:   #faf7f2;
-  --ink:     #1a1612;
-  --ink-mid: #5a5048;
-  --ink-lt:  #9a9088;
-  --rust:    #c2460a;
-  --rust-lt: #e8cfc4;
-  --green:   #2a6e4a;
-  --border:  rgba(26,22,18,0.12);
-  --shadow:  0 2px 20px rgba(26,22,18,0.08);
-  --font-d:  'Fraunces', Georgia, serif;
-  --font-b:  'DM Sans', sans-serif;
-  --r:       10px;
-  --trans:   0.22s ease;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; }
-
-body {
-  font-family: var(--font-b);
-  background: var(--cream);
-  color: var(--ink);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px 16px 80px;
-  position: relative;
-}
-
-/* subtle dot grid background */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: radial-gradient(circle, rgba(26,22,18,0.07) 1px, transparent 1px);
-  background-size: 28px 28px;
-  pointer-events: none; z-index: 0;
-}
-
-/* ─── PROGRESS BAR ───────────────────────────────── */
-.progress-bar {
-  position: fixed; top: 0; left: 0; right: 0; height: 3px;
-  background: var(--border); z-index: 100;
-}
-.progress-fill {
-  height: 100%; background: var(--rust);
-  transition: width 0.4s ease;
-  width: 0%;
-}
-
-/* ─── CARD ───────────────────────────────────────── */
-.card {
-  background: var(--paper);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: var(--shadow), 0 0 0 1px rgba(255,255,255,0.8) inset;
-  padding: 48px 48px 40px;
-  width: 100%; max-width: 640px;
-  position: relative; z-index: 1;
-  animation: slideUp 0.5s ease both;
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.card + .card { margin-top: 16px; }
-
-/* corner decorations */
-.card::before {
-  content: '';
-  position: absolute; top: -1px; left: 28px; right: 28px; height: 3px;
-  background: linear-gradient(90deg, transparent, var(--rust), transparent);
-  border-radius: 0 0 3px 3px;
-}
-
-/* ─── HEADER ─────────────────────────────────────── */
-.survey-header {
-  text-align: center; margin-bottom: 36px;
-}
-.survey-eyebrow {
-  font-family: var(--font-b); font-size: 0.7rem; font-weight: 600;
-  letter-spacing: 0.15em; text-transform: uppercase; color: var(--rust);
-  margin-bottom: 10px;
-}
-.survey-title {
-  font-family: var(--font-d); font-size: 2rem; font-weight: 600;
-  line-height: 1.2; color: var(--ink); margin-bottom: 12px;
-}
-.survey-desc {
-  font-size: 0.9rem; color: var(--ink-mid); line-height: 1.7;
-}
-.divider {
-  width: 40px; height: 2px; background: var(--rust); margin: 20px auto;
-  border-radius: 1px;
-}
-
-/* ─── CODE GATE ──────────────────────────────────── */
-#screen-code { text-align: center; }
-#screen-code .lock-icon {
-  width: 56px; height: 56px; border-radius: 50%;
-  background: var(--rust-lt); display: flex; align-items: center;
-  justify-content: center; margin: 0 auto 24px; font-size: 1.4rem;
-}
-#screen-code h2 {
-  font-family: var(--font-d); font-size: 1.5rem; font-weight: 600;
-  margin-bottom: 8px;
-}
-#screen-code p { font-size: 0.88rem; color: var(--ink-mid); line-height: 1.6; margin-bottom: 28px; }
-
-.code-input-wrap {
-  display: flex; gap: 10px; margin-bottom: 10px;
-}
-.code-input {
-  flex: 1;
-  font-family: var(--font-b); font-size: 1.15rem; font-weight: 500;
-  letter-spacing: 0.12em; text-transform: uppercase; text-align: center;
-  padding: 14px 16px;
-  border: 2px solid var(--border); border-radius: var(--r);
-  background: white; color: var(--ink);
-  transition: var(--trans); outline: none;
-}
-.code-input:focus { border-color: var(--rust); box-shadow: 0 0 0 3px rgba(194,70,10,0.1); }
-.code-input.error { border-color: #d44; animation: shake 0.3s ease; }
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  75% { transform: translateX(6px); }
-}
-
-.code-error { font-size: 0.8rem; color: #c33; min-height: 20px; margin-bottom: 4px; }
-
-/* ─── BUTTONS ─────────────────────────────────────── */
-.btn {
-  font-family: var(--font-b); font-size: 0.88rem; font-weight: 600;
-  letter-spacing: 0.02em; cursor: pointer;
-  border: none; border-radius: var(--r);
-  transition: var(--trans); white-space: nowrap;
-  display: inline-flex; align-items: center; gap: 7px;
-}
-.btn-primary {
-  background: var(--ink); color: white;
-  padding: 14px 28px;
-}
-.btn-primary:hover { background: #2e2820; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(26,22,18,0.18); }
-.btn-primary:active { transform: translateY(0); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-
-.btn-ghost {
-  background: transparent; color: var(--ink-mid);
-  padding: 12px 20px; border: 1px solid var(--border);
-}
-.btn-ghost:hover { background: var(--cream); color: var(--ink); }
-
-.btn-submit {
-  background: var(--rust); color: white;
-  padding: 15px 36px; font-size: 0.95rem; width: 100%;
-  justify-content: center; margin-top: 8px;
-}
-.btn-submit:hover { background: #a83a08; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(194,70,10,0.3); }
-.btn-submit:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
-
-/* spinner */
-.spinner {
-  width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: white; border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ─── SURVEY SCREEN ──────────────────────────────── */
-#screen-survey { display: none; }
-
-.question-block {
-  margin-bottom: 32px; padding-bottom: 32px;
-  border-bottom: 1px solid var(--border);
-}
-.question-block:last-of-type { border-bottom: none; padding-bottom: 0; }
-
-.q-number {
-  font-family: var(--font-b); font-size: 0.68rem; font-weight: 600;
-  letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust);
-  margin-bottom: 6px;
-}
-.q-label {
-  font-family: var(--font-d); font-size: 1.05rem; font-weight: 400;
-  line-height: 1.5; color: var(--ink); margin-bottom: 6px;
-}
-.q-required { color: var(--rust); margin-left: 3px; }
-.q-hint { font-size: 0.78rem; color: var(--ink-lt); margin-bottom: 16px; }
-
-/* ── Rating ── */
-.rating-wrap { display: flex; gap: 8px; flex-wrap: wrap; }
-.rating-wrap input[type="radio"] { display: none; }
-.rating-wrap label {
-  width: 44px; height: 44px; border-radius: 8px;
-  border: 2px solid var(--border); background: white;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-b); font-size: 0.88rem; font-weight: 600;
-  cursor: pointer; transition: var(--trans); color: var(--ink-mid);
-  user-select: none;
-}
-.rating-wrap label:hover { border-color: var(--rust); color: var(--rust); background: var(--rust-lt); }
-.rating-wrap input:checked + label {
-  border-color: var(--rust); background: var(--rust); color: white;
-  box-shadow: 0 2px 8px rgba(194,70,10,0.25);
-}
-.rating-labels {
-  display: flex; justify-content: space-between;
-  font-size: 0.7rem; color: var(--ink-lt); margin-top: 6px;
-}
-
-/* ── Yes/No ── */
-.yesno-wrap { display: flex; gap: 12px; }
-.yesno-wrap input[type="radio"] { display: none; }
-.yesno-wrap label {
-  flex: 1; padding: 12px 16px; border-radius: var(--r);
-  border: 2px solid var(--border); background: white;
-  text-align: center; font-weight: 600; font-size: 0.9rem;
-  cursor: pointer; transition: var(--trans); color: var(--ink-mid);
-  user-select: none;
-}
-.yesno-wrap label:hover { border-color: var(--ink); color: var(--ink); }
-.yesno-wrap input:checked + label {
-  border-color: var(--green); background: var(--green); color: white;
-}
-
-/* ── Multiple Choice ── */
-.mc-wrap { display: flex; flex-direction: column; gap: 8px; }
-.mc-wrap input[type="radio"], .mc-wrap input[type="checkbox"] { display: none; }
-.mc-option {
-  display: flex; align-items: center; gap: 12px;
-  padding: 11px 14px; border-radius: var(--r);
-  border: 2px solid var(--border); background: white;
-  cursor: pointer; transition: var(--trans);
-  font-size: 0.9rem; color: var(--ink-mid); user-select: none;
-}
-.mc-option:hover { border-color: var(--ink-mid); color: var(--ink); background: var(--paper); }
-.mc-indicator {
-  width: 18px; height: 18px; border-radius: 50%;
-  border: 2px solid var(--border); flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  transition: var(--trans);
-}
-.mc-indicator.square { border-radius: 4px; }
-.mc-wrap input:checked + .mc-option {
-  border-color: var(--ink); background: var(--ink); color: white;
-}
-.mc-wrap input:checked + .mc-option .mc-indicator {
-  border-color: white; background: white;
-}
-.mc-wrap input:checked + .mc-option .mc-indicator::after {
-  content: '✓'; font-size: 0.65rem; font-weight: 700; color: var(--ink);
-}
-
-/* ── Text ── */
-.text-input, .textarea-input {
-  width: 100%; font-family: var(--font-b); font-size: 0.9rem;
-  color: var(--ink); background: white;
-  border: 2px solid var(--border); border-radius: var(--r);
-  padding: 12px 14px; outline: none; transition: var(--trans);
-  resize: vertical;
-}
-.text-input:focus, .textarea-input:focus {
-  border-color: var(--rust); box-shadow: 0 0 0 3px rgba(194,70,10,0.08);
-}
-.textarea-input { min-height: 100px; }
-
-/* ─── THANK YOU ─────────────────────────────────── */
-#screen-thanks { display: none; text-align: center; }
-.thanks-icon {
-  width: 64px; height: 64px; border-radius: 50%; background: #e6f4ec;
-  margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;
-  font-size: 1.8rem;
-}
-#screen-thanks h2 {
-  font-family: var(--font-d); font-size: 1.6rem; font-weight: 600; margin-bottom: 12px;
-}
-#screen-thanks p { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.7; }
-
-/* ─── FOOTER ─────────────────────────────────────── */
-.survey-footer {
-  position: relative; z-index: 1; margin-top: 24px;
-  font-size: 0.72rem; color: var(--ink-lt); text-align: center;
-  display: flex; align-items: center; gap: 8px; justify-content: center;
-}
-.survey-footer::before, .survey-footer::after {
-  content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--border);
-}
-
-/* ─── VALIDATION ─────────────────────────────────── */
-.q-error { font-size: 0.75rem; color: #c33; margin-top: 6px; display: none; }
-.question-block.has-error .q-error { display: block; }
-.question-block.has-error .rating-wrap label,
-.question-block.has-error .yesno-wrap label,
-.question-block.has-error .mc-option,
-.question-block.has-error .text-input,
-.question-block.has-error .textarea-input {
-  border-color: #d44;
-}
-
-@media (max-width: 540px) {
-  .card { padding: 32px 24px 28px; }
-  .survey-title { font-size: 1.5rem; }
-  .code-input-wrap { flex-direction: column; }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OpenDataBD Survey</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; max-width: 900px; }
+    h1 { margin-bottom: 6px; }
+    .muted { color:#555; margin-top:0; }
+    .card { border:1px solid #ddd; border-radius:10px; padding:16px; margin:14px 0; }
+    label { font-weight: 600; display:block; margin-bottom:6px; }
+    input[type="text"], input[type="number"], select, textarea {
+      width: 100%; padding: 10px; border:1px solid #ccc; border-radius:8px;
+    }
+    textarea { min-height: 90px; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; }
+    .row > * { flex: 1 1 280px; }
+    .btn {
+      padding: 10px 14px; border:1px solid #111; background:#fff; cursor:pointer;
+      border-radius:8px; font-weight:600;
+    }
+    .btn.primary { background:#111; color:#fff; }
+    .status { margin-top:10px; font-size: 14px; }
+    .status.ok { color: #0a7a2f; }
+    .status.err { color: #b00020; }
+    .q { margin-top: 10px; }
+    .choices { display:grid; gap:8px; }
+    .choices label { font-weight: 400; display:flex; gap:8px; align-items:center; margin:0; }
+    .disabled { opacity: .5; pointer-events:none; }
+    .req { color:#b00020; font-weight:700; margin-left:6px; }
+  </style>
 </head>
 <body>
+  <h1>OpenDataBD Survey</h1>
+  <p class="muted">Enter your access code to begin.</p>
 
-<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-
-<!-- ── CODE GATE ─────────────────────────────── -->
-<div class="card" id="screen-code">
-  <div class="lock-icon">🔒</div>
-  <h2>Enter your access code</h2>
-  <p>This survey is invitation-only. Please enter the unique code you received to continue.</p>
-
-  <div class="code-input-wrap">
-    <input class="code-input" id="codeInput" type="text" maxlength="12"
-      placeholder="e.g. AB12-XY78" autocomplete="off" spellcheck="false"
-      onkeydown="if(event.key==='Enter') verifyCode()">
-    <button class="btn btn-primary" onclick="verifyCode()" id="codeBtn">
-      Verify
-    </button>
-  </div>
-  <div class="code-error" id="codeError"></div>
-</div>
-
-<!-- ── SURVEY ────────────────────────────────── -->
-<div class="card" id="screen-survey">
-  <div class="survey-header">
-    <div class="survey-eyebrow">Confidential Survey</div>
-    <h1 class="survey-title">Your Feedback Matters</h1>
-    <div class="divider"></div>
-    <p class="survey-desc">
-      Thank you for taking part. Your honest answers help us improve.
-      All responses are recorded anonymously and securely.
-    </p>
+  <div class="card">
+    <div class="row">
+      <div>
+        <label for="accessCode">Access Code <span class="req">*</span></label>
+        <input id="accessCode" type="text" placeholder="e.g., AB12CD34" autocomplete="off" />
+      </div>
+      <div style="display:flex; align-items:flex-end; gap:10px;">
+        <button class="btn primary" id="btnValidate" type="button">Validate Code</button>
+      </div>
+    </div>
+    <div id="codeStatus" class="status"></div>
   </div>
 
-  <form id="surveyForm" novalidate>
+  <form id="surveyForm" class="disabled">
+    <div id="questions"></div>
 
-    <!-- Q1 · Rating 1–5 -->
-    <div class="question-block" data-required="true">
-      <div class="q-number">Question 01</div>
-      <div class="q-label">How satisfied are you with our overall service? <span class="q-required">*</span></div>
-      <div class="q-hint">1 = Very dissatisfied · 5 = Very satisfied</div>
-      <div class="rating-wrap" id="q1">
-        <input type="radio" name="q1" id="q1_1" value="1"><label for="q1_1">1</label>
-        <input type="radio" name="q1" id="q1_2" value="2"><label for="q1_2">2</label>
-        <input type="radio" name="q1" id="q1_3" value="3"><label for="q1_3">3</label>
-        <input type="radio" name="q1" id="q1_4" value="4"><label for="q1_4">4</label>
-        <input type="radio" name="q1" id="q1_5" value="5"><label for="q1_5">5</label>
-      </div>
-      <div class="rating-labels"><span>Very dissatisfied</span><span>Very satisfied</span></div>
-      <div class="q-error">Please select a rating.</div>
+    <div class="card">
+      <button class="btn primary" type="submit">Submit Survey</button>
+      <div id="submitStatus" class="status"></div>
     </div>
-
-    <!-- Q2 · Rating 1–10 (NPS-style) -->
-    <div class="question-block" data-required="true">
-      <div class="q-number">Question 02</div>
-      <div class="q-label">How likely are you to recommend us to a friend or colleague? <span class="q-required">*</span></div>
-      <div class="q-hint">0 = Not at all likely · 10 = Extremely likely</div>
-      <div class="rating-wrap" id="q2">
-        <input type="radio" name="q2" id="q2_0" value="0"><label for="q2_0">0</label>
-        <input type="radio" name="q2" id="q2_1" value="1"><label for="q2_1">1</label>
-        <input type="radio" name="q2" id="q2_2" value="2"><label for="q2_2">2</label>
-        <input type="radio" name="q2" id="q2_3" value="3"><label for="q2_3">3</label>
-        <input type="radio" name="q2" id="q2_4" value="4"><label for="q2_4">4</label>
-        <input type="radio" name="q2" id="q2_5" value="5"><label for="q2_5">5</label>
-        <input type="radio" name="q2" id="q2_6" value="6"><label for="q2_6">6</label>
-        <input type="radio" name="q2" id="q2_7" value="7"><label for="q2_7">7</label>
-        <input type="radio" name="q2" id="q2_8" value="8"><label for="q2_8">8</label>
-        <input type="radio" name="q2" id="q2_9" value="9"><label for="q2_9">9</label>
-        <input type="radio" name="q2" id="q2_10" value="10"><label for="q2_10">10</label>
-      </div>
-      <div class="rating-labels"><span>Not at all</span><span>Extremely likely</span></div>
-      <div class="q-error">Please select a value.</div>
-    </div>
-
-    <!-- Q3 · Yes / No -->
-    <div class="question-block" data-required="true">
-      <div class="q-number">Question 03</div>
-      <div class="q-label">Did our team resolve your issue on the first contact? <span class="q-required">*</span></div>
-      <div class="yesno-wrap" id="q3">
-        <input type="radio" name="q3" id="q3_yes" value="Yes"><label for="q3_yes">✓ Yes</label>
-        <input type="radio" name="q3" id="q3_no"  value="No"><label for="q3_no">✗ No</label>
-      </div>
-      <div class="q-error">Please select Yes or No.</div>
-    </div>
-
-    <!-- Q4 · Multiple Choice (single select) -->
-    <div class="question-block" data-required="true">
-      <div class="q-number">Question 04</div>
-      <div class="q-label">Which channel do you primarily use to contact us? <span class="q-required">*</span></div>
-      <div class="mc-wrap" id="q4">
-        <input type="radio" name="q4" id="q4_a" value="Phone">
-        <label class="mc-option" for="q4_a"><div class="mc-indicator"></div>Phone</label>
-        <input type="radio" name="q4" id="q4_b" value="Email">
-        <label class="mc-option" for="q4_b"><div class="mc-indicator"></div>Email</label>
-        <input type="radio" name="q4" id="q4_c" value="Live Chat">
-        <label class="mc-option" for="q4_c"><div class="mc-indicator"></div>Live Chat</label>
-        <input type="radio" name="q4" id="q4_d" value="Social Media">
-        <label class="mc-option" for="q4_d"><div class="mc-indicator"></div>Social Media</label>
-        <input type="radio" name="q4" id="q4_e" value="In Person">
-        <label class="mc-option" for="q4_e"><div class="mc-indicator"></div>In Person</label>
-      </div>
-      <div class="q-error">Please choose an option.</div>
-    </div>
-
-    <!-- Q5 · Multiple Choice (multi-select / checkboxes) -->
-    <div class="question-block" data-required="false">
-      <div class="q-number">Question 05</div>
-      <div class="q-label">Which aspects of our service do you value most? <span style="font-size:0.8em;color:var(--ink-lt)">(Select all that apply)</span></div>
-      <div class="mc-wrap" id="q5">
-        <input type="checkbox" name="q5" id="q5_a" value="Speed">
-        <label class="mc-option" for="q5_a"><div class="mc-indicator square"></div>Speed of response</label>
-        <input type="checkbox" name="q5" id="q5_b" value="Quality">
-        <label class="mc-option" for="q5_b"><div class="mc-indicator square"></div>Quality of solutions</label>
-        <input type="checkbox" name="q5" id="q5_c" value="Friendliness">
-        <label class="mc-option" for="q5_c"><div class="mc-indicator square"></div>Staff friendliness</label>
-        <input type="checkbox" name="q5" id="q5_d" value="Price">
-        <label class="mc-option" for="q5_d"><div class="mc-indicator square"></div>Value for money</label>
-        <input type="checkbox" name="q5" id="q5_e" value="Availability">
-        <label class="mc-option" for="q5_e"><div class="mc-indicator square"></div>Availability / hours</label>
-      </div>
-    </div>
-
-    <!-- Q6 · Text (short) -->
-    <div class="question-block" data-required="false">
-      <div class="q-number">Question 06</div>
-      <div class="q-label">What is the one thing we could do to improve your experience?</div>
-      <input class="text-input" type="text" id="q6" maxlength="300"
-        placeholder="Type your answer here…">
-    </div>
-
-    <!-- Q7 · Text (long) -->
-    <div class="question-block" data-required="false">
-      <div class="q-number">Question 07</div>
-      <div class="q-label">Any other comments or feedback you'd like to share?</div>
-      <textarea class="textarea-input" id="q7" rows="4"
-        maxlength="1000" placeholder="Feel free to share any additional thoughts…"></textarea>
-    </div>
-
-    <button type="button" class="btn btn-submit" onclick="submitSurvey()" id="submitBtn">
-      Submit Response
-    </button>
-
   </form>
-</div>
 
-<!-- ── THANK YOU ──────────────────────────────── -->
-<div class="card" id="screen-thanks">
-  <div class="thanks-icon">✓</div>
-  <h2>Thank you!</h2>
-  <div class="divider"></div>
-  <p>Your response has been recorded successfully. We genuinely appreciate you taking the time to share your feedback — it makes a real difference.</p>
-</div>
+  <script>
+    // 1) PASTE your Apps Script Web App URL here:
+    // Example: https://script.google.com/macros/s/XXXX/exec
+    const APPS_SCRIPT_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
 
-<div class="survey-footer">Your response is private and secure</div>
+    // 2) Define your questions here (edit texts/options anytime)
+    const QUESTIONS = [
+      { id:"q1",  type:"text",     label:"1) What is your full name?", required:false },
+      { id:"q2",  type:"text",     label:"2) What city/district are you in?", required:true },
+      { id:"q3",  type:"select",   label:"3) Your age group?", required:true, options:["18–24","25–34","35–44","45–54","55+"] },
+      { id:"q4",  type:"radio",    label:"4) Your gender?", required:false, options:["Female","Male","Non-binary","Prefer not to say"] },
+      { id:"q5",  type:"radio",    label:"5) Are you currently employed?", required:true, options:["Yes","No","Student","Other"] },
+      { id:"q6",  type:"number",   label:"6) Household size (number of people)?", required:true, min:1, max:30 },
+      { id:"q7",  type:"radio",    label:"7) Do you have reliable internet access?", required:true, options:["Yes","No","Sometimes"] },
+      { id:"q8",  type:"rating",   label:"8) Rate public service quality in your area (1=low, 5=high).", required:true, scale:5 },
+      { id:"q9",  type:"checkbox", label:"9) Which topics interest you most? (Select all that apply)", required:true,
+        options:["Economy","Education","Health","Environment","Transport","Governance","Crime/Safety"] },
+      { id:"q10", type:"textarea", label:"10) What is the biggest challenge in your community?", required:true },
 
-<script>
-// ─────────────────────────────────────────────────────────
-// ⚙️  CONFIGURATION — replace with your Apps Script URL
-// ─────────────────────────────────────────────────────────
-const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+      { id:"q11", type:"radio",    label:"11) How often do you use public transportation?", required:true,
+        options:["Daily","Weekly","Monthly","Rarely","Never"] },
+      { id:"q12", type:"radio",    label:"12) Do you feel safe in your neighborhood at night?", required:true,
+        options:["Yes","No","Sometimes"] },
+      { id:"q13", type:"rating",   label:"13) Rate access to healthcare (1–5).", required:true, scale:5 },
+      { id:"q14", type:"rating",   label:"14) Rate quality of education services (1–5).", required:true, scale:5 },
+      { id:"q15", type:"radio",    label:"15) Do you think government data should be openly available?", required:true,
+        options:["Yes","No","Not sure"] },
 
-// ─────────────────────────────────────────────────────────
-// CODE VERIFICATION
-// ─────────────────────────────────────────────────────────
-let validatedCode = '';
+      { id:"q16", type:"checkbox", label:"16) Which data would you use if available? (Select all that apply)", required:false,
+        options:["Budget/Spending","Elections","Health","Prices/Inflation","Climate/Disaster","Jobs/Employment"] },
+      { id:"q17", type:"textarea", label:"17) What dataset would you want OpenDataBD to publish first?", required:true },
+      { id:"q18", type:"radio",    label:"18) Would you participate in future surveys?", required:true,
+        options:["Yes","No","Maybe"] },
+      { id:"q19", type:"radio",    label:"19) Do you want email updates from OpenDataBD?", required:false,
+        options:["Yes","No"] },
+      { id:"q20", type:"textarea", label:"20) Any additional comments or suggestions?", required:false },
+    ];
 
-async function verifyCode() {
-  const input   = document.getElementById('codeInput');
-  const btn     = document.getElementById('codeBtn');
-  const errEl   = document.getElementById('codeError');
-  const code    = input.value.trim().toUpperCase().replace(/\s/g, '');
+    let codeValidated = false;
 
-  if (!code) { showCodeError('Please enter your access code.'); return; }
-
-  // Loading state
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>';
-  errEl.textContent = '';
-  input.classList.remove('error');
-
-  try {
-    const res  = await fetch(`${APPS_SCRIPT_URL}?action=validate&code=${encodeURIComponent(code)}`);
-    const data = await res.json();
-
-    if (data.valid) {
-      validatedCode = code;
-      showScreen('survey');
-      updateProgress();
-    } else {
-      showCodeError(data.message || 'Invalid or already-used code. Please try again.');
-      input.classList.add('error');
+    function el(tag, attrs={}, children=[]) {
+      const n = document.createElement(tag);
+      Object.entries(attrs).forEach(([k,v]) => {
+        if (k === "class") n.className = v;
+        else if (k === "html") n.innerHTML = v;
+        else n.setAttribute(k, v);
+      });
+      (Array.isArray(children) ? children : [children]).forEach(c => {
+        if (c === null || c === undefined) return;
+        if (typeof c === "string") n.appendChild(document.createTextNode(c));
+        else n.appendChild(c);
+      });
+      return n;
     }
-  } catch (e) {
-    showCodeError('Could not reach the server. Please check your connection and try again.');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Verify';
-  }
-}
 
-function showCodeError(msg) {
-  const el = document.getElementById('codeError');
-  el.textContent = msg;
-  document.getElementById('codeInput').classList.add('error');
-}
+    function renderQuestions() {
+      const host = document.getElementById("questions");
+      host.innerHTML = "";
+      QUESTIONS.forEach(q => {
+        const card = el("div", { class:"card q" });
 
-// ─────────────────────────────────────────────────────────
-// FORM COLLECTION & VALIDATION
-// ─────────────────────────────────────────────────────────
-function collectAnswers() {
-  return {
-    q1:  getRadio('q1'),
-    q2:  getRadio('q2'),
-    q3:  getRadio('q3'),
-    q4:  getRadio('q4'),
-    q5:  getCheckboxes('q5').join(', ') || '',
-    q6:  document.getElementById('q6').value.trim(),
-    q7:  document.getElementById('q7').value.trim(),
-  };
-}
+        const label = el("label", { for:q.id }, [
+          q.label,
+          q.required ? el("span", { class:"req" }, " *") : null
+        ]);
+        card.appendChild(label);
 
-function getRadio(name) {
-  const el = document.querySelector(`input[name="${name}"]:checked`);
-  return el ? el.value : '';
-}
+        let inputBlock;
 
-function getCheckboxes(name) {
-  return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el => el.value);
-}
+        if (q.type === "text") {
+          inputBlock = el("input", { id:q.id, type:"text", "data-qid":q.id });
+        } else if (q.type === "number") {
+          inputBlock = el("input", { id:q.id, type:"number", min:q.min ?? "", max:q.max ?? "", "data-qid":q.id });
+        } else if (q.type === "textarea") {
+          inputBlock = el("textarea", { id:q.id, "data-qid":q.id });
+        } else if (q.type === "select") {
+          const sel = el("select", { id:q.id, "data-qid":q.id });
+          sel.appendChild(el("option", { value:"" }, "Select..."));
+          q.options.forEach(opt => sel.appendChild(el("option", { value:opt }, opt)));
+          inputBlock = sel;
+        } else if (q.type === "radio") {
+          const wrap = el("div", { class:"choices" });
+          q.options.forEach((opt, idx) => {
+            const rid = `${q.id}_${idx}`;
+            const inp = el("input", { type:"radio", name:q.id, id:rid, value:opt, "data-qid":q.id });
+            const lab = el("label", { for:rid }, [inp, opt]);
+            wrap.appendChild(lab);
+          });
+          inputBlock = wrap;
+        } else if (q.type === "checkbox") {
+          const wrap = el("div", { class:"choices" });
+          q.options.forEach((opt, idx) => {
+            const cid = `${q.id}_${idx}`;
+            const inp = el("input", { type:"checkbox", id:cid, value:opt, "data-qid":q.id });
+            const lab = el("label", { for:cid }, [inp, opt]);
+            wrap.appendChild(lab);
+          });
+          inputBlock = wrap;
+        } else if (q.type === "rating") {
+          const wrap = el("div", { class:"choices" });
+          for (let i=1; i<=q.scale; i++) {
+            const rid = `${q.id}_${i}`;
+            const inp = el("input", { type:"radio", name:q.id, id:rid, value:String(i), "data-qid":q.id });
+            const lab = el("label", { for:rid }, [inp, ` ${i}`]);
+            wrap.appendChild(lab);
+          }
+          inputBlock = wrap;
+        }
 
-function validateForm() {
-  let ok = true;
-  document.querySelectorAll('.question-block[data-required="true"]').forEach(block => {
-    const name  = block.querySelector('[name]')?.getAttribute('name');
-    const type  = block.querySelector('[name]')?.getAttribute('type');
-    let filled  = false;
+        card.appendChild(inputBlock);
+        host.appendChild(card);
+      });
+    }
 
-    if (type === 'radio')    filled = !!document.querySelector(`input[name="${name}"]:checked`);
-    if (type === 'text')     filled = !!document.getElementById(name)?.value.trim();
-    if (type === 'textarea') filled = !!document.getElementById(name)?.value.trim();
+    function getAnswers() {
+      const answers = {};
+      for (const q of QUESTIONS) {
+        if (q.type === "radio" || q.type === "rating") {
+          const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+          answers[q.id] = checked ? checked.value : "";
+        } else if (q.type === "checkbox") {
+          const checked = Array.from(document.querySelectorAll(`input[data-qid="${q.id}"]:checked`))
+            .map(x => x.value);
+          answers[q.id] = checked;
+        } else {
+          const node = document.querySelector(`[data-qid="${q.id}"]`);
+          answers[q.id] = node ? (node.value ?? "").trim() : "";
+        }
+      }
+      return answers;
+    }
 
-    block.classList.toggle('has-error', !filled);
-    if (!filled) ok = false;
-  });
-  return ok;
-}
+    function validateRequired(answers) {
+      const missing = [];
+      for (const q of QUESTIONS) {
+        if (!q.required) continue;
+        const v = answers[q.id];
+        const ok = Array.isArray(v) ? v.length > 0 : String(v).trim().length > 0;
+        if (!ok) missing.push(q.label);
+      }
+      return missing;
+    }
 
-// ─────────────────────────────────────────────────────────
-// SUBMISSION
-// ─────────────────────────────────────────────────────────
-async function submitSurvey() {
-  if (!validateForm()) {
-    document.querySelector('.has-error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
-  }
+    async function postJSON(payload) {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify(payload),
+      });
+      return res.json();
+    }
 
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Submitting…';
+    async function validateCode() {
+      const code = document.getElementById("accessCode").value.trim();
+      const status = document.getElementById("codeStatus");
+      status.className = "status";
+      status.textContent = "";
 
-  const answers = collectAnswers();
-  const payload = { action: 'submit', code: validatedCode, ...answers };
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("PASTE_YOUR_WEB_APP_URL_HERE")) {
+        status.className = "status err";
+        status.textContent = "Missing APPS_SCRIPT_URL. Paste your Apps Script Web App URL at the top of this file.";
+        return;
+      }
 
-  try {
-    const res  = await fetch(APPS_SCRIPT_URL, {
-      method:  'POST',
-      headers: { 'Content-Type': 'text/plain' }, // required for Apps Script CORS
-      body:    JSON.stringify(payload),
+      if (!code) {
+        status.className = "status err";
+        status.textContent = "Please enter your access code.";
+        return;
+      }
+
+      status.textContent = "Validating code...";
+
+      // This expects your Apps Script to support action=validateCode (POST)
+      const result = await postJSON({ action:"validateCode", code });
+
+      if (result && result.valid) {
+        codeValidated = true;
+        status.className = "status ok";
+        status.textContent = "Code accepted. You may start the survey.";
+        document.getElementById("surveyForm").classList.remove("disabled");
+      } else {
+        status.className = "status err";
+        status.textContent = (result && result.message) ? result.message : "Invalid code.";
+        document.getElementById("surveyForm").classList.add("disabled");
+        codeValidated = false;
+      }
+    }
+
+    document.getElementById("btnValidate").addEventListener("click", validateCode);
+
+    document.getElementById("surveyForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const submitStatus = document.getElementById("submitStatus");
+      submitStatus.className = "status";
+      submitStatus.textContent = "";
+
+      if (!codeValidated) {
+        submitStatus.className = "status err";
+        submitStatus.textContent = "Please validate your code first.";
+        return;
+      }
+
+      const code = document.getElementById("accessCode").value.trim();
+      const answers = getAnswers();
+      const missing = validateRequired(answers);
+
+      if (missing.length) {
+        submitStatus.className = "status err";
+        submitStatus.textContent = "Missing required answers. Please complete the required questions.";
+        return;
+      }
+
+      submitStatus.textContent = "Submitting...";
+
+      // This expects your Apps Script to accept {code, answers} and save it
+      const result = await postJSON({ code, answers });
+
+      if (result && (result.success === true || result.ok === true)) {
+        submitStatus.className = "status ok";
+        submitStatus.textContent = "Submitted successfully. Thank you!";
+        e.target.reset();
+        document.getElementById("surveyForm").classList.add("disabled");
+        codeValidated = false;
+      } else {
+        submitStatus.className = "status err";
+        submitStatus.textContent = (result && result.message) ? result.message : "Submission failed.";
+      }
     });
-    const data = await res.json();
 
-    if (data.success) {
-      showScreen('thanks');
-    } else {
-      alert('Submission failed: ' + (data.message || 'Unknown error. Please try again.'));
-      btn.disabled = false;
-      btn.textContent = 'Submit Response';
-    }
-  } catch (e) {
-    alert('Network error. Please check your connection and try again.');
-    btn.disabled = false;
-    btn.textContent = 'Submit Response';
-  }
-}
-
-// ─────────────────────────────────────────────────────────
-// SCREEN MANAGEMENT
-// ─────────────────────────────────────────────────────────
-function showScreen(name) {
-  document.getElementById('screen-code').style.display   = name === 'code'   ? '' : 'none';
-  document.getElementById('screen-survey').style.display = name === 'survey' ? '' : 'none';
-  document.getElementById('screen-thanks').style.display = name === 'thanks' ? '' : 'none';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ─────────────────────────────────────────────────────────
-// PROGRESS BAR (tracks answered required questions)
-// ─────────────────────────────────────────────────────────
-function updateProgress() {
-  const required = document.querySelectorAll('.question-block[data-required="true"]');
-  let answered   = 0;
-  required.forEach(block => {
-    const name = block.querySelector('[name]')?.getAttribute('name');
-    if (document.querySelector(`input[name="${name}"]:checked`)) answered++;
-  });
-  const pct = required.length ? Math.round((answered / required.length) * 100) : 0;
-  document.getElementById('progressFill').style.width = pct + '%';
-}
-
-// Live progress tracking
-document.querySelectorAll('input[type="radio"], input[type="checkbox"]')
-  .forEach(el => el.addEventListener('change', () => {
-    updateProgress();
-    // Clear error state on interaction
-    el.closest('.question-block')?.classList.remove('has-error');
-  }));
-
-document.querySelectorAll('.text-input, .textarea-input')
-  .forEach(el => el.addEventListener('input', () => {
-    el.closest('.question-block')?.classList.remove('has-error');
-  }));
-
-// Enter key on code input
-document.getElementById('codeInput')
-  .addEventListener('input', e => {
-    e.target.classList.remove('error');
-    document.getElementById('codeError').textContent = '';
-  });
-</script>
+    renderQuestions();
+  </script>
 </body>
 </html>
