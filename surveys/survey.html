@@ -772,12 +772,15 @@
         const result = await postForm({ code, answers });
 
         if (result && result.success) {
-          setStatus("submitStatus", "Submitted successfully. Thank you!", true);
-          e.target.reset();
-          document.getElementById("surveyForm").classList.add("hidden");
-          codeValidated = false;
-          document.getElementById("accessCode").value = "";
-        } else {
+        e.target.reset();
+        codeValidated = false;
+        document.getElementById("accessCode").value = "";
+        
+        document.getElementById("surveyForm").classList.add("hidden");
+        document.getElementById("codeGate").classList.add("hidden");
+        document.getElementById("successPage").classList.remove("hidden");
+        } 
+		else {
           setStatus(
             "submitStatus",
             (result && result.message) ? result.message : "Submission failed.",
