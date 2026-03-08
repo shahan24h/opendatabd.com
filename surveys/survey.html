@@ -36,19 +36,32 @@
   <h1>OpenDataBD Survey</h1>
   <p>Please enter your access code to begin.</p>
 
-  <!-- Code Gate -->
-  <div class="box">
-    <div class="row">
-      <div>
-        <label for="accessCode">Access Code<span class="req">*</span></label>
-        <input id="accessCode" type="text" placeholder="e.g., AB12CD34" autocomplete="off" />
-      </div>
-      <div style="flex:0 0 auto;">
-        <button class="btn primary" id="btnValidate" type="button">Validate Code</button>
-      </div>
+  <!-- Code Gate (styled like your screenshot) -->
+<div class="gate-page" id="codeGate">
+  <div class="gate-card">
+    <div class="gate-icon" aria-hidden="true">🔒</div>
+
+    <h1 class="gate-title">Enter your access code</h1>
+    <p class="gate-sub">
+      This survey is invitation-only. Please enter the unique code you received to continue.
+    </p>
+
+    <div class="gate-row">
+      <input
+        id="accessCode"
+        class="gate-input"
+        type="text"
+        placeholder="E.G. AB12-XY78"
+        autocomplete="off"
+      />
+      <button class="gate-btn" id="btnValidate" type="button">Verify</button>
     </div>
-    <div id="codeStatus" class="status"></div>
+
+    <div id="codeStatus" class="gate-status"></div>
   </div>
+
+  <div class="gate-foot">Your response is private and secure</div>
+</div>
 
   <!-- Survey Form (hidden until code validated) -->
   <form id="surveyForm" class="hidden">
@@ -223,10 +236,10 @@
     }
 
     function setStatus(id, msg, ok) {
-      const el = document.getElementById(id);
-      el.className = "status " + (ok ? "ok" : "err");
-      el.textContent = msg;
-    }
+  const el = document.getElementById(id);
+  el.className = "gate-status " + (ok ? "ok" : "err");
+  el.textContent = msg;
+}
 
     async function validateCode() {
       const code = document.getElementById("accessCode").value.trim();
