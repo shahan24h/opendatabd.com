@@ -66,153 +66,463 @@ body { max-width: none; }
   <div class="gate-foot">Your response is private and secure</div>
 </div>
 
-  <!-- Survey Form (hidden until code validated) -->
-  <form id="surveyForm" class="hidden">
-    <div class="box">
-      <h2 style="margin:0 0 10px;">Survey Questions</h2>
+<section class="bal-survey-wrap">
+  <style>
+    .bal-survey-wrap {
+      font-family: Arial, sans-serif;
+      color: #111827;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+    }
 
-      <label for="q1">1) Full name (optional)</label>
-      <input id="q1" type="text" />
+    .bal-survey {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+    }
 
-      <label for="q2">2) City / District<span class="req">*</span></label>
-      <input id="q2" type="text" />
+    .bal-survey h1 {
+      font-size: 28px;
+      margin: 0 0 10px;
+      line-height: 1.2;
+    }
 
-      <label for="q3">3) Age group<span class="req">*</span></label>
-      <select id="q3">
-        <option value="">Select…</option>
-        <option>18–24</option>
-        <option>25–34</option>
-        <option>35–44</option>
-        <option>45–54</option>
-        <option>55+</option>
-      </select>
+    .bal-survey p.intro {
+      margin: 0 0 20px;
+      color: #4b5563;
+      line-height: 1.6;
+    }
 
-      <label>4) Gender (optional)</label>
-      <fieldset class="choices" id="q4">
-        <label><input type="radio" name="q4" value="Female"> Female</label>
-        <label><input type="radio" name="q4" value="Male"> Male</label>
-        <label><input type="radio" name="q4" value="Non-binary"> Non-binary</label>
-        <label><input type="radio" name="q4" value="Prefer not to say"> Prefer not to say</label>
-      </fieldset>
+    .bal-survey .note {
+      background: #f9fafb;
+      border-left: 4px solid #2563eb;
+      padding: 12px 14px;
+      margin: 0 0 24px;
+      border-radius: 8px;
+      color: #374151;
+    }
 
-      <label>5) Are you currently employed?<span class="req">*</span></label>
-      <fieldset class="choices" id="q5">
-        <label><input type="radio" name="q5" value="Yes"> Yes</label>
-        <label><input type="radio" name="q5" value="No"> No</label>
-        <label><input type="radio" name="q5" value="Student"> Student</label>
-        <label><input type="radio" name="q5" value="Other"> Other</label>
-      </fieldset>
+    .bal-survey fieldset {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 18px;
+      margin: 0 0 18px;
+    }
 
-      <label for="q6">6) Household size (number of people)<span class="req">*</span></label>
-      <input id="q6" type="number" min="1" max="30" />
+    .bal-survey legend {
+      font-weight: 700;
+      padding: 0 8px;
+    }
 
-      <label>7) Do you have reliable internet access?<span class="req">*</span></label>
-      <fieldset class="choices" id="q7">
-        <label><input type="radio" name="q7" value="Yes"> Yes</label>
-        <label><input type="radio" name="q7" value="No"> No</label>
-        <label><input type="radio" name="q7" value="Sometimes"> Sometimes</label>
-      </fieldset>
+    .bal-survey .question {
+      margin-bottom: 18px;
+    }
 
-      <label>8) Rate public service quality (1=low, 5=high)<span class="req">*</span></label>
-      <fieldset class="choices" id="q8">
-        <label><input type="radio" name="q8" value="1"> 1</label>
-        <label><input type="radio" name="q8" value="2"> 2</label>
-        <label><input type="radio" name="q8" value="3"> 3</label>
-        <label><input type="radio" name="q8" value="4"> 4</label>
-        <label><input type="radio" name="q8" value="5"> 5</label>
-      </fieldset>
+    .bal-survey .question:last-child {
+      margin-bottom: 0;
+    }
 
-      <label>9) Which topics interest you most? (Select all)<span class="req">*</span></label>
-      <fieldset class="choices" id="q9">
-        <label><input type="checkbox" value="Economy"> Economy</label>
-        <label><input type="checkbox" value="Education"> Education</label>
-        <label><input type="checkbox" value="Health"> Health</label>
-        <label><input type="checkbox" value="Environment"> Environment</label>
-        <label><input type="checkbox" value="Transport"> Transport</label>
-        <label><input type="checkbox" value="Governance"> Governance</label>
-        <label><input type="checkbox" value="Crime/Safety"> Crime/Safety</label>
-      </fieldset>
+    .bal-survey label.q-title {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
 
-      <label for="q10">10) Biggest challenge in your community<span class="req">*</span></label>
-      <textarea id="q10"></textarea>
+    .bal-survey .subtext {
+      display: block;
+      color: #6b7280;
+      font-size: 14px;
+      margin-top: 4px;
+    }
 
-      <label for="q11">11) Public transport usage frequency<span class="req">*</span></label>
-      <select id="q11">
-        <option value="">Select…</option>
-        <option>Daily</option>
-        <option>Weekly</option>
-        <option>Monthly</option>
-        <option>Rarely</option>
-        <option>Never</option>
-      </select>
+    .bal-survey select,
+    .bal-survey input[type="text"],
+    .bal-survey input[type="email"],
+    .bal-survey textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      box-sizing: border-box;
+      background: #fff;
+    }
 
-      <label>12) Do you feel safe at night in your area?<span class="req">*</span></label>
-      <fieldset class="choices" id="q12">
-        <label><input type="radio" name="q12" value="Yes"> Yes</label>
-        <label><input type="radio" name="q12" value="No"> No</label>
-        <label><input type="radio" name="q12" value="Sometimes"> Sometimes</label>
-      </fieldset>
+    .bal-survey textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
 
-      <label>13) Rate access to healthcare (1–5)<span class="req">*</span></label>
-      <fieldset class="choices" id="q13">
-        <label><input type="radio" name="q13" value="1"> 1</label>
-        <label><input type="radio" name="q13" value="2"> 2</label>
-        <label><input type="radio" name="q13" value="3"> 3</label>
-        <label><input type="radio" name="q13" value="4"> 4</label>
-        <label><input type="radio" name="q13" value="5"> 5</label>
-      </fieldset>
+    .bal-survey .options {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
 
-      <label>14) Rate education services (1–5)<span class="req">*</span></label>
-      <fieldset class="choices" id="q14">
-        <label><input type="radio" name="q14" value="1"> 1</label>
-        <label><input type="radio" name="q14" value="2"> 2</label>
-        <label><input type="radio" name="q14" value="3"> 3</label>
-        <label><input type="radio" name="q14" value="4"> 4</label>
-        <label><input type="radio" name="q14" value="5"> 5</label>
-      </fieldset>
+    .bal-survey .inline-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 8px;
+    }
 
-      <label>15) Government data should be openly available?<span class="req">*</span></label>
-      <fieldset class="choices" id="q15">
-        <label><input type="radio" name="q15" value="Yes"> Yes</label>
-        <label><input type="radio" name="q15" value="No"> No</label>
-        <label><input type="radio" name="q15" value="Not sure"> Not sure</label>
-      </fieldset>
+    .bal-survey .inline-options label,
+    .bal-survey .options label {
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1.4;
+    }
 
-      <label>16) Which data would you use if available? (optional)</label>
-      <fieldset class="choices" id="q16">
-        <label><input type="checkbox" value="Budget/Spending"> Budget/Spending</label>
-        <label><input type="checkbox" value="Elections"> Elections</label>
-        <label><input type="checkbox" value="Health"> Health</label>
-        <label><input type="checkbox" value="Prices/Inflation"> Prices/Inflation</label>
-        <label><input type="checkbox" value="Climate/Disaster"> Climate/Disaster</label>
-        <label><input type="checkbox" value="Jobs/Employment"> Jobs/Employment</label>
-      </fieldset>
+    .bal-survey .likert {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(70px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
 
-      <label for="q17">17) What dataset should OpenDataBD publish first?<span class="req">*</span></label>
-      <textarea id="q17"></textarea>
+    .bal-survey .likert label {
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 10px 8px;
+      text-align: center;
+      font-size: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      background: #f9fafb;
+    }
 
-      <label>18) Would you participate in future surveys?<span class="req">*</span></label>
-      <fieldset class="choices" id="q18">
-        <label><input type="radio" name="q18" value="Yes"> Yes</label>
-        <label><input type="radio" name="q18" value="No"> No</label>
-        <label><input type="radio" name="q18" value="Maybe"> Maybe</label>
-      </fieldset>
+    .bal-survey .likert input {
+      margin: 0;
+    }
 
-      <label>19) Do you want email updates? (optional)</label>
-      <fieldset class="choices" id="q19">
-        <label><input type="radio" name="q19" value="Yes"> Yes</label>
-        <label><input type="radio" name="q19" value="No"> No</label>
-      </fieldset>
+    .bal-survey .scale-note {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
 
-      <label for="q20">20) Additional comments (optional)</label>
-      <textarea id="q20"></textarea>
+    .bal-survey .actions {
+      margin-top: 22px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .bal-survey button {
+      background: #1d4ed8;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .bal-survey button:hover {
+      background: #1e40af;
+    }
+
+    .bal-survey .secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .bal-survey .secondary:hover {
+      background: #d1d5db;
+    }
+
+    @media (max-width: 640px) {
+      .bal-survey .likert {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <form class="bal-survey" action="#" method="post">
+    <h1>Bangladesh Awami League &amp; Supporters Satisfaction Survey 2026</h1>
+
+    <p class="intro">
+      This survey explores the views, reflections, and future expectations of supporters, activists,
+      and leaders connected to the Bangladesh Awami League after its removal from power.
+    </p>
+
+    <div class="note">
+      <strong>Confidentiality note:</strong> Your responses are confidential. Please do not include your name
+      or personally identifying information unless you choose to do so.
     </div>
 
-    <div class="box">
-      <button class="btn primary" type="submit">Submit</button>
-      <div id="submitStatus" class="status"></div>
+    <fieldset>
+      <legend>Section A. Respondent Background</legend>
+
+      <div class="question">
+        <label class="q-title" for="q1">1. Which of the following best describes you?</label>
+        <select id="q1" name="q1" required>
+          <option value="">Select one</option>
+          <option>Awami League supporter</option>
+          <option>Former student/youth wing supporter</option>
+          <option>Former party activist/organizer</option>
+          <option>Former elected representative/local leader</option>
+          <option>Exiled or overseas leader/supporter</option>
+          <option>General citizen with interest in politics</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label class="q-title" for="q2">2. How long have you identified as a supporter of the Bangladesh Awami League?</label>
+        <select id="q2" name="q2" required>
+          <option value="">Select one</option>
+          <option>Less than 2 years</option>
+          <option>2–5 years</option>
+          <option>6–10 years</option>
+          <option>More than 10 years</option>
+          <option>I do not identify as a supporter</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label class="q-title" for="q3">3. Where are you currently based?</label>
+        <select id="q3" name="q3" required>
+          <option value="">Select one</option>
+          <option>In Bangladesh</option>
+          <option>Outside Bangladesh</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label class="q-title" for="q4">4. How closely do you currently follow Awami League-related political developments?</label>
+        <select id="q4" name="q4" required>
+          <option value="">Select one</option>
+          <option>Very closely</option>
+          <option>Somewhat closely</option>
+          <option>Occasionally</option>
+          <option>Rarely</option>
+          <option>Not at all</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Section B. Reflections on the Party’s Time in Power</legend>
+
+      <div class="question">
+        <label class="q-title" for="q5">5. Overall, how satisfied were you with the performance of the Bangladesh Awami League during its time in government from 2009 to 2024?</label>
+        <select id="q5" name="q5" required>
+          <option value="">Select one</option>
+          <option>Very satisfied</option>
+          <option>Satisfied</option>
+          <option>Neutral</option>
+          <option>Dissatisfied</option>
+          <option>Very dissatisfied</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label class="q-title">6. “The Awami League made important contributions to Bangladesh’s economic development.”</label>
+        <div class="scale-note">1 = Strongly disagree, 5 = Strongly agree</div>
+        <div class="likert">
+          <label><input type="radio" name="q6" value="1" required> 1</label>
+          <label><input type="radio" name="q6" value="2"> 2</label>
+          <label><input type="radio" name="q6" value="3"> 3</label>
+          <label><input type="radio" name="q6" value="4"> 4</label>
+          <label><input type="radio" name="q6" value="5"> 5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-title">7. “The Awami League improved infrastructure and public services in ways that had a visible impact on people’s lives.”</label>
+        <div class="scale-note">1 = Strongly disagree, 5 = Strongly agree</div>
+        <div class="likert">
+          <label><input type="radio" name="q7" value="1" required> 1</label>
+          <label><input type="radio" name="q7" value="2"> 2</label>
+          <label><input type="radio" name="q7" value="3"> 3</label>
+          <label><input type="radio" name="q7" value="4"> 4</label>
+          <label><input type="radio" name="q7" value="5"> 5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-title">8. “The party leadership remained connected to the concerns of ordinary supporters.”</label>
+        <div class="scale-note">1 = Strongly disagree, 5 = Strongly agree</div>
+        <div class="likert">
+          <label><input type="radio" name="q8" value="1" required> 1</label>
+          <label><input type="radio" name="q8" value="2"> 2</label>
+          <label><input type="radio" name="q8" value="3"> 3</label>
+          <label><input type="radio" name="q8" value="4"> 4</label>
+          <label><input type="radio" name="q8" value="5"> 5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-title">9. “The party’s governance record was weakened by corruption, lack of accountability, or misuse of power.”</label>
+        <div class="scale-note">1 = Strongly disagree, 5 = Strongly agree</div>
+        <div class="likert">
+          <label><input type="radio" name="q9" value="1" required> 1</label>
+          <label><input type="radio" name="q9" value="2"> 2</label>
+          <label><input type="radio" name="q9" value="3"> 3</label>
+          <label><input type="radio" name="q9" value="4"> 4</label>
+          <label><input type="radio" name="q9" value="5"> 5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-title" for="q10">10. In your view, which one of the following best describes the Awami League’s overall legacy?</label>
+        <select id="q10" name="q10" required>
+          <option value="">Select one</option>
+          <option>Mostly positive</option>
+          <option>More positive than negative</option>
+          <option>Mixed</option>
+          <option>More negative than positive</option>
+          <option>Mostly negative</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Section C. Current Mood After Removal from Power</legend>
+
+      <div class="question">
+        <label class="q-title" for="q11">11. What is your current emotional response to the party’s removal from power?</label>
+        <select id="q11" name="q11" required>
+          <option value="">Select one</option>
+          <option>Hopeful</option>
+          <option>Disappointed</option>
+          <option>Angry</option>
+          <option>Confused/uncertain</option>
+          <option>Motivated to reorganize</option>
+          <option>No strong feeling</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label class="q-title">12. “The removal from power has caused me to rethink my support for the party.”</label>
+        <div class="scale-note">1 = Strongly disagree, 5 = Strongly agree</div>
+        <div class="likert">
+          <label><input type="radio" name="q12" value="1" required> 1</label>
+          <label><input type="radio" name="q12" value="2"> 2</label>
+          <label><input type="radio" name="q12" value="3"> 3</label>
+          <label><input type="radio" name="q12" value="4"> 4</label>
+          <label><input type="radio" name="q12" value="5"> 5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-title" for="q13">13. How much confidence do you currently have in the Awami League’s ability to reorganize and remain politically relevant?</label>
+        <select id="q13" name="q13" required>
+          <option value="">Select one</option>
+          <option>Very high</option>
+          <option>High</option>
+          <option>Moderate</option>
+          <option>Low</option>
+          <option>Very low</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label class="q-title" for="q14">14. What do you think is the biggest reason for the party’s loss of power or decline in influence?</label>
+        <select id="q14" name="q14" required>
+          <option value="">Select one</option>
+          <option>Leadership failures</option>
+          <option>Disconnect from grassroots supporters</option>
+          <option>Economic issues/inflation/cost of living</option>
+          <option>Democratic legitimacy concerns</option>
+          <option>Internal divisions</option>
+          <option>Opposition mobilization</option>
+          <option>International pressure</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label class="q-title">15. “The party should openly acknowledge mistakes made during its years in power.”</label>
+        <div class="scale-note">1 = Strongly disagree, 5 = Strongly agree</div>
+        <div class="likert">
+          <label><input type="radio" name="q15" value="1" required> 1</label>
+          <label><input type="radio" name="q15" value="2"> 2</label>
+          <label><input type="radio" name="q15" value="3"> 3</label>
+          <label><input type="radio" name="q15" value="4"> 4</label>
+          <label><input type="radio" name="q15" value="5"> 5</label>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Section D. Leadership, Exile, and Future Direction</legend>
+
+      <div class="question">
+        <label class="q-title" for="q16">16. How much trust do you currently have in the party’s senior leadership to guide its future?</label>
+        <select id="q16" name="q16" required>
+          <option value="">Select one</option>
+          <option>Very high</option>
+          <option>High</option>
+          <option>Moderate</option>
+          <option>Low</option>
+          <option>Very low</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label class="q-title">17. “Leaders currently outside Bangladesh can still play a meaningful role in rebuilding the party.”</label>
+        <div class="scale-note">1 = Strongly disagree, 5 = Strongly agree</div>
+        <div class="likert">
+          <label><input type="radio" name="q17" value="1" required> 1</label>
+          <label><input type="radio" name="q17" value="2"> 2</label>
+          <label><input type="radio" name="q17" value="3"> 3</label>
+          <label><input type="radio" name="q17" value="4"> 4</label>
+          <label><input type="radio" name="q17" value="5"> 5</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="q-title" for="q18">18. For leaders, former leaders, or politically active members: what should be the top priority for the party in the next 12 months?</label>
+        <select id="q18" name="q18" required>
+          <option value="">Select one</option>
+          <option>Rebuilding grassroots organization</option>
+          <option>Internal reform and accountability</option>
+          <option>Youth engagement</option>
+          <option>International outreach</option>
+          <option>Coalition-building with other political actors</option>
+          <option>Public apology and image repair</option>
+          <option>Policy renewal</option>
+          <option>Not applicable</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label class="q-title" for="q19">19. Which direction would you most like the Awami League to take in the future?</label>
+        <select id="q19" name="q19" required>
+          <option value="">Select one</option>
+          <option>Return with the same leadership style</option>
+          <option>Keep core values but reform leadership and strategy</option>
+          <option>Major internal restructuring is needed</option>
+          <option>Build a broader alliance-based movement</option>
+          <option>Unsure</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label class="q-title" for="q20">20. In your own words, what must the Awami League and its leaders do now to regain trust among supporters and the wider public?</label>
+        <textarea id="q20" name="q20" placeholder="Write your response here..." required></textarea>
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="submit">Submit Survey</button>
+      <button type="reset" class="secondary">Reset</button>
     </div>
   </form>
+</section>
 
   <script>
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz67BdVjBhK9nAkfFaptucssnp3ehb0eG4xgvfsf9X4ZbcSsQxTw55Qg--Q-Xogd7A/exec";
