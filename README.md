@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-# opendatabd.com
-opendatabd.com landing page
-Incoming Dataset inside the site
-=======
 # OpenDataBD
 
 Bangladesh's open platform for data sharing, surveys, and research.
@@ -52,7 +47,57 @@ These features are planned and will be built incrementally. Each one has its own
 - [Quarto](https://quarto.org) — static site and document framework
 - [Bootstrap 5](https://getbootstrap.com) — via Quarto's cosmo theme
 - Plain HTML / CSS / vanilla JS — no build chain required beyond `quarto render`
+## Deployment
 
+This site is deployed on [Vercel](https://vercel.com) from the `main` branch. Pushes to `main` trigger automatic builds and deployments.
+
+### Build configuration
+
+Vercel's build environment does not include Quarto by default, so the build process installs it on each deploy.
+
+**`install-quarto.sh`** — downloads and extracts Quarto to the build container's home directory:
+
+```bash
+#!/bin/bash
+set -e
+
+QUARTO_VERSION="1.5.57"
+curl -L -o quarto.tar.gz "https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.tar.gz"
+mkdir -p "$HOME/opt"
+tar -xzf quarto.tar.gz -C "$HOME/opt/"
+mv "$HOME/opt/quarto-${QUARTO_VERSION}" "$HOME/opt/quarto"
+export PATH="$HOME/opt/quarto/bin:$PATH"
+quarto --version
+```
+
+**`vercel.json`** — tells Vercel to run the install script before rendering, and which directory to serve:
+
+```json
+{
+  "buildCommand": "bash install-quarto.sh && export PATH=\"$HOME/opt/quarto/bin:$PATH\" && quarto render",
+  "outputDirectory": "_site"
+}
+```
+
+### Local development
+
+To preview the site locally:
+
+```bash
+quarto preview
+```
+
+To build the static site:
+
+```bash
+quarto render
+```
+
+The rendered output goes to `_site/` (configured in `_quarto.yml`).
+
+### Updating Quarto version
+
+The Quarto version is pinned in `install-quarto.sh`. To upgrade, change `QUARTO_VERSION` to the desired release from [quarto-dev/quarto-cli releases](https://github.com/quarto-dev/quarto-cli/releases), then commit and push.
 ---
 
 ## Getting started locally
@@ -60,7 +105,7 @@ These features are planned and will be built incrementally. Each one has its own
 You need [Quarto](https://quarto.org/docs/get-started/) installed.
 
 ```bash
-git clone https://github.com/shahan24h/OpendataBD.git
+git clone https://github.com/shahan24h/opendatabd.com.git
 cd OpendataBD
 quarto preview
 ```
@@ -125,4 +170,3 @@ Content and datasets published on OpenDataBD are available under [Creative Commo
 ---
 
 *Built for Bangladesh, by the community.*
->>>>>>> 7145eef (v2.0 clean start)
