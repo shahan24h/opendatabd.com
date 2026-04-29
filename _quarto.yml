@@ -6,7 +6,7 @@ website:
   title: "OpenDataBD"
   description: "Bangladesh's Open Platform for Data Sharing, Surveys & Research"
   favicon: assets/favicon.png
-  site-url: https://opendatabd.org
+  site-url: https://opendatabd.com
   repo-url: https://github.com/shahan24h/opendatabd.com
 
   navbar:
