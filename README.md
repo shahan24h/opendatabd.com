@@ -2,7 +2,7 @@
 
 Bangladesh's open platform for data sharing, surveys, and research.
 
-**[opendatabd.org](https://opendatabd.org)** · [Browse Datasets](#) · [Active Surveys](#) · [API Docs](#)
+**[opendatabd.com](https://opendatabd.com)** · [Browse Datasets](#) · [Active Surveys](#) · [API Docs](#)
 
 ---
 
