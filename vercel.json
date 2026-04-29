@@ -1,0 +1,4 @@
+{
+  "buildCommand": "bash install-quarto.sh && export PATH=\"$HOME/opt/quarto/bin:$PATH\" && quarto render",
+  "outputDirectory": "_site"
+}
