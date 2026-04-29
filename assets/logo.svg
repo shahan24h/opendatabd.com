@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 148 36" fill="none">
+  <!-- Pin mark -->
+  <rect x="0" y="0" width="4" height="28" rx="2" fill="#005A3C"/>
+  <!-- Text -->
+  <text x="12" y="22" font-family="Inter,system-ui,sans-serif" font-size="16" font-weight="700" fill="#111827">Open</text>
+  <text x="57" y="22" font-family="Inter,system-ui,sans-serif" font-size="16" font-weight="700" fill="#005A3C">Data</text>
+  <text x="100" y="22" font-family="Inter,system-ui,sans-serif" font-size="16" font-weight="700" fill="#111827">BD</text>
+</svg>

@@ -1,0 +1,388 @@
+---
+title: "OpenDataBD"
+description: "Bangladesh's open platform for data sharing, surveys, and research"
+page-layout: full
+toc: false
+---
+
+```{=html}
+<!-- HERO -->
+<section class="hero-section">
+  <div class="content-container">
+
+    <p class="hero-eyebrow">Bangladesh · Open Data · Surveys</p>
+
+    <h1 class="hero-title">
+      Where Bangladesh's data<br>lives openly
+    </h1>
+
+    <p class="hero-subtitle">
+      Discover, share, and build on datasets from government, research, and citizens.
+      Participate in national surveys and contribute to evidence-based policy.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#datasets" class="btn-primary-solid">Explore Datasets</a>
+      <a href="#surveys" class="btn-outline">Active Surveys</a>
+      <a href="#" class="btn-outline">API Access</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="content-container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-number">1,240</div>
+        <div class="stat-label">Datasets</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">64</div>
+        <div class="stat-label">Districts covered</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">38</div>
+        <div class="stat-label">Active surveys</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">5,800</div>
+        <div class="stat-label">Researchers</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">120</div>
+        <div class="stat-label">Organisations</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- FEATURES -->
+<section class="section section-alt" id="features">
+  <div class="content-container">
+
+    <div style="margin-bottom:2.5rem;">
+      <span class="section-label">Platform</span>
+      <h2 class="section-title">Everything you need to work with data</h2>
+      <p class="section-subtitle">
+        OpenDataBD brings together government statistics, research datasets, and
+        citizen surveys into one open-access platform.
+      </p>
+    </div>
+
+    <div class="feature-grid">
+
+      <div class="feature-card">
+        <span class="feature-icon">[ / ]</span>
+        <div class="feature-title">Open Data Repository</div>
+        <div class="feature-desc">
+          Browse and download structured datasets across health, education, climate,
+          and economy — all under open licenses.
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">[ ~ ]</span>
+        <div class="feature-title">Live Surveys</div>
+        <div class="feature-desc">
+          Participate in or launch national surveys. Results are published as open
+          datasets after each survey closes.
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">[ ↑ ]</span>
+        <div class="feature-title">Data Submission</div>
+        <div class="feature-desc">
+          Researchers, NGOs, and government bodies can submit datasets through a
+          community review and metadata process.
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">[ {} ]</span>
+        <div class="feature-title">Developer API</div>
+        <div class="feature-desc">
+          Programmatic access to all datasets via a RESTful JSON API — for
+          applications, dashboards, and research pipelines.
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">[ ⊞ ]</span>
+        <div class="feature-title">Government Collaboration</div>
+        <div class="feature-desc">
+          A dedicated portal for ministries and agencies to publish official
+          statistics and administrative records.
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">[ ◎ ]</span>
+        <div class="feature-title">Research Projects</div>
+        <div class="feature-desc">
+          Register ongoing projects, link datasets, and invite collaborators.
+          Build a transparent record of data-driven work.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- DATASETS -->
+<section class="section" id="datasets">
+  <div class="content-container">
+
+    <div class="section-header">
+      <div>
+        <span class="section-label">Featured Datasets</span>
+        <h2 class="section-title" style="margin-bottom:0;">Popular &amp; recent data</h2>
+      </div>
+      <a href="#" style="font-size:0.87rem; font-weight:500; color:var(--c-green); text-decoration:none; white-space:nowrap;">
+        Browse all →
+      </a>
+    </div>
+
+    <div class="filter-strip">
+      <button class="filter-btn active">All</button>
+      <button class="filter-btn">Health</button>
+      <button class="filter-btn">Education</button>
+      <button class="filter-btn">Economy</button>
+      <button class="filter-btn">Climate</button>
+      <button class="filter-btn">Census</button>
+    </div>
+
+    <div class="dataset-grid">
+
+      <div class="dataset-card">
+        <span class="dataset-category cat-health">Health</span>
+        <div class="dataset-title">District-Level Health Indicators 2023</div>
+        <div class="dataset-meta">Bangladesh Bureau of Statistics &middot; Jan 2024 &middot; CSV, JSON</div>
+        <div class="dataset-tags">
+          <span class="tag">maternal health</span>
+          <span class="tag">child mortality</span>
+          <span class="tag">all districts</span>
+        </div>
+      </div>
+
+      <div class="dataset-card">
+        <span class="dataset-category cat-education">Education</span>
+        <div class="dataset-title">Primary School Enrollment &amp; Dropout 2022–23</div>
+        <div class="dataset-meta">BANBEIS &middot; Mar 2024 &middot; CSV, XLSX</div>
+        <div class="dataset-tags">
+          <span class="tag">upazila-level</span>
+          <span class="tag">gender disaggregated</span>
+        </div>
+      </div>
+
+      <div class="dataset-card">
+        <span class="dataset-category cat-climate">Climate</span>
+        <div class="dataset-title">Flood Risk Zones &amp; Historical Inundation</div>
+        <div class="dataset-meta">BWDB &middot; Feb 2024 &middot; GeoJSON, Shapefile</div>
+        <div class="dataset-tags">
+          <span class="tag">geospatial</span>
+          <span class="tag">climate risk</span>
+          <span class="tag">disaster</span>
+        </div>
+      </div>
+
+      <div class="dataset-card">
+        <span class="dataset-category cat-economy">Economy</span>
+        <div class="dataset-title">Household Income &amp; Expenditure Survey 2022</div>
+        <div class="dataset-meta">BBS &middot; Aug 2023 &middot; STATA, CSV</div>
+        <div class="dataset-tags">
+          <span class="tag">poverty</span>
+          <span class="tag">income distribution</span>
+          <span class="tag">urban/rural</span>
+        </div>
+      </div>
+
+      <div class="dataset-card">
+        <span class="dataset-category cat-census">Census</span>
+        <div class="dataset-title">Population Census 2022 — Preliminary Results</div>
+        <div class="dataset-meta">Bangladesh Bureau of Statistics &middot; CSV, API</div>
+        <div class="dataset-tags">
+          <span class="tag">demographics</span>
+          <span class="tag">population</span>
+          <span class="tag">64 districts</span>
+        </div>
+      </div>
+
+      <div class="dataset-card">
+        <span class="dataset-category cat-infra">Infrastructure</span>
+        <div class="dataset-title">Road Network &amp; Connectivity Index</div>
+        <div class="dataset-meta">LGED &middot; Dec 2023 &middot; GeoJSON, CSV</div>
+        <div class="dataset-tags">
+          <span class="tag">transport</span>
+          <span class="tag">geospatial</span>
+          <span class="tag">rural roads</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- SURVEYS -->
+<section class="section section-alt" id="surveys">
+  <div class="content-container">
+
+    <div style="margin-bottom:2.5rem;">
+      <span class="section-label">Citizen Surveys</span>
+      <h2 class="section-title">Your voice shapes the data</h2>
+      <p class="section-subtitle">
+        Active surveys collecting responses now. Results are published as open datasets
+        once each survey closes.
+      </p>
+    </div>
+
+    <div class="survey-grid">
+
+      <div class="survey-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.1rem;">
+          <span class="survey-status">Active</span>
+          <span class="survey-close">Closes Jun 30, 2025</span>
+        </div>
+        <h3>National Digital Access Survey 2025</h3>
+        <p>How do Bangladeshi citizens access the internet? Help us map connectivity across all 64 districts.</p>
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+          <span class="survey-count">12,430 responses</span>
+          <a href="#" class="btn-primary-solid" style="font-size:0.83rem; padding:0.4rem 0.9rem;">Take Survey</a>
+        </div>
+      </div>
+
+      <div class="survey-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.1rem;">
+          <span class="survey-status">Active</span>
+          <span class="survey-close">Closes May 15, 2025</span>
+        </div>
+        <h3>Urban Air Quality Perception Survey</h3>
+        <p>Residents of Dhaka, Chittagong, and Sylhet — share your experience of air quality in your area.</p>
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+          <span class="survey-count">8,214 responses</span>
+          <a href="#" class="btn-primary-solid" style="font-size:0.83rem; padding:0.4rem 0.9rem;">Take Survey</a>
+        </div>
+      </div>
+
+      <div class="survey-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.1rem;">
+          <span class="survey-status">Active</span>
+          <span class="survey-close">Closes Jul 1, 2025</span>
+        </div>
+        <h3>Flood Preparedness &amp; Response 2025</h3>
+        <p>Share how your community prepares for and responds to seasonal flooding. All 64 districts.</p>
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+          <span class="survey-count">5,892 responses</span>
+          <a href="#" class="btn-primary-solid" style="font-size:0.83rem; padding:0.4rem 0.9rem;">Take Survey</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:2rem;">
+      <a href="#" style="font-size:0.87rem; font-weight:500; color:var(--c-green); text-decoration:none;">
+        View all 38 active surveys →
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="content-container">
+
+    <div style="margin-bottom:2.5rem;">
+      <h2 class="section-title">Simple to get started</h2>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-title">Create an account</div>
+        <div class="step-desc">Sign up as a researcher, organisation, or citizen contributor.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-title">Explore or contribute</div>
+        <div class="step-desc">Browse datasets, take surveys, or submit your own data.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-title">Download or query</div>
+        <div class="step-desc">Get CSV, JSON, or XLSX — or query via our open REST API.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <div class="step-title">Cite &amp; share</div>
+        <div class="step-desc">Every dataset has a DOI. Share your findings openly.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- SURVEY CTA -->
+<div class="cta-wrapper">
+  <div class="content-container">
+    <div class="cta-block">
+      <h2>Run a survey. Reach all of Bangladesh.</h2>
+      <p>
+        Researchers, NGOs, and government agencies can launch verified national surveys
+        on OpenDataBD — results published as open data automatically.
+      </p>
+      <div class="cta-buttons">
+        <a href="#" class="btn-cta-primary">Submit a survey proposal</a>
+        <a href="#" class="btn-cta-outline">Survey guidelines</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- PARTNERS -->
+<section class="section">
+  <div class="content-container" style="text-align:center;">
+
+    <span class="section-label">Data Sources &amp; Partners</span>
+    <h2 class="section-title">Trusted by leading institutions</h2>
+    <p class="section-subtitle" style="margin:0 auto 2.5rem;">
+      Working with government agencies, research organisations, and international
+      bodies to publish high-quality, verified data.
+    </p>
+
+    <div class="partner-list">
+      <span class="partner-name">Bangladesh Bureau of Statistics</span>
+      <span class="partner-name">Ministry of Health &amp; Family Welfare</span>
+      <span class="partner-name">BANBEIS</span>
+      <span class="partner-name">BWDB</span>
+      <span class="partner-name">a2i Programme</span>
+      <span class="partner-name">BIDS</span>
+      <span class="partner-name">World Bank Bangladesh</span>
+      <span class="partner-name">UNDP Bangladesh</span>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- NEWSLETTER -->
+<div class="newsletter-section">
+  <div class="content-container">
+    <h2>Stay up to date</h2>
+    <p>Weekly digest of new datasets, survey launches, and platform updates.</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="your@email.com">
+      <button type="submit">Subscribe</button>
+    </div>
+    <p style="font-size:0.73rem; color:#4B5563; margin-top:0.75rem;">No spam. Unsubscribe any time.</p>
+  </div>
+</div>
+```

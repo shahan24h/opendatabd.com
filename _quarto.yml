@@ -1,0 +1,72 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "OpenDataBD"
+  description: "Bangladesh's Open Platform for Data Sharing, Surveys & Research"
+  favicon: assets/favicon.png
+  site-url: https://opendatabd.org
+  repo-url: https://github.com/shahan24h/opendatabd.com
+
+  navbar:
+    logo: assets/logo.svg
+    logo-alt: "OpenDataBD"
+    title: false
+    background: "white"
+    foreground: "#111827"
+    pinned: true
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Data"
+        menu:
+          - text: "Browse Datasets"
+            href: index.qmd
+          - text: "Submit Data"
+            href: index.qmd
+          - text: "API Access"
+            href: index.qmd
+      - text: "Surveys"
+        href: index.qmd
+      - text: "Projects"
+        href: index.qmd
+      - text: "Government"
+        href: index.qmd
+      - text: "About"
+        href: index.qmd
+    right:
+      - text: "Sign In"
+        href: index.qmd
+        aria-label: "Sign In"
+      - icon: github
+        href: https://github.com/shahan24h/opendatabd.com
+        aria-label: "GitHub"
+
+  page-footer:
+    background: "#111827"
+    foreground: "#9CA3AF"
+    left: |
+      © 2025 OpenDataBD · Built for Bangladesh
+    center:
+      - text: "Privacy Policy"
+        href: index.qmd
+      - text: "Terms of Use"
+        href: index.qmd
+      - text: "Contact"
+        href: index.qmd
+    right: |
+      Made with ♥ in Bangladesh
+
+format:
+  html:
+    theme:
+      - cosmo
+      - custom.scss
+    css: custom.css
+    include-in-header: _includes/theme-init.html
+    include-after-body: _includes/theme-toggle.html
+    toc: false
+    anchor-sections: false
+    smooth-scroll: true
+    page-layout: full
