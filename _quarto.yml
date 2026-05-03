@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: _site
+  resources:
+    - surveys/bangladesh-trust-survey.html
 
 website:
   title: "OpenDataBD"
@@ -28,7 +30,7 @@ website:
           - text: "API Access"
             href: index.qmd
       - text: "Surveys"
-        href: index.qmd
+        href: index.qmd#surveys
       - text: "Projects"
         href: index.qmd
       - text: "Government"

@@ -246,9 +246,22 @@ toc: false
       <div class="survey-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.1rem;">
           <span class="survey-status">Active</span>
-          <span class="survey-close">Closes Jun 30, 2025</span>
+          <span class="survey-close">Closes Dec 31, 2026</span>
         </div>
-        <h3>National Digital Access Survey 2025</h3>
+        <h3>Bangladesh Governance Trust Survey 2026</h3>
+        <p>How much do Bangladeshi citizens trust their public institutions? Share your views on governance, public services, and rule of law across all 64 districts.</p>
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+          <span class="survey-count">New · Be among the first</span>
+          <a href="surveys/bangladesh-governance-trust.html" class="btn-primary-solid" style="font-size:0.83rem; padding:0.4rem 0.9rem;">Take Survey</a>
+        </div>
+      </div>
+
+      <div class="survey-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.1rem;">
+          <span class="survey-status">Active</span>
+          <span class="survey-close">Closes Jun 30, 2026</span>
+        </div>
+        <h3>National Digital Access Survey 2026</h3>
         <p>How do Bangladeshi citizens access the internet? Help us map connectivity across all 64 districts.</p>
         <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
           <span class="survey-count">12,430 responses</span>
@@ -259,7 +272,7 @@ toc: false
       <div class="survey-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.1rem;">
           <span class="survey-status">Active</span>
-          <span class="survey-close">Closes May 15, 2025</span>
+          <span class="survey-close">Closes May 15, 2026</span>
         </div>
         <h3>Urban Air Quality Perception Survey</h3>
         <p>Residents of Dhaka, Chittagong, and Sylhet — share your experience of air quality in your area.</p>
@@ -272,9 +285,9 @@ toc: false
       <div class="survey-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.1rem;">
           <span class="survey-status">Active</span>
-          <span class="survey-close">Closes Jul 1, 2025</span>
+          <span class="survey-close">Closes Jul 1, 2026</span>
         </div>
-        <h3>Flood Preparedness &amp; Response 2025</h3>
+        <h3>Flood Preparedness &amp; Response 2026</h3>
         <p>Share how your community prepares for and responds to seasonal flooding. All 64 districts.</p>
         <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
           <span class="survey-count">5,892 responses</span>
