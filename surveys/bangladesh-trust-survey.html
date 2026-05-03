@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bangladesh Governance Trust Survey 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #006A4E;
+    --green-light: #e8f5f0;
+    --green-mid: #00855f;
+    --red: #C82333;
+    --red-light: #fdf0f0;
+    --gold: #D4A017;
+    --text: #1a1a1a;
+    --text-muted: #5a5a5a;
+    --border: #dde3df;
+    --bg: #f9faf9;
+    --white: #ffffff;
+    --radius: 10px;
+    --shadow: 0 2px 16px rgba(0,106,78,0.08);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--green);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  }
+  .flag-icon {
+    width: 40px;
+    height: 28px;
+    border-radius: 3px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+  .flag-icon svg { width: 100%; height: 100%; }
+  .header-title {
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .header-sub {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.75rem;
+    font-weight: 300;
+    margin-top: 2px;
+  }
+  .header-badge {
+    margin-left: auto;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.25);
+    white-space: nowrap;
+  }
+
+  /* ── Progress bar ── */
+  .progress-wrap {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px 10px;
+    position: sticky;
+    top: 61px;
+    z-index: 99;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .progress-meta strong { color: var(--green); font-weight: 500; }
+  .progress-bar-bg {
+    height: 6px;
+    background: #e8ede9;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green-mid), var(--green));
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+  .section-tabs {
+    display: flex;
+    gap: 6px;
+    margin-top: 9px;
+    flex-wrap: wrap;
+  }
+  .stab {
+    font-size: 0.68rem;
+    padding: 3px 9px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    cursor: default;
+    transition: all 0.25s;
+    white-space: nowrap;
+  }
+  .stab.done { background: var(--green-light); border-color: var(--green); color: var(--green); }
+  .stab.active { background: var(--green); color: white; border-color: var(--green); font-weight: 500; }
+
+  /* ── Main layout ── */
+  .main { flex: 1; max-width: 740px; margin: 0 auto; width: 100%; padding: 28px 20px 60px; }
+
+  /* ── Section card ── */
+  .section-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: none;
+    animation: fadeUp 0.35s ease;
+  }
+  .section-card.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--green-light);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .section-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--green);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--green);
+    line-height: 1.35;
+  }
+  .section-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+
+  /* ── Questions ── */
+  .questions-list { padding: 8px 0; }
+
+  .q-item {
+    padding: 18px 24px;
+    border-bottom: 1px solid #f0f2f0;
+    transition: background 0.15s;
+  }
+  .q-item:last-child { border-bottom: none; }
+  .q-item:hover { background: #fafbfa; }
+
+  .q-number {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--green-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+  }
+  .q-text {
+    font-size: 0.92rem;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+  .q-required { color: var(--red); margin-left: 2px; }
+
+  /* Radio / Checkbox options */
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 7px;
+  }
+  .options-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .options-grid.cols-1 { grid-template-columns: 1fr; }
+
+  .opt-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 11px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.83rem;
+    color: var(--text);
+    transition: all 0.15s;
+    line-height: 1.35;
+    user-select: none;
+  }
+  .opt-label:hover { border-color: var(--green-mid); background: var(--green-light); }
+  .opt-label input { accent-color: var(--green); width: 14px; height: 14px; flex-shrink: 0; }
+
+  input[type="radio"]:checked + .opt-label,
+  .opt-label:has(input:checked) {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  /* Likert scale */
+  .likert-wrap { overflow-x: auto; }
+  .likert-table { width: 100%; border-collapse: collapse; min-width: 420px; }
+  .likert-table th {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 4px 6px 8px;
+    white-space: nowrap;
+  }
+  .likert-table th:first-child { text-align: left; }
+  .likert-table td {
+    text-align: center;
+    padding: 7px 4px;
+    border-top: 1px solid #f0f2f0;
+    font-size: 0.83rem;
+  }
+  .likert-table td:first-child { text-align: left; padding-left: 0; color: var(--text-muted); font-size: 0.8rem; }
+  .likert-table input[type="radio"] { accent-color: var(--green); width: 16px; height: 16px; cursor: pointer; }
+
+  /* Satisfaction stars */
+  .star-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .star-btn {
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .star-btn:hover, .star-btn.active { background: var(--green); border-color: var(--green); transform: scale(1.08); }
+  .star-label { display: flex; align-items: center; gap: 3px; font-size: 0.78rem; color: var(--text-muted); margin-top: 5px; }
+
+  /* Text area */
+  .q-textarea {
+    width: 100%;
+    padding: 10px 13px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text);
+    resize: vertical;
+    min-height: 70px;
+    background: white;
+    transition: border 0.15s;
+  }
+  .q-textarea:focus { outline: none; border-color: var(--green); }
+
+  /* Select */
+  .q-select {
+    width: 100%;
+    max-width: 320px;
+    padding: 9px 13px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text);
+    background: white;
+    cursor: pointer;
+  }
+  .q-select:focus { outline: none; border-color: var(--green); }
+
+  /* ── Navigation buttons ── */
+  .nav-row {
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    background: #fafbfa;
+    gap: 12px;
+  }
+  .btn {
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.87rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+    border: none;
+  }
+  .btn-prev {
+    background: white;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .btn-prev:hover { border-color: var(--green-mid); color: var(--green); }
+  .btn-next {
+    background: var(--green);
+    color: white;
+    padding: 10px 28px;
+    box-shadow: 0 2px 8px rgba(0,106,78,0.3);
+  }
+  .btn-next:hover { background: var(--green-mid); transform: translateY(-1px); }
+  .btn-submit {
+    background: var(--red);
+    color: white;
+    padding: 10px 30px;
+    box-shadow: 0 2px 8px rgba(200,35,51,0.3);
+  }
+  .btn-submit:hover { background: #a81e2d; transform: translateY(-1px); }
+  .nav-info { font-size: 0.78rem; color: var(--text-muted); }
+
+  /* Error hint */
+  .error-msg {
+    display: none;
+    background: var(--red-light);
+    border: 1px solid #f5c6cb;
+    color: var(--red);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    margin: 0 24px 4px;
+  }
+
+  /* ── Thank you screen ── */
+  #thankyou {
+    display: none;
+    text-align: center;
+    padding: 50px 24px 60px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    animation: fadeUp 0.5s ease;
+  }
+  .ty-circle {
+    width: 72px; height: 72px;
+    background: var(--green-light);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 18px;
+    font-size: 2rem;
+  }
+  .ty-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+  .ty-sub { font-size: 0.9rem; color: var(--text-muted); max-width: 380px; margin: 0 auto 24px; line-height: 1.6; }
+  .ty-stats {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+  }
+  .ty-stat {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    min-width: 100px;
+  }
+  .ty-stat-val { font-size: 1.4rem; font-weight: 600; color: var(--green); font-family: 'Playfair Display', serif; }
+  .ty-stat-lbl { font-size: 0.73rem; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 14px;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    background: white;
+  }
+
+  @media (max-width: 520px) {
+    .options-grid { grid-template-columns: 1fr; }
+    .options-grid.cols-2 { grid-template-columns: 1fr; }
+    .q-item { padding: 14px 16px; }
+    .section-header { padding: 16px; }
+    .nav-row { padding: 14px 16px; }
+    .main { padding: 16px 12px 50px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="flag-icon">
+    <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+      <rect width="900" height="600" fill="#006A4E"/>
+      <circle cx="420" cy="300" r="180" fill="#F42A41"/>
+    </svg>
+  </div>
+  <div>
+    <div class="header-title">Bangladesh Governance Trust Survey</div>
+    <div class="header-sub">Citizen Perception Study · 2026</div>
+  </div>
+  <div class="header-badge">Confidential &amp; Anonymous</div>
+</header>
+
+<!-- Progress -->
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-meta">
+    <span id="progressLabel">Section 1 of 6 — Demographics</span>
+    <strong id="progressPct">0%</strong>
+  </div>
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+  <div class="section-tabs">
+    <span class="stab active" id="tab0">Demographics</span>
+    <span class="stab" id="tab1">Daily Goods</span>
+    <span class="stab" id="tab2">Electricity</span>
+    <span class="stab" id="tab3">Social Safety</span>
+    <span class="stab" id="tab4">Job &amp; Economy</span>
+    <span class="stab" id="tab5">Overall Trust</span>
+  </div>
+</div>
+
+<main class="main">
+
+<!-- ═══════════════════════════════════════════
+     SECTION 0 — DEMOGRAPHICS
+═══════════════════════════════════════════ -->
+<div class="section-card active" id="sec0">
+  <div class="section-header">
+    <div class="section-icon">👤</div>
+    <div>
+      <div class="section-title">Section 1: About You</div>
+      <div class="section-desc">Basic demographic information. All responses are anonymous and will be used for statistical purposes only.</div>
+    </div>
+  </div>
+  <div class="questions-list">
+
+    <!-- Q1 -->
+    <div class="q-item">
+      <div class="q-number">Question 1</div>
+      <div class="q-text">What is your age group? <span class="q-required">*</span></div>
+      <div class="options-grid cols-2">
+        <label class="opt-label"><input type="radio" name="q1" value="18-24"> 18 – 24 years</label>
+        <label class="opt-label"><input type="radio" name="q1" value="25-34"> 25 – 34 years</label>
+        <label class="opt-label"><input type="radio" name="q1" value="35-44"> 35 – 44 years</label>
+        <label class="opt-label"><input type="radio" name="q1" value="45-54"> 45 – 54 years</label>
+        <label class="opt-label"><input type="radio" name="q1" value="55-64"> 55 – 64 years</label>
+        <label class="opt-label"><input type="radio" name="q1" value="65+"> 65 years or older</label>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-item">
+      <div class="q-number">Question 2</div>
+      <div class="q-text">What is your gender? <span class="q-required">*</span></div>
+      <div class="options-grid cols-2">
+        <label class="opt-label"><input type="radio" name="q2" value="male"> Male</label>
+        <label class="opt-label"><input type="radio" name="q2" value="female"> Female</label>
+        <label class="opt-label"><input type="radio" name="q2" value="other"> Other</label>
+        <label class="opt-label"><input type="radio" name="q2" value="pnts"> Prefer not to say</label>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-item">
+      <div class="q-number">Question 3</div>
+      <div class="q-text">Which division do you currently live in? <span class="q-required">*</span></div>
+      <select class="q-select" name="q3" id="q3">
+        <option value="">— Select your division —</option>
+        <option>Dhaka</option><option>Chittagong</option><option>Rajshahi</option>
+        <option>Khulna</option><option>Barishal</option><option>Sylhet</option>
+        <option>Rangpur</option><option>Mymensingh</option>
+      </select>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-item">
+      <div class="q-number">Question 4</div>
+      <div class="q-text">What type of area do you live in? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q4" value="city"> City / Metropolitan</label>
+        <label class="opt-label"><input type="radio" name="q4" value="town"> District / Town</label>
+        <label class="opt-label"><input type="radio" name="q4" value="rural"> Village / Rural</label>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-item">
+      <div class="q-number">Question 5</div>
+      <div class="q-text">What is your highest level of education? <span class="q-required">*</span></div>
+      <div class="options-grid cols-2">
+        <label class="opt-label"><input type="radio" name="q5" value="primary"> Up to Primary (Class 5)</label>
+        <label class="opt-label"><input type="radio" name="q5" value="secondary"> Secondary (SSC/JSC)</label>
+        <label class="opt-label"><input type="radio" name="q5" value="higher"> Higher Secondary (HSC)</label>
+        <label class="opt-label"><input type="radio" name="q5" value="graduate"> Graduate (BA/BSc)</label>
+        <label class="opt-label"><input type="radio" name="q5" value="postgrad"> Postgraduate</label>
+        <label class="opt-label"><input type="radio" name="q5" value="none"> No formal education</label>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="q-item">
+      <div class="q-number">Question 6</div>
+      <div class="q-text">What is your current employment status? <span class="q-required">*</span></div>
+      <div class="options-grid cols-2">
+        <label class="opt-label"><input type="radio" name="q6" value="govt"> Government employee</label>
+        <label class="opt-label"><input type="radio" name="q6" value="private"> Private sector employee</label>
+        <label class="opt-label"><input type="radio" name="q6" value="self"> Self-employed / Business</label>
+        <label class="opt-label"><input type="radio" name="q6" value="student"> Student</label>
+        <label class="opt-label"><input type="radio" name="q6" value="unemployed"> Unemployed</label>
+        <label class="opt-label"><input type="radio" name="q6" value="retired"> Retired / Homemaker</label>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="q-item">
+      <div class="q-number">Question 7</div>
+      <div class="q-text">What is your approximate monthly household income? <span class="q-required">*</span></div>
+      <div class="options-grid cols-2">
+        <label class="opt-label"><input type="radio" name="q7" value="u10k"> Below ৳10,000</label>
+        <label class="opt-label"><input type="radio" name="q7" value="10-25k"> ৳10,000 – ৳25,000</label>
+        <label class="opt-label"><input type="radio" name="q7" value="25-50k"> ৳25,001 – ৳50,000</label>
+        <label class="opt-label"><input type="radio" name="q7" value="50-100k"> ৳50,001 – ৳1,00,000</label>
+        <label class="opt-label"><input type="radio" name="q7" value="100k+"> Above ৳1,00,000</label>
+        <label class="opt-label"><input type="radio" name="q7" value="pnts"> Prefer not to say</label>
+      </div>
+    </div>
+
+  </div>
+  <div class="error-msg" id="err0">Please answer all required questions before continuing.</div>
+  <div class="nav-row">
+    <div class="nav-info">7 questions · ~2 min</div>
+    <button class="btn btn-next" onclick="nextSection(0)">Next: Daily Goods →</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 1 — DAILY GOODS & PRICES
+═══════════════════════════════════════════ -->
+<div class="section-card" id="sec1">
+  <div class="section-header">
+    <div class="section-icon">🛒</div>
+    <div>
+      <div class="section-title">Section 2: Daily Goods &amp; Prices</div>
+      <div class="section-desc">Your experience with the affordability and availability of essential goods under the current government.</div>
+    </div>
+  </div>
+  <div class="questions-list">
+
+    <!-- Q8 -->
+    <div class="q-item">
+      <div class="q-number">Question 8</div>
+      <div class="q-text">How would you rate the current prices of essential food items (rice, oil, lentils, vegetables)? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q8" value="very_affordable"> Very affordable</label>
+        <label class="opt-label"><input type="radio" name="q8" value="affordable"> Somewhat affordable</label>
+        <label class="opt-label"><input type="radio" name="q8" value="difficult"> Difficult to afford</label>
+        <label class="opt-label"><input type="radio" name="q8" value="very_difficult"> Very difficult to afford</label>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="q-item">
+      <div class="q-number">Question 9</div>
+      <div class="q-text">Compared to the <strong>previous government</strong>, how have the prices of daily necessities changed? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q9" value="much_better"> Much more affordable now</label>
+        <label class="opt-label"><input type="radio" name="q9" value="better"> Slightly more affordable</label>
+        <label class="opt-label"><input type="radio" name="q9" value="same"> About the same</label>
+        <label class="opt-label"><input type="radio" name="q9" value="worse"> Slightly more expensive</label>
+        <label class="opt-label"><input type="radio" name="q9" value="much_worse"> Much more expensive now</label>
+        <label class="opt-label"><input type="radio" name="q9" value="dontknow"> Don't know</label>
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="q-item">
+      <div class="q-number">Question 10</div>
+      <div class="q-text">How satisfied are you with the government's efforts to control market prices? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q10" value="very_sat"> Very satisfied</label>
+        <label class="opt-label"><input type="radio" name="q10" value="sat"> Satisfied</label>
+        <label class="opt-label"><input type="radio" name="q10" value="neutral"> Neutral</label>
+        <label class="opt-label"><input type="radio" name="q10" value="dissat"> Dissatisfied</label>
+        <label class="opt-label"><input type="radio" name="q10" value="very_dissat"> Very dissatisfied</label>
+      </div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="q-item">
+      <div class="q-number">Question 11</div>
+      <div class="q-text">How accessible are essential medicines at affordable prices in your area? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q11" value="easily"> Easily available &amp; affordable</label>
+        <label class="opt-label"><input type="radio" name="q11" value="available"> Available but slightly costly</label>
+        <label class="opt-label"><input type="radio" name="q11" value="scarce"> Sometimes unavailable or costly</label>
+        <label class="opt-label"><input type="radio" name="q11" value="very_scarce"> Often unavailable or unaffordable</label>
+      </div>
+    </div>
+
+    <!-- Q12 -->
+    <div class="q-item">
+      <div class="q-number">Question 12</div>
+      <div class="q-text">Have you or your family accessed any government subsidy programs (TCB, OMS, fair price shops) in the past year? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q12" value="regularly"> Yes, regularly</label>
+        <label class="opt-label"><input type="radio" name="q12" value="sometimes"> Yes, occasionally</label>
+        <label class="opt-label"><input type="radio" name="q12" value="tried_failed"> Tried but couldn't access</label>
+        <label class="opt-label"><input type="radio" name="q12" value="no_need"> No, didn't need to</label>
+        <label class="opt-label"><input type="radio" name="q12" value="not_aware"> Not aware of such programs</label>
+      </div>
+    </div>
+
+    <!-- Q13 -->
+    <div class="q-item">
+      <div class="q-number">Question 13</div>
+      <div class="q-text">Overall, how much do you trust the current government to manage food security for ordinary citizens? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q13" value="full"> Fully trust</label>
+        <label class="opt-label"><input type="radio" name="q13" value="mostly"> Mostly trust</label>
+        <label class="opt-label"><input type="radio" name="q13" value="little"> Little trust</label>
+        <label class="opt-label"><input type="radio" name="q13" value="none"> No trust at all</label>
+        <label class="opt-label"><input type="radio" name="q13" value="noopinion"> No opinion</label>
+      </div>
+    </div>
+
+  </div>
+  <div class="error-msg" id="err1">Please answer all required questions before continuing.</div>
+  <div class="nav-row">
+    <button class="btn btn-prev" onclick="prevSection(1)">← Back</button>
+    <div class="nav-info">6 questions · ~2 min</div>
+    <button class="btn btn-next" onclick="nextSection(1)">Next: Electricity →</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 2 — ELECTRICITY & UTILITIES
+═══════════════════════════════════════════ -->
+<div class="section-card" id="sec2">
+  <div class="section-header">
+    <div class="section-icon">⚡</div>
+    <div>
+      <div class="section-title">Section 3: Electricity &amp; Utilities</div>
+      <div class="section-desc">Your experience with electricity access, load shedding, and utility costs compared to the previous government.</div>
+    </div>
+  </div>
+  <div class="questions-list">
+
+    <!-- Q14 -->
+    <div class="q-item">
+      <div class="q-number">Question 14</div>
+      <div class="q-text">On average, how many hours of load shedding (power cut) do you experience per day currently? <span class="q-required">*</span></div>
+      <div class="options-grid cols-2">
+        <label class="opt-label"><input type="radio" name="q14" value="none"> No load shedding</label>
+        <label class="opt-label"><input type="radio" name="q14" value="1-2h"> 1–2 hours</label>
+        <label class="opt-label"><input type="radio" name="q14" value="3-6h"> 3–6 hours</label>
+        <label class="opt-label"><input type="radio" name="q14" value="7-12h"> 7–12 hours</label>
+        <label class="opt-label"><input type="radio" name="q14" value="12h+"> More than 12 hours</label>
+      </div>
+    </div>
+
+    <!-- Q15 -->
+    <div class="q-item">
+      <div class="q-number">Question 15</div>
+      <div class="q-text">Compared to the <strong>previous government</strong>, how has electricity availability changed? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q15" value="much_better"> Much better now</label>
+        <label class="opt-label"><input type="radio" name="q15" value="better"> Somewhat better</label>
+        <label class="opt-label"><input type="radio" name="q15" value="same"> About the same</label>
+        <label class="opt-label"><input type="radio" name="q15" value="worse"> Somewhat worse</label>
+        <label class="opt-label"><input type="radio" name="q15" value="much_worse"> Much worse now</label>
+        <label class="opt-label"><input type="radio" name="q15" value="dk"> Don't know</label>
+      </div>
+    </div>
+
+    <!-- Q16 -->
+    <div class="q-item">
+      <div class="q-number">Question 16</div>
+      <div class="q-text">How affordable is your current electricity bill? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q16" value="very_afford"> Very affordable</label>
+        <label class="opt-label"><input type="radio" name="q16" value="afford"> Manageable</label>
+        <label class="opt-label"><input type="radio" name="q16" value="burden"> A burden on the household</label>
+        <label class="opt-label"><input type="radio" name="q16" value="cant"> Cannot afford it properly</label>
+      </div>
+    </div>
+
+    <!-- Q17 -->
+    <div class="q-item">
+      <div class="q-number">Question 17</div>
+      <div class="q-text">How would you rate the availability of cooking gas (LPG/piped gas) in your area? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q17" value="good"> Consistently available</label>
+        <label class="opt-label"><input type="radio" name="q17" value="ok"> Usually available</label>
+        <label class="opt-label"><input type="radio" name="q17" value="poor"> Frequently unavailable</label>
+        <label class="opt-label"><input type="radio" name="q17" value="no_access"> No access / Not applicable</label>
+      </div>
+    </div>
+
+    <!-- Q18 -->
+    <div class="q-item">
+      <div class="q-number">Question 18</div>
+      <div class="q-text">How much do you trust the current government to improve the power sector over the next 2 years? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q18" value="full"> Fully trust</label>
+        <label class="opt-label"><input type="radio" name="q18" value="mostly"> Mostly trust</label>
+        <label class="opt-label"><input type="radio" name="q18" value="little"> Little trust</label>
+        <label class="opt-label"><input type="radio" name="q18" value="none"> No trust</label>
+        <label class="opt-label"><input type="radio" name="q18" value="noopinion"> No opinion</label>
+      </div>
+    </div>
+
+  </div>
+  <div class="error-msg" id="err2">Please answer all required questions before continuing.</div>
+  <div class="nav-row">
+    <button class="btn btn-prev" onclick="prevSection(2)">← Back</button>
+    <div class="nav-info">5 questions · ~2 min</div>
+    <button class="btn btn-next" onclick="nextSection(2)">Next: Social Safety →</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 3 — SOCIAL SAFETY
+═══════════════════════════════════════════ -->
+<div class="section-card" id="sec3">
+  <div class="section-header">
+    <div class="section-icon">🛡️</div>
+    <div>
+      <div class="section-title">Section 4: Social Safety &amp; Law &amp; Order</div>
+      <div class="section-desc">Your sense of personal safety, community security, and access to justice under the current government compared to the previous one.</div>
+    </div>
+  </div>
+  <div class="questions-list">
+
+    <!-- Q19 -->
+    <div class="q-item">
+      <div class="q-number">Question 19</div>
+      <div class="q-text">How safe do you feel in your community on a day-to-day basis? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q19" value="very_safe"> Very safe</label>
+        <label class="opt-label"><input type="radio" name="q19" value="safe"> Mostly safe</label>
+        <label class="opt-label"><input type="radio" name="q19" value="unsafe"> Somewhat unsafe</label>
+        <label class="opt-label"><input type="radio" name="q19" value="very_unsafe"> Very unsafe</label>
+      </div>
+    </div>
+
+    <!-- Q20 -->
+    <div class="q-item">
+      <div class="q-number">Question 20</div>
+      <div class="q-text">Compared to the <strong>previous government</strong>, how has overall law and order changed in your area? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q20" value="much_better"> Much better now</label>
+        <label class="opt-label"><input type="radio" name="q20" value="better"> Somewhat better</label>
+        <label class="opt-label"><input type="radio" name="q20" value="same"> About the same</label>
+        <label class="opt-label"><input type="radio" name="q20" value="worse"> Somewhat worse</label>
+        <label class="opt-label"><input type="radio" name="q20" value="much_worse"> Much worse now</label>
+        <label class="opt-label"><input type="radio" name="q20" value="dk"> Don't know</label>
+      </div>
+    </div>
+
+    <!-- Q21 -->
+    <div class="q-item">
+      <div class="q-number">Question 21</div>
+      <div class="q-text">How would you rate the safety of women in public spaces (streets, transport, workplaces) currently? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q21" value="very_good"> Very good</label>
+        <label class="opt-label"><input type="radio" name="q21" value="good"> Good</label>
+        <label class="opt-label"><input type="radio" name="q21" value="poor"> Poor</label>
+        <label class="opt-label"><input type="radio" name="q21" value="very_poor"> Very poor</label>
+        <label class="opt-label"><input type="radio" name="q21" value="noopinion"> No opinion</label>
+      </div>
+    </div>
+
+    <!-- Q22 -->
+    <div class="q-item">
+      <div class="q-number">Question 22</div>
+      <div class="q-text">How responsive and trustworthy do you find the police/law enforcement agencies currently? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q22" value="very_trust"> Very trustworthy &amp; responsive</label>
+        <label class="opt-label"><input type="radio" name="q22" value="mostly"> Mostly trustworthy</label>
+        <label class="opt-label"><input type="radio" name="q22" value="little"> Somewhat untrustworthy</label>
+        <label class="opt-label"><input type="radio" name="q22" value="not_at_all"> Very untrustworthy / corrupt</label>
+        <label class="opt-label"><input type="radio" name="q22" value="nocontact"> No direct experience</label>
+      </div>
+    </div>
+
+    <!-- Q23 -->
+    <div class="q-item">
+      <div class="q-number">Question 23</div>
+      <div class="q-text">How effective is the current government in delivering social safety net programs (old-age allowance, widow allowance, disability support, VGD/VGF)? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q23" value="very_eff"> Very effective</label>
+        <label class="opt-label"><input type="radio" name="q23" value="eff"> Somewhat effective</label>
+        <label class="opt-label"><input type="radio" name="q23" value="ineff"> Mostly ineffective</label>
+        <label class="opt-label"><input type="radio" name="q23" value="very_ineff"> Very ineffective / corrupt</label>
+        <label class="opt-label"><input type="radio" name="q23" value="dk"> Don't know</label>
+      </div>
+    </div>
+
+    <!-- Q24 -->
+    <div class="q-item">
+      <div class="q-number">Question 24</div>
+      <div class="q-text">How would you compare the overall social security situation compared to the previous government? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q24" value="much_better"> Much better now</label>
+        <label class="opt-label"><input type="radio" name="q24" value="better"> Somewhat better</label>
+        <label class="opt-label"><input type="radio" name="q24" value="same"> About the same</label>
+        <label class="opt-label"><input type="radio" name="q24" value="worse"> Somewhat worse</label>
+        <label class="opt-label"><input type="radio" name="q24" value="much_worse"> Much worse</label>
+        <label class="opt-label"><input type="radio" name="q24" value="dk"> Don't know</label>
+      </div>
+    </div>
+
+  </div>
+  <div class="error-msg" id="err3">Please answer all required questions before continuing.</div>
+  <div class="nav-row">
+    <button class="btn btn-prev" onclick="prevSection(3)">← Back</button>
+    <div class="nav-info">6 questions · ~2 min</div>
+    <button class="btn btn-next" onclick="nextSection(3)">Next: Jobs &amp; Economy →</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 4 — JOB SECURITY & ECONOMY
+═══════════════════════════════════════════ -->
+<div class="section-card" id="sec4">
+  <div class="section-header">
+    <div class="section-icon">💼</div>
+    <div>
+      <div class="section-title">Section 5: Job Security &amp; Economy</div>
+      <div class="section-desc">Your perceptions about employment, economic stability, and opportunities under the current government.</div>
+    </div>
+  </div>
+  <div class="questions-list">
+
+    <!-- Q25 -->
+    <div class="q-item">
+      <div class="q-number">Question 25</div>
+      <div class="q-text">How secure do you feel in your current job or primary source of income? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q25" value="very_secure"> Very secure</label>
+        <label class="opt-label"><input type="radio" name="q25" value="secure"> Mostly secure</label>
+        <label class="opt-label"><input type="radio" name="q25" value="insecure"> Somewhat insecure</label>
+        <label class="opt-label"><input type="radio" name="q25" value="very_insecure"> Very insecure / unemployed</label>
+        <label class="opt-label"><input type="radio" name="q25" value="na"> Not applicable</label>
+      </div>
+    </div>
+
+    <!-- Q26 -->
+    <div class="q-item">
+      <div class="q-number">Question 26</div>
+      <div class="q-text">Compared to the <strong>previous government</strong>, how have job opportunities changed in your area? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q26" value="much_better"> Much better now</label>
+        <label class="opt-label"><input type="radio" name="q26" value="better"> Somewhat better</label>
+        <label class="opt-label"><input type="radio" name="q26" value="same"> About the same</label>
+        <label class="opt-label"><input type="radio" name="q26" value="worse"> Somewhat fewer opportunities</label>
+        <label class="opt-label"><input type="radio" name="q26" value="much_worse"> Much fewer opportunities</label>
+        <label class="opt-label"><input type="radio" name="q26" value="dk"> Don't know</label>
+      </div>
+    </div>
+
+    <!-- Q27 -->
+    <div class="q-item">
+      <div class="q-number">Question 27</div>
+      <div class="q-text">How would you rate the business and entrepreneurship environment under the current government? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q27" value="very_good"> Very favorable</label>
+        <label class="opt-label"><input type="radio" name="q27" value="good"> Somewhat favorable</label>
+        <label class="opt-label"><input type="radio" name="q27" value="poor"> Somewhat unfavorable</label>
+        <label class="opt-label"><input type="radio" name="q27" value="very_poor"> Very unfavorable</label>
+        <label class="opt-label"><input type="radio" name="q27" value="noopinion"> No opinion</label>
+      </div>
+    </div>
+
+    <!-- Q28 -->
+    <div class="q-item">
+      <div class="q-number">Question 28</div>
+      <div class="q-text">How satisfied are you with the economic policies introduced by the current government? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q28" value="very_sat"> Very satisfied</label>
+        <label class="opt-label"><input type="radio" name="q28" value="sat"> Satisfied</label>
+        <label class="opt-label"><input type="radio" name="q28" value="neutral"> Neutral</label>
+        <label class="opt-label"><input type="radio" name="q28" value="dissat"> Dissatisfied</label>
+        <label class="opt-label"><input type="radio" name="q28" value="very_dissat"> Very dissatisfied</label>
+      </div>
+    </div>
+
+    <!-- Q29 -->
+    <div class="q-item">
+      <div class="q-number">Question 29</div>
+      <div class="q-text">How do you perceive the level of corruption in the current government compared to the previous one? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q29" value="much_less"> Much less corrupt now</label>
+        <label class="opt-label"><input type="radio" name="q29" value="less"> Somewhat less corrupt</label>
+        <label class="opt-label"><input type="radio" name="q29" value="same"> About the same</label>
+        <label class="opt-label"><input type="radio" name="q29" value="more"> More corrupt now</label>
+        <label class="opt-label"><input type="radio" name="q29" value="much_more"> Much more corrupt now</label>
+        <label class="opt-label"><input type="radio" name="q29" value="dk"> Don't know</label>
+      </div>
+    </div>
+
+    <!-- Q30 -->
+    <div class="q-item">
+      <div class="q-number">Question 30</div>
+      <div class="q-text">How confident are you in the current government's ability to attract foreign investment and improve the national economy? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q30" value="very_conf"> Very confident</label>
+        <label class="opt-label"><input type="radio" name="q30" value="conf"> Somewhat confident</label>
+        <label class="opt-label"><input type="radio" name="q30" value="not_conf"> Not confident</label>
+        <label class="opt-label"><input type="radio" name="q30" value="not_at_all"> Not confident at all</label>
+        <label class="opt-label"><input type="radio" name="q30" value="dk"> Don't know</label>
+      </div>
+    </div>
+
+  </div>
+  <div class="error-msg" id="err4">Please answer all required questions before continuing.</div>
+  <div class="nav-row">
+    <button class="btn btn-prev" onclick="prevSection(4)">← Back</button>
+    <div class="nav-info">6 questions · ~2 min</div>
+    <button class="btn btn-next" onclick="nextSection(4)">Next: Overall Trust →</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 5 — OVERALL TRUST
+═══════════════════════════════════════════ -->
+<div class="section-card" id="sec5">
+  <div class="section-header">
+    <div class="section-icon">🏛️</div>
+    <div>
+      <div class="section-title">Section 6: Overall Trust &amp; Outlook</div>
+      <div class="section-desc">Your overall assessment and confidence in the current government of Bangladesh.</div>
+    </div>
+  </div>
+  <div class="questions-list">
+
+    <!-- Q31 -->
+    <div class="q-item">
+      <div class="q-number">Question 31</div>
+      <div class="q-text">On a scale of 1–10, how much do you <strong>trust</strong> the current government of Bangladesh overall? <span class="q-required">*</span>
+        <div style="margin-top:8px; font-size:0.78rem; color:var(--text-muted);">1 = No trust at all &nbsp;·&nbsp; 10 = Complete trust</div>
+      </div>
+      <div class="star-row" id="trustScale">
+        <button type="button" class="star-btn" onclick="setScale('q31','1',this)">1</button>
+        <button type="button" class="star-btn" onclick="setScale('q31','2',this)">2</button>
+        <button type="button" class="star-btn" onclick="setScale('q31','3',this)">3</button>
+        <button type="button" class="star-btn" onclick="setScale('q31','4',this)">4</button>
+        <button type="button" class="star-btn" onclick="setScale('q31','5',this)">5</button>
+        <button type="button" class="star-btn" onclick="setScale('q31','6',this)">6</button>
+        <button type="button" class="star-btn" onclick="setScale('q31','7',this)">7</button>
+        <button type="button" class="star-btn" onclick="setScale('q31','8',this)">8</button>
+        <button type="button" class="star-btn" onclick="setScale('q31','9',this)">9</button>
+        <button type="button" class="star-btn" onclick="setScale('q31','10',this)">10</button>
+      </div>
+      <input type="hidden" name="q31" id="q31val">
+    </div>
+
+    <!-- Q32 -->
+    <div class="q-item">
+      <div class="q-number">Question 32</div>
+      <div class="q-text">How transparent and accountable do you think the current government is? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q32" value="very"> Very transparent &amp; accountable</label>
+        <label class="opt-label"><input type="radio" name="q32" value="mostly"> Mostly transparent</label>
+        <label class="opt-label"><input type="radio" name="q32" value="little"> Little transparency</label>
+        <label class="opt-label"><input type="radio" name="q32" value="none"> Not transparent at all</label>
+        <label class="opt-label"><input type="radio" name="q32" value="noopinion"> No opinion</label>
+      </div>
+    </div>
+
+    <!-- Q33 -->
+    <div class="q-item">
+      <div class="q-number">Question 33</div>
+      <div class="q-text">Do you think the current government is moving the country in the right direction? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q33" value="definitely_yes"> Definitely yes</label>
+        <label class="opt-label"><input type="radio" name="q33" value="mostly_yes"> Mostly yes</label>
+        <label class="opt-label"><input type="radio" name="q33" value="uncertain"> Uncertain</label>
+        <label class="opt-label"><input type="radio" name="q33" value="mostly_no"> Mostly no</label>
+        <label class="opt-label"><input type="radio" name="q33" value="definitely_no"> Definitely no</label>
+      </div>
+    </div>
+
+    <!-- Q34 -->
+    <div class="q-item">
+      <div class="q-number">Question 34</div>
+      <div class="q-text">If a national election were held today, would you vote? <span class="q-required">*</span></div>
+      <div class="options-grid">
+        <label class="opt-label"><input type="radio" name="q34" value="definitely"> Definitely vote</label>
+        <label class="opt-label"><input type="radio" name="q34" value="probably"> Probably vote</label>
+        <label class="opt-label"><input type="radio" name="q34" value="unsure"> Unsure</label>
+        <label class="opt-label"><input type="radio" name="q34" value="probably_not"> Probably not vote</label>
+        <label class="opt-label"><input type="radio" name="q34" value="no"> Would not vote</label>
+      </div>
+    </div>
+
+    <!-- Q35 — open text -->
+    <div class="q-item">
+      <div class="q-number">Question 35</div>
+      <div class="q-text">Is there anything else you would like to share about your experience with the current government? <span style="color:var(--text-muted);font-size:0.8rem;">(Optional)</span></div>
+      <textarea class="q-textarea" name="q35" placeholder="Write your thoughts here…" rows="4"></textarea>
+    </div>
+
+  </div>
+  <div class="error-msg" id="err5">Please answer all required questions (Questions 31–34) before submitting.</div>
+  <div class="nav-row">
+    <button class="btn btn-prev" onclick="prevSection(5)">← Back</button>
+    <div class="nav-info">5 questions · ~2 min</div>
+    <button class="btn btn-submit" onclick="submitSurvey()">Submit Survey ✓</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     THANK YOU
+═══════════════════════════════════════════ -->
+<div id="thankyou">
+  <div class="ty-circle">✅</div>
+  <div class="ty-title">Thank you for your response!</div>
+  <div class="ty-sub">Your participation in this study is greatly valued. Your answers will contribute to understanding citizen trust and public governance in Bangladesh.</div>
+  <div style="font-size:0.8rem; color:var(--text-muted); background:var(--green-light); border-radius:8px; padding:10px 16px; display:inline-block; border:1px solid #b4d9ce;">
+    🔒 All responses are completely anonymous and confidential.
+  </div>
+  <div class="ty-stats" id="tyStats">
+    <div class="ty-stat">
+      <div class="ty-stat-val" id="tyQCount">35</div>
+      <div class="ty-stat-lbl">Questions answered</div>
+    </div>
+    <div class="ty-stat">
+      <div class="ty-stat-val">6</div>
+      <div class="ty-stat-lbl">Topics covered</div>
+    </div>
+    <div class="ty-stat">
+      <div class="ty-stat-val" id="tyTime">—</div>
+      <div class="ty-stat-lbl">Minutes taken</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  Bangladesh Governance Trust Survey 2026 · All responses are anonymous &amp; used for academic research purposes only.
+</footer>
+
+<script>
+  const SECTIONS = 6;
+  let current = 0;
+  const startTime = Date.now();
+  const scaleValues = {};
+
+  const sectionNames = ['Demographics','Daily Goods','Electricity','Social Safety','Job & Economy','Overall Trust'];
+  const sectionQCounts = [7, 6, 5, 6, 6, 5];
+
+  function updateProgress(sec) {
+    const pct = Math.round((sec / SECTIONS) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+    document.getElementById('progressLabel').textContent =
+      'Section ' + (sec + 1) + ' of ' + SECTIONS + ' — ' + sectionNames[sec];
+    for (let i = 0; i < SECTIONS; i++) {
+      const tab = document.getElementById('tab' + i);
+      tab.className = 'stab' + (i < sec ? ' done' : i === sec ? ' active' : '');
+    }
+  }
+
+  function getRequiredForSection(sec) {
+    const ranges = [
+      ['q1','q2','q3_sel','q4','q5','q6','q7'],
+      ['q8','q9','q10','q11','q12','q13'],
+      ['q14','q15','q16','q17','q18'],
+      ['q19','q20','q21','q22','q23','q24'],
+      ['q25','q26','q27','q28','q29','q30'],
+      ['q31_scale','q32','q33','q34']
+    ];
+    return ranges[sec];
+  }
+
+  function isAnswered(key) {
+    if (key === 'q3_sel') return document.getElementById('q3').value !== '';
+    if (key === 'q31_scale') return document.getElementById('q31val').value !== '';
+    const radios = document.querySelectorAll('input[name="' + key + '"]:checked');
+    return radios.length > 0;
+  }
+
+  function validateSection(sec) {
+    const required = getRequiredForSection(sec);
+    return required.every(k => isAnswered(k));
+  }
+
+  function nextSection(sec) {
+    if (!validateSection(sec)) {
+      document.getElementById('err' + sec).style.display = 'block';
+      return;
+    }
+    document.getElementById('err' + sec).style.display = 'none';
+    document.getElementById('sec' + sec).classList.remove('active');
+    current = sec + 1;
+    document.getElementById('sec' + current).classList.add('active');
+    updateProgress(current);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function prevSection(sec) {
+    document.getElementById('sec' + sec).classList.remove('active');
+    current = sec - 1;
+    document.getElementById('sec' + current).classList.add('active');
+    updateProgress(current);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function setScale(name, val, btn) {
+    document.getElementById(name + 'val').value = val;
+    const allBtns = btn.parentElement.querySelectorAll('.star-btn');
+    allBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyga_ihiFL6-lxGlFN9Vom6zM_95yu36shuNZ5dHGCZ4wx6vwomEaQmdq3UtZTh6HmE/exec';
+
+  function collectResponses() {
+    const data = {};
+    document.querySelectorAll('input[type=radio]:checked, input[type=hidden], textarea, select')
+      .forEach(el => {
+        if (el.name && el.value !== '') data[el.name] = el.value;
+      });
+    document.querySelectorAll('input[type=checkbox]:checked')
+      .forEach(el => {
+        data[el.name] = data[el.name] ? data[el.name] + ', ' + el.value : el.value;
+      });
+    return data;
+  }
+
+  async function submitSurvey() {
+    if (!validateSection(5)) {
+      document.getElementById('err5').style.display = 'block';
+      return;
+    }
+
+    const submitBtn = document.querySelector('.btn-submit');
+    submitBtn.textContent = 'Submitting…';
+    submitBtn.disabled = true;
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(collectResponses())
+      });
+    } catch (err) {
+      console.warn('Submission error:', err);
+    }
+
+    const elapsed = Math.round((Date.now() - startTime) / 60000);
+    document.getElementById('tyTime').textContent = Math.max(1, elapsed);
+
+    for (let i = 0; i < SECTIONS; i++) {
+      const el = document.getElementById('sec' + i);
+      if (el) el.style.display = 'none';
+    }
+    document.getElementById('progressWrap').style.display = 'none';
+    document.getElementById('thankyou').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  updateProgress(0);
+</script>
+</body>
+</html>

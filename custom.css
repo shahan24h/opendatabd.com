@@ -1,0 +1,26 @@
+/* Remove default Quarto page padding */
+.page-layout-full > .page-full { padding: 0; }
+
+/* Hide default Quarto title block */
+#title-block-header { display: none !important; }
+
+/* Navbar active link */
+.navbar .active > .nav-link {
+  color: var(--c-green) !important;
+  font-weight: 600;
+}
+
+/* Container utility */
+.content-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Link color inside content */
+a { color: var(--c-green); }
+
+/* Mobile: full-width content container */
+@media (max-width: 600px) {
+  .content-container { padding: 0 1rem; }
+}
