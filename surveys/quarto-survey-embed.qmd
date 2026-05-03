@@ -1,0 +1,91 @@
+---
+title: "Bangladesh Governance Trust Survey"
+---
+
+## How to embed the survey button in any Quarto page
+
+Place the code block below anywhere in your `.qmd` file where you want the button to appear.
+
+---
+
+### Option A — Opens survey in a new tab (simplest)
+
+```{=html}
+<a href="bangladesh-trust-survey.html" target="_blank"
+   style="display:inline-flex; align-items:center; gap:10px;
+          background:#006A4E; color:#fff; font-family:sans-serif;
+          font-size:0.95rem; font-weight:500; padding:12px 24px;
+          border-radius:8px; text-decoration:none;
+          box-shadow:0 2px 10px rgba(0,106,78,0.35);
+          transition:background 0.2s;">
+  <svg width="18" height="18" fill="none" viewBox="0 0 24 24"
+       stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round"
+          d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5
+             a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+  </svg>
+  Take the Governance Trust Survey
+</a>
+```
+
+---
+
+### Option B — Opens survey in an inline iframe modal (embedded, no page leave)
+
+```{=html}
+<!-- Trigger button -->
+<button onclick="document.getElementById('surveyModal').style.display='flex'"
+        style="display:inline-flex; align-items:center; gap:10px;
+               background:#006A4E; color:#fff; font-family:sans-serif;
+               font-size:0.95rem; font-weight:500; padding:12px 24px;
+               border-radius:8px; border:none; cursor:pointer;
+               box-shadow:0 2px 10px rgba(0,106,78,0.35);">
+  <svg width="18" height="18" fill="none" viewBox="0 0 24 24"
+       stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round"
+          d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5
+             a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+  </svg>
+  Take the Governance Trust Survey
+</button>
+
+<!-- Modal overlay -->
+<div id="surveyModal"
+     style="display:none; position:fixed; inset:0; z-index:9999;
+            background:rgba(0,0,0,0.6); align-items:center;
+            justify-content:center; padding:20px;">
+  <div style="background:white; border-radius:14px; width:100%;
+              max-width:780px; height:90vh; overflow:hidden;
+              display:flex; flex-direction:column;
+              box-shadow:0 8px 40px rgba(0,0,0,0.35);">
+    <!-- Modal header bar -->
+    <div style="display:flex; align-items:center; justify-content:space-between;
+                padding:12px 18px; background:#006A4E; border-radius:14px 14px 0 0;">
+      <span style="color:white; font-family:sans-serif; font-size:0.9rem; font-weight:500;">
+        Bangladesh Governance Trust Survey 2026
+      </span>
+      <button onclick="document.getElementById('surveyModal').style.display='none'"
+              style="background:rgba(255,255,255,0.2); border:none; color:white;
+                     border-radius:6px; padding:4px 10px; cursor:pointer;
+                     font-size:0.85rem; font-family:sans-serif;">
+        ✕ Close
+      </button>
+    </div>
+    <!-- Embedded survey -->
+    <iframe src="bangladesh-trust-survey.html"
+            style="flex:1; border:none; width:100%;"
+            title="Bangladesh Governance Trust Survey">
+    </iframe>
+  </div>
+</div>
+```
+
+---
+
+> **File placement:** Put `bangladesh-trust-survey.html` in the same folder as your `.qmd` file (or your Quarto `_site/` output directory). Quarto will copy it as a passthrough resource.
+>
+> Add this to your `_quarto.yml` to ensure the file is copied during render:
+> ```yaml
+> resources:
+>   - bangladesh-trust-survey.html
+> ```
