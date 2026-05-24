@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Submit a Dataset — opendatabd</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;font-size:13px;background:#fff;color:#333}
+a{color:#7c3f00;text-decoration:none}
+a:hover{text-decoration:underline}
+
+#header{border-bottom:1px solid #ccc;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+#header h1{font-size:26px;font-weight:bold;color:#591C8B;letter-spacing:-0.5px}
+#header h1 span{color:#006633}
+.header-right{font-size:12px;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.header-right .tagline{color:#666}
+.header-links{display:flex;gap:6px;flex-wrap:wrap}
+.header-links a{font-size:12px}
+
+#breadcrumb{background:#fafafa;border-bottom:1px solid #eee;padding:5px 16px;font-size:12px;color:#666}
+#breadcrumb a{font-size:12px;color:#591C8B}
+
+#main{max-width:760px;margin:0 auto;padding:20px 16px}
+
+h2{font-size:16px;font-weight:bold;color:#333;margin-bottom:4px}
+.subtitle{font-size:12px;color:#666;margin-bottom:20px}
+
+.form-section{margin-bottom:20px;border:1px solid #ddd;padding:14px;background:#fafafa}
+.form-section h3{font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:.05em;color:#591C8B;margin-bottom:10px;border-bottom:1px solid #ddd;padding-bottom:4px}
+
+.form-row{margin-bottom:10px}
+.form-row label{display:block;font-size:12px;font-weight:bold;color:#444;margin-bottom:3px}
+.form-row label .req{color:#c00}
+.form-row input,.form-row select,.form-row textarea{width:100%;font-size:13px;padding:6px 8px;border:1px solid #bbb;background:#fff;outline:none;font-family:inherit}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:#591C8B;box-shadow:0 0 0 2px rgba(89,28,139,0.1)}
+.form-row textarea{height:80px;resize:vertical}
+.form-row .hint{font-size:11px;color:#888;margin-top:2px}
+
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.btn{display:inline-block;padding:8px 20px;font-size:13px;font-weight:bold;cursor:pointer;border:none;text-decoration:none}
+.btn-primary{background:#591C8B;color:#fff}
+.btn-primary:hover{background:#006633;color:#fff}
+.btn-secondary{background:#006633;color:#fff;margin-left:8px}
+
+.success-box{background:#dff0d8;border:1px solid #b2dfb2;color:#2a6d2a;padding:14px;margin-bottom:16px;display:none}
+.success-box h3{font-size:14px;margin-bottom:4px}
+.error-msg{color:#c00;font-size:12px;margin-top:4px;display:none}
+#submit-error{color:#c00;background:#fde8e8;border:1px solid #f5c6c6;padding:10px;margin-bottom:12px;display:none;font-size:12px}
+
+.info-box{background:#d0e4ff;border:1px solid #90caf9;padding:10px 12px;font-size:12px;margin-bottom:16px;color:#0039a6}
+
+#footer{border-top:1px solid #ccc;padding:8px 16px;font-size:11px;color:#888;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:30px}
+#footer a{font-size:11px;color:#888}
+#footer a:hover{text-decoration:underline}
+
+@media(max-width:600px){.form-row-2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1><a href="/" style="color:inherit;text-decoration:none">open<span>data</span>bd</a></h1>
+  <div class="header-right">
+    <span class="tagline">open data for bangladesh &mdash; free, public, accessible</span>
+    <div class="header-links">
+      <a href="/">browse datasets</a> |
+      <a href="/api-docs.html">api docs</a> |
+      <a href="/api-docs.html#apikey">get api key</a>
+    </div>
+  </div>
+</div>
+
+<div id="breadcrumb">
+  <a href="/">opendatabd</a> &rsaquo; submit a dataset
+</div>
+
+<div id="main">
+  <h2>Submit a Dataset</h2>
+  <p class="subtitle">Share a Bangladesh dataset with the open data community. All submissions are reviewed before publishing (usually within 24–48 hours).</p>
+
+  <div class="info-box">
+    Datasets must relate to Bangladesh, be from a credible source, and be legally shareable under an open license.
+    Government, NGO, research institution, and UN agency data are all welcome.
+  </div>
+
+  <div class="success-box" id="success-box">
+    <h3>Thank you for your submission!</h3>
+    <p>Your dataset has been submitted for review. We'll publish it within 24–48 hours. <a href="/">Browse existing datasets →</a></p>
+  </div>
+
+  <div id="submit-error"></div>
+
+  <form id="submit-form" novalidate>
+
+    <div class="form-section">
+      <h3>dataset information</h3>
+
+      <div class="form-row">
+        <label>Dataset Title <span class="req">*</span></label>
+        <input type="text" id="f-title" placeholder="e.g. Dhaka District Population by Age Group 2022" maxlength="200"/>
+        <div class="error-msg" id="err-title">Title is required.</div>
+      </div>
+
+      <div class="form-row">
+        <label>Description <span class="req">*</span></label>
+        <textarea id="f-description" placeholder="What does this dataset contain? What time period does it cover? Any important caveats?"></textarea>
+        <div class="error-msg" id="err-description">Description is required.</div>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-row">
+          <label>Category <span class="req">*</span></label>
+          <select id="f-category">
+            <option value="">— select category —</option>
+            <option value="agriculture">Agriculture</option>
+            <option value="climate & weather">Climate &amp; Weather</option>
+            <option value="demographics">Demographics</option>
+            <option value="economy & finance">Economy &amp; Finance</option>
+            <option value="education">Education</option>
+            <option value="energy">Energy</option>
+            <option value="environment">Environment</option>
+            <option value="governance">Governance</option>
+            <option value="health">Health</option>
+            <option value="infrastructure">Infrastructure</option>
+            <option value="land & maps">Land &amp; Maps</option>
+            <option value="labor & employment">Labor &amp; Employment</option>
+            <option value="rivers & water">Rivers &amp; Water</option>
+            <option value="trade & exports">Trade &amp; Exports</option>
+            <option value="transport">Transport</option>
+          </select>
+          <div class="error-msg" id="err-category">Please select a category.</div>
+        </div>
+
+        <div class="form-row">
+          <label>Format <span class="req">*</span></label>
+          <select id="f-format">
+            <option value="">— select format —</option>
+            <option value="CSV">CSV</option>
+            <option value="JSON">JSON</option>
+            <option value="XLS">XLS / Excel</option>
+            <option value="API">API / Live Feed</option>
+            <option value="GEO">GeoJSON / Shapefile</option>
+            <option value="PDF">PDF</option>
+            <option value="XML">XML</option>
+          </select>
+          <div class="error-msg" id="err-format">Please select a format.</div>
+        </div>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-row">
+          <label>Division / Region</label>
+          <select id="f-division">
+            <option value="nationwide">Nationwide</option>
+            <option value="Dhaka">Dhaka</option>
+            <option value="Chittagong">Chittagong</option>
+            <option value="Rajshahi">Rajshahi</option>
+            <option value="Khulna">Khulna</option>
+            <option value="Barishal">Barishal</option>
+            <option value="Sylhet">Sylhet</option>
+            <option value="Rangpur">Rangpur</option>
+            <option value="Mymensingh">Mymensingh</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label>License</label>
+          <select id="f-license">
+            <option value="CC0">CC0 (Public Domain)</option>
+            <option value="CC-BY 4.0" selected>CC-BY 4.0</option>
+            <option value="Govt. Open">Govt. Open License</option>
+            <option value="CC-BY-SA 4.0">CC-BY-SA 4.0</option>
+            <option value="CC-BY-NC 4.0">CC-BY-NC 4.0</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-row">
+          <label>Row Count / Size</label>
+          <input type="text" id="f-rows" placeholder="e.g. 4,200 rows or 18MB or live"/>
+          <div class="hint">How many records, or the file size.</div>
+        </div>
+        <div class="form-row">
+          <label>Tags (comma-separated)</label>
+          <input type="text" id="f-tags" placeholder="e.g. census, population, Dhaka"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>source information</h3>
+
+      <div class="form-row">
+        <label>Source Organization <span class="req">*</span></label>
+        <input type="text" id="f-source" placeholder="e.g. Bangladesh Bureau of Statistics (BBS)"/>
+        <div class="error-msg" id="err-source">Source organization is required.</div>
+      </div>
+
+      <div class="form-row">
+        <label>Source URL</label>
+        <input type="url" id="f-source-url" placeholder="https://bbs.gov.bd/..."/>
+        <div class="hint">Link to the official source page or dataset download.</div>
+      </div>
+
+      <div class="form-row">
+        <label>Download URL</label>
+        <input type="url" id="f-download-url" placeholder="https://... (direct link to file, if available)"/>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>your information (optional)</h3>
+
+      <div class="form-row">
+        <label>Your Name or Organization</label>
+        <input type="text" id="f-submitted-by" placeholder="e.g. BRAC Institute of Governance and Development"/>
+        <div class="hint">We may credit you as the submitter.</div>
+      </div>
+    </div>
+
+    <div>
+      <button type="button" class="btn btn-primary" onclick="submitForm()">Submit Dataset</button>
+      <a href="/" class="btn btn-secondary" style="text-decoration:none">Cancel</a>
+    </div>
+
+  </form>
+</div>
+
+<div id="footer">
+  <a href="/">home</a>
+  <a href="/api-docs.html">api docs</a>
+  <a href="/api-docs.html#apikey">get api key</a>
+  <a href="mailto:hello@opendatabd.com">contact</a>
+  <span>© 2026 opendatabd</span>
+</div>
+
+<script>
+const API = '';
+
+function getVal(id) { return document.getElementById(id).value.trim(); }
+
+function showErr(id, show) {
+  document.getElementById(id).style.display = show ? 'block' : 'none';
+}
+
+async function submitForm() {
+  let valid = true;
+
+  const title = getVal('f-title');
+  const description = getVal('f-description');
+  const category = getVal('f-category');
+  const format = getVal('f-format');
+  const source = getVal('f-source');
+
+  showErr('err-title', !title);
+  showErr('err-description', !description);
+  showErr('err-category', !category);
+  showErr('err-format', !format);
+  showErr('err-source', !source);
+
+  if (!title || !description || !category || !format || !source) return;
+
+  const rawTags = getVal('f-tags');
+  const tags = rawTags ? rawTags.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+  const body = {
+    title,
+    description,
+    category,
+    format,
+    source,
+    source_url: getVal('f-source-url'),
+    division: getVal('f-division'),
+    license: getVal('f-license'),
+    rows_count: getVal('f-rows'),
+    download_url: getVal('f-download-url'),
+    tags,
+    submitted_by: getVal('f-submitted-by'),
+  };
+
+  const errBox = document.getElementById('submit-error');
+  errBox.style.display = 'none';
+  const btn = document.querySelector('.btn-primary');
+  btn.textContent = 'Submitting...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`${API}/api/datasets`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Submission failed');
+    document.getElementById('submit-form').style.display = 'none';
+    document.getElementById('success-box').style.display = 'block';
+    window.scrollTo(0, 0);
+  } catch (e) {
+    errBox.textContent = `Error: ${e.message}. Please try again or email hello@opendatabd.com`;
+    errBox.style.display = 'block';
+    btn.textContent = 'Submit Dataset';
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>

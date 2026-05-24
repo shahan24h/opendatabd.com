@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>OpenDataBD | Empowering Bangladesh Through Data</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "on-secondary-container": "#fffbff",
+        "inverse-on-surface": "#eff1f3",
+        "background": "#f7f9fb",
+        "on-surface": "#191c1e",
+        "inverse-surface": "#2d3133",
+        "secondary-fixed-dim": "#ffb3b6",
+        "surface-dim": "#d8dadc",
+        "outline": "#76777d",
+        "on-secondary-fixed": "#40000c",
+        "tertiary-fixed-dim": "#6bd8cb",
+        "surface-container-high": "#e6e8ea",
+        "on-background": "#191c1e",
+        "on-secondary": "#ffffff",
+        "primary-fixed-dim": "#bec6e0",
+        "surface-bright": "#f7f9fb",
+        "secondary-container": "#e21e49",
+        "tertiary-container": "#00201d",
+        "secondary": "#ba0035",
+        "on-tertiary-fixed": "#00201d",
+        "on-primary-fixed-variant": "#3f465c",
+        "on-primary-fixed": "#131b2e",
+        "surface-container-highest": "#e0e3e5",
+        "surface-container-lowest": "#ffffff",
+        "primary-fixed": "#dae2fd",
+        "on-error-container": "#93000a",
+        "primary-container": "#131b2e",
+        "on-tertiary-container": "#0c9488",
+        "surface-container-low": "#f2f4f6",
+        "on-tertiary-fixed-variant": "#005049",
+        "tertiary": "#000000",
+        "surface": "#f7f9fb",
+        "on-primary": "#ffffff",
+        "inverse-primary": "#bec6e0",
+        "error": "#ba1a1a",
+        "on-tertiary": "#ffffff",
+        "surface-container": "#eceef0",
+        "tertiary-fixed": "#89f5e7",
+        "on-surface-variant": "#45464d",
+        "primary": "#000000",
+        "on-primary-container": "#7c839b",
+        "on-secondary-fixed-variant": "#920028",
+        "on-error": "#ffffff",
+        "secondary-fixed": "#ffdada",
+        "outline-variant": "#c6c6cd",
+        "surface-tint": "#565e74",
+        "error-container": "#ffdad6",
+        "surface-variant": "#e0e3e5"
+      },
+      borderRadius: {
+        DEFAULT: "0.25rem",
+        lg: "0.5rem",
+        xl: "0.75rem",
+        full: "9999px"
+      },
+      spacing: {
+        "margin-desktop": "64px",
+        "unit-lg": "32px",
+        "container-max": "1280px",
+        "unit-xs": "4px",
+        "margin-mobile": "20px",
+        "unit-xl": "64px",
+        "gutter": "24px",
+        "unit-sm": "8px",
+        "unit-md": "16px"
+      },
+      fontFamily: {
+        "headline-lg-mobile": ["Hanken Grotesk"],
+        "label-caps": ["JetBrains Mono"],
+        "body-md": ["Inter"],
+        "headline-lg": ["Hanken Grotesk"],
+        "body-lg": ["Inter"],
+        "display-lg": ["Hanken Grotesk"],
+        "headline-md": ["Hanken Grotesk"]
+      },
+      fontSize: {
+        "headline-lg-mobile": ["28px", { lineHeight: "1.2", fontWeight: "700" }],
+        "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "600" }],
+        "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }],
+        "headline-lg": ["32px", { lineHeight: "1.2", letterSpacing: "-0.01em", fontWeight: "700" }],
+        "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+        "display-lg": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "800" }],
+        "headline-md": ["24px", { lineHeight: "1.3", fontWeight: "600" }]
+      },
+      animation: {
+        "fade-up": "fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards"
+      },
+      keyframes: {
+        fadeUp: {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" }
+        }
+      }
+    }
+  }
+}
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .glass-search {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+
+  .reveal-card {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-up, .reveal-card, .transition-all {
+      animation: none !important;
+      transition: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+</style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-secondary-fixed-dim">
+
+<!-- Nav -->
+<nav class="w-full sticky top-0 z-50 bg-surface-container-lowest border-b border-outline-variant/30 shadow-sm">
+  <div class="max-w-container-max mx-auto px-margin-desktop flex items-center justify-between h-20">
+    <div class="flex items-center gap-gutter">
+      <button class="font-headline-md text-headline-md font-bold bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg hover:bg-secondary-container transition-colors duration-200 active:scale-95 shadow-sm">OpenDataBD</button>
+      <div class="hidden md:flex items-center gap-1 ml-unit-lg">
+        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="#">Datasets</a>
+        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="#">API Docs</a>
+        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="#">Dashboards</a>
+        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="#">Impact</a>
+        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="#">News</a>
+      </div>
+    </div>
+    <div class="flex items-center gap-unit-md">
+      <button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-container rounded-full transition-colors duration-200" aria-label="Search">search</button>
+      <!-- Signed-out state -->
+      <button id="auth-signin-btn" onclick="openAuthModal()"
+        class="bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg font-body-md font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95">
+        Sign In
+      </button>
+
+      <!-- Signed-in state (hidden until auth resolves) -->
+      <div id="auth-user-menu" class="hidden items-center gap-2">
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container text-sm font-medium text-on-surface">
+          <span id="auth-user-avatar"
+            class="w-7 h-7 bg-secondary text-on-secondary rounded-full flex items-center justify-center text-xs font-bold shrink-0">U</span>
+          <span id="auth-user-name" class="max-w-[120px] truncate">User</span>
+        </div>
+        <button onclick="handleSignOut()"
+          class="text-sm text-on-surface-variant px-3 py-1.5 rounded-lg hover:bg-surface-container transition-colors duration-200">
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="relative overflow-hidden" style="background-image: linear-gradient(rgba(0,0,0,0.58), rgba(0,0,0,0.58)), url('https://lh3.googleusercontent.com/aida-public/AB6AXuCBUYVEav7yXgqBFw5TvHGg49r6zEnDwxI7Xnv2rUsm-iNZclvxU0cojmZa2Ws7SZJYVCE559XJHU7UYaDyCClRWqJcyJn5GDl0Pg7DMUsux5Gp2pjPXmX8k-nT3NSeZtP4PisprzWYQ3E1Q9RYNQxGvMGnNRrwS-KRub-oPRKUK4rtHmWwKBosFFqhiBOFN0QdgPmo6UVMeeNqbI_y2m0bI4yxKfA9MrbvsXbG1YXHNGMavOCbSsZW6nYJ42OcEf5huIyDabwCAb8'); background-size: cover; background-position: center;">
+  <div class="max-w-container-max mx-auto px-margin-desktop py-unit-xl md:py-32 relative z-10">
+    <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
+      <span class="opacity-0 animate-fade-up font-label-caps text-label-caps text-secondary mb-unit-md tracking-widest bg-secondary-fixed px-unit-md py-unit-xs rounded-full">BANGLADESH OPEN DATA PORTAL</span>
+      <h1 class="opacity-0 animate-fade-up animate-delay-100 font-display-lg text-display-lg mb-unit-lg text-[#f8fafc]">Empowering Bangladesh<br>through Data</h1>
+      <p class="opacity-0 animate-fade-up animate-delay-200 font-body-lg text-body-lg mb-unit-xl max-w-2xl text-[#cbd5e1]">
+        Access 5,000+ public datasets across health, education, transport, and economy to drive civic transparency and innovation.
+      </p>
+      <!-- Search -->
+      <div class="opacity-0 animate-fade-up animate-delay-300 w-full max-w-2xl glass-search p-1.5 rounded-full border border-white/30 shadow-xl flex items-center group focus-within:ring-2 focus-within:ring-secondary/50 transition-shadow duration-200">
+        <div class="pl-4 pr-2 text-outline group-focus-within:text-secondary transition-colors duration-200">
+          <span class="material-symbols-outlined">search</span>
+        </div>
+        <input class="flex-grow bg-transparent border-none focus:ring-0 font-body-md text-on-surface py-unit-sm pr-2" placeholder="Search datasets (e.g. Dhaka rainfall, literacy rate…)" type="text">
+        <button class="bg-secondary text-on-secondary px-6 py-unit-sm rounded-full font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95 shadow-md shrink-0">Search</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Stats Bar -->
+<div class="bg-surface-container-lowest border-b border-outline-variant/40">
+  <div class="max-w-container-max mx-auto px-margin-desktop py-8">
+    <dl class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div class="flex flex-col items-center md:border-r md:border-outline-variant/40 last:border-0 gap-1">
+        <dt class="text-[2rem] font-extrabold font-headline-lg text-on-surface tabular-nums leading-none">5,000+</dt>
+        <dd class="text-sm text-on-surface-variant">Public Datasets</dd>
+      </div>
+      <div class="flex flex-col items-center md:border-r md:border-outline-variant/40 gap-1">
+        <dt class="text-[2rem] font-extrabold font-headline-lg text-on-surface tabular-nums leading-none">200+</dt>
+        <dd class="text-sm text-on-surface-variant">Contributors</dd>
+      </div>
+      <div class="flex flex-col items-center md:border-r md:border-outline-variant/40 gap-1">
+        <dt class="text-[2rem] font-extrabold font-headline-lg text-on-surface tabular-nums leading-none">64</dt>
+        <dd class="text-sm text-on-surface-variant">Districts Covered</dd>
+      </div>
+      <div class="flex flex-col items-center gap-1">
+        <dt class="text-[2rem] font-extrabold font-headline-lg text-on-surface tabular-nums leading-none">1M+</dt>
+        <dd class="text-sm text-on-surface-variant">Dataset Downloads</dd>
+      </div>
+    </dl>
+  </div>
+</div>
+
+<!-- Main Features -->
+<section class="py-unit-xl max-w-container-max mx-auto px-margin-desktop">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+    <!-- Discover -->
+    <div class="group bg-surface-container-lowest border border-outline-variant/50 p-unit-lg md:p-unit-xl rounded-xl hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col items-center text-center md:items-start md:text-left">
+      <div class="w-14 h-14 bg-secondary-fixed flex items-center justify-center rounded-xl mb-unit-lg text-secondary group-hover:scale-105 transition-transform duration-200 mx-auto md:mx-0">
+        <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">database</span>
+      </div>
+      <h3 class="font-headline-lg text-headline-lg mb-unit-md">Discover Data</h3>
+      <p class="font-body-md text-body-md text-on-surface-variant mb-unit-lg max-w-md">Explore verified catalogs curated by government agencies, NGOs, and independent researchers. Export in CSV, JSON, or XML formats.</p>
+      <div class="flex items-center gap-1 text-secondary font-semibold group-hover:gap-2 transition-all duration-200">
+        <span>Browse Catalog</span>
+        <span class="material-symbols-outlined" style="font-size: 20px;">arrow_forward</span>
+      </div>
+    </div>
+    <!-- Submit -->
+    <div class="group bg-surface-container-lowest border border-outline-variant/50 p-unit-lg md:p-unit-xl rounded-xl hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col items-center text-center md:items-start md:text-left">
+      <div class="w-14 h-14 bg-tertiary-fixed flex items-center justify-center rounded-xl mb-unit-lg text-on-tertiary-fixed-variant group-hover:scale-105 transition-transform duration-200 mx-auto md:mx-0">
+        <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">upload_file</span>
+      </div>
+      <h3 class="font-headline-lg text-headline-lg mb-unit-md">Submit Data</h3>
+      <p class="font-body-md text-body-md text-on-surface-variant mb-unit-lg max-w-md">Contribute to the national data ecosystem. Share community research, localized statistics, or sensor data for public benefit.</p>
+      <div class="flex items-center gap-1 text-on-tertiary-fixed-variant font-semibold group-hover:gap-2 transition-all duration-200">
+        <span>Contribution Portal</span>
+        <span class="material-symbols-outlined" style="font-size: 20px;">arrow_forward</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Browse by Category -->
+<section class="bg-surface-container-low py-unit-xl">
+  <div class="max-w-container-max mx-auto px-margin-desktop">
+    <div class="flex items-end justify-between mb-unit-lg">
+      <div>
+        <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-2">EXPLORE</p>
+        <h2 class="font-headline-lg text-headline-lg">Browse by Category</h2>
+      </div>
+      <a href="#" class="text-secondary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all duration-200">
+        View all <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
+      </a>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+
+      <a href="#" class="group flex flex-col items-center gap-2.5 px-3 py-5 bg-surface-container-lowest border border-outline-variant/50 rounded-xl text-center hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+        <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-secondary-fixed transition-colors duration-200">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors duration-200" style="font-variation-settings: 'FILL' 1; font-size: 22px;">agriculture</span>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-on-surface">Agriculture</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">312 datasets</p>
+        </div>
+      </a>
+
+      <a href="#" class="group flex flex-col items-center gap-2.5 px-3 py-5 bg-surface-container-lowest border border-outline-variant/50 rounded-xl text-center hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+        <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-secondary-fixed transition-colors duration-200">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors duration-200" style="font-variation-settings: 'FILL' 1; font-size: 22px;">partly_cloudy_day</span>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-on-surface">Climate</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">248 datasets</p>
+        </div>
+      </a>
+
+      <a href="#" class="group flex flex-col items-center gap-2.5 px-3 py-5 bg-surface-container-lowest border border-outline-variant/50 rounded-xl text-center hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+        <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-secondary-fixed transition-colors duration-200">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors duration-200" style="font-variation-settings: 'FILL' 1; font-size: 22px;">trending_up</span>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-on-surface">Economy</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">427 datasets</p>
+        </div>
+      </a>
+
+      <a href="#" class="group flex flex-col items-center gap-2.5 px-3 py-5 bg-surface-container-lowest border border-outline-variant/50 rounded-xl text-center hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+        <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-secondary-fixed transition-colors duration-200">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors duration-200" style="font-variation-settings: 'FILL' 1; font-size: 22px;">school</span>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-on-surface">Education</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">311 datasets</p>
+        </div>
+      </a>
+
+      <a href="#" class="group flex flex-col items-center gap-2.5 px-3 py-5 bg-surface-container-lowest border border-outline-variant/50 rounded-xl text-center hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+        <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-secondary-fixed transition-colors duration-200">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors duration-200" style="font-variation-settings: 'FILL' 1; font-size: 22px;">health_and_safety</span>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-on-surface">Health</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">389 datasets</p>
+        </div>
+      </a>
+
+      <a href="#" class="group flex flex-col items-center gap-2.5 px-3 py-5 bg-surface-container-lowest border border-outline-variant/50 rounded-xl text-center hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+        <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-secondary-fixed transition-colors duration-200">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors duration-200" style="font-variation-settings: 'FILL' 1; font-size: 22px;">eco</span>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-on-surface">Environment</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">203 datasets</p>
+        </div>
+      </a>
+
+      <a href="#" class="group flex flex-col items-center gap-2.5 px-3 py-5 bg-surface-container-lowest border border-outline-variant/50 rounded-xl text-center hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+        <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-secondary-fixed transition-colors duration-200">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors duration-200" style="font-variation-settings: 'FILL' 1; font-size: 22px;">bolt</span>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-on-surface">Energy</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">156 datasets</p>
+        </div>
+      </a>
+
+      <a href="#" class="group flex flex-col items-center gap-2.5 px-3 py-5 bg-surface-container-lowest border border-outline-variant/50 rounded-xl text-center hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+        <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-secondary-fixed transition-colors duration-200">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors duration-200" style="font-variation-settings: 'FILL' 1; font-size: 22px;">foundation</span>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-on-surface">Infrastructure</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">178 datasets</p>
+        </div>
+      </a>
+
+      <a href="#" class="group flex flex-col items-center gap-2.5 px-3 py-5 bg-surface-container-lowest border border-outline-variant/50 rounded-xl text-center hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+        <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-secondary-fixed transition-colors duration-200">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors duration-200" style="font-variation-settings: 'FILL' 1; font-size: 22px;">account_balance</span>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-on-surface">Governance</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">264 datasets</p>
+        </div>
+      </a>
+
+      <a href="#" class="group flex flex-col items-center gap-2.5 px-3 py-5 bg-surface-container-lowest border border-outline-variant/50 rounded-xl text-center hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+        <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-secondary-fixed transition-colors duration-200">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors duration-200" style="font-variation-settings: 'FILL' 1; font-size: 22px;">group</span>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-on-surface">Demographics</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">194 datasets</p>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- Featured Datasets -->
+<section class="py-unit-xl">
+  <div class="max-w-container-max mx-auto px-margin-desktop">
+    <div class="flex items-end justify-between mb-unit-lg">
+      <div>
+        <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-2">LATEST</p>
+        <h2 class="font-headline-lg text-headline-lg">Featured Datasets</h2>
+      </div>
+      <a href="#" class="text-secondary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all duration-200">
+        Browse all <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
+      </a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+
+      <!-- Dataset 1 -->
+      <article class="group flex flex-col bg-surface-container-lowest border border-outline-variant/50 rounded-xl overflow-hidden hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+        <div class="p-5 flex-1 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant group-hover:bg-secondary-fixed group-hover:text-secondary transition-colors duration-200">Health</span>
+            <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed-variant tracking-wide">CSV</span>
+          </div>
+          <h4 class="font-semibold text-on-surface mb-2 leading-snug">District-wise Hospital Bed Capacity</h4>
+          <p class="text-sm text-on-surface-variant mb-4 flex-1 line-clamp-2">Hospital capacity across all 64 districts, including specialists and bed availability by year.</p>
+          <div class="flex items-center gap-3 text-xs text-on-surface-variant">
+            <span class="flex items-center gap-1">
+              <span class="material-symbols-outlined" style="font-size: 14px;">download</span>4,210
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>Updated Apr 2024</span>
+          </div>
+        </div>
+        <div class="px-5 py-3 border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/60">
+          <span class="text-xs text-on-surface-variant">DGHS Bangladesh</span>
+          <span class="material-symbols-outlined text-secondary group-hover:translate-x-0.5 transition-transform duration-200" style="font-size: 18px;">arrow_forward</span>
+        </div>
+      </article>
+
+      <!-- Dataset 2 -->
+      <article class="group flex flex-col bg-surface-container-lowest border border-outline-variant/50 rounded-xl overflow-hidden hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+        <div class="p-5 flex-1 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant group-hover:bg-secondary-fixed group-hover:text-secondary transition-colors duration-200">Economy</span>
+            <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-primary-fixed text-on-primary-fixed-variant tracking-wide">JSON</span>
+          </div>
+          <h4 class="font-semibold text-on-surface mb-2 leading-snug">Bangladesh GDP Growth Rate 2000–2023</h4>
+          <p class="text-sm text-on-surface-variant mb-4 flex-1 line-clamp-2">Annual GDP and sector-wise growth rate from the Bangladesh Bureau of Statistics over two decades.</p>
+          <div class="flex items-center gap-3 text-xs text-on-surface-variant">
+            <span class="flex items-center gap-1">
+              <span class="material-symbols-outlined" style="font-size: 14px;">download</span>8,542
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>Updated Jan 2024</span>
+          </div>
+        </div>
+        <div class="px-5 py-3 border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/60">
+          <span class="text-xs text-on-surface-variant">Bangladesh Bureau of Statistics</span>
+          <span class="material-symbols-outlined text-secondary group-hover:translate-x-0.5 transition-transform duration-200" style="font-size: 18px;">arrow_forward</span>
+        </div>
+      </article>
+
+      <!-- Dataset 3 -->
+      <article class="group flex flex-col bg-surface-container-lowest border border-outline-variant/50 rounded-xl overflow-hidden hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+        <div class="p-5 flex-1 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant group-hover:bg-secondary-fixed group-hover:text-secondary transition-colors duration-200">Education</span>
+            <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed-variant tracking-wide">API</span>
+          </div>
+          <h4 class="font-semibold text-on-surface mb-2 leading-snug">Primary School Enrollment by Division</h4>
+          <p class="text-sm text-on-surface-variant mb-4 flex-1 line-clamp-2">Division and district-level primary enrollment stats with gender disaggregation from 2010 to present.</p>
+          <div class="flex items-center gap-3 text-xs text-on-surface-variant">
+            <span class="flex items-center gap-1">
+              <span class="material-symbols-outlined" style="font-size: 14px;">download</span>6,103
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>Updated Mar 2024</span>
+          </div>
+        </div>
+        <div class="px-5 py-3 border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/60">
+          <span class="text-xs text-on-surface-variant">Ministry of Education</span>
+          <span class="material-symbols-outlined text-secondary group-hover:translate-x-0.5 transition-transform duration-200" style="font-size: 18px;">arrow_forward</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- Audience Section -->
+<section class="bg-surface-container-low py-unit-xl">
+  <div class="max-w-container-max mx-auto px-margin-desktop">
+    <div class="text-center mb-unit-xl">
+      <h2 class="font-headline-lg text-headline-lg mb-unit-sm">Data for Everyone</h2>
+      <p class="text-on-surface-variant">Tailored tools and experiences for our diverse community.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+      <div class="reveal-card group bg-surface-container-lowest p-unit-lg rounded-xl border border-outline-variant/50 hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200 flex flex-col items-center text-center">
+        <div class="w-12 h-12 bg-surface-container rounded-full flex items-center justify-center mb-unit-md group-hover:bg-secondary-fixed transition-colors duration-200">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors duration-200">biotech</span>
+        </div>
+        <h4 class="font-headline-md text-headline-md mb-unit-sm">Researchers</h4>
+        <p class="font-body-md text-body-md text-on-surface-variant">Access raw historical data and API endpoints for deep longitudinal analysis and forecasting models.</p>
+      </div>
+      <div class="reveal-card group bg-surface-container-lowest p-unit-lg rounded-xl border border-outline-variant/50 hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200 flex flex-col items-center text-center" data-reveal-delay="120">
+        <div class="w-12 h-12 bg-surface-container rounded-full flex items-center justify-center mb-unit-md group-hover:bg-secondary-fixed transition-colors duration-200">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors duration-200">school</span>
+        </div>
+        <h4 class="font-headline-md text-headline-md mb-unit-sm">Students</h4>
+        <p class="font-body-md text-body-md text-on-surface-variant">Learning resources and clean datasets for data science projects, thesis research, and visual storytelling.</p>
+      </div>
+      <div class="reveal-card group bg-surface-container-lowest p-unit-lg rounded-xl border border-outline-variant/50 hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200 flex flex-col items-center text-center" data-reveal-delay="240">
+        <div class="w-12 h-12 bg-surface-container rounded-full flex items-center justify-center mb-unit-md group-hover:bg-secondary-fixed transition-colors duration-200">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors duration-200">account_balance</span>
+        </div>
+        <h4 class="font-headline-md text-headline-md mb-unit-sm">Government</h4>
+        <p class="font-body-md text-body-md text-on-surface-variant">Inter-departmental data sharing protocols to enhance policy making and public service delivery through insights.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="relative bg-primary-container text-white py-unit-xl overflow-hidden">
+  <div class="absolute inset-0 opacity-10 pointer-events-none">
+    <img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkqVN6EYcquhI-0Tgrtz1Zi3l6_Y_Yv1zJw9A5wgJa7f4VDqGBndUq4gc1CzEV7n3_i-Q1sA9l1djZ9bnKCVGE4LCEnOoXGukFkf_ZPnHdYWwRYKz0nK48fka0s1YbJ3opMW8niHsMM5KaU_t5jJa1fc6Y5uDK-Za5cdLhsyRNR8zgrx021Mu7QamAkOYIOP5EgEyKZLh7IYWKach1rVX3BpCKBhCe0Lt1jJoW-ViEoMcbxD9rJMNwgVXATJhNDLeqkJO8SFFwglg">
+  </div>
+  <div class="max-w-container-max mx-auto px-margin-desktop relative z-10 flex flex-col md:flex-row items-center justify-between gap-unit-xl">
+    <div class="max-w-2xl text-center md:text-left">
+      <h2 class="font-display-lg text-headline-lg md:text-display-lg mb-unit-md leading-tight text-white">Join the National Data Network</h2>
+      <p class="font-body-lg text-body-lg text-on-primary-container">Build the future of Bangladesh with open, accessible, and high-quality data. Sign up for free today.</p>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-unit-md shrink-0">
+      <button class="bg-secondary text-white px-unit-xl py-unit-md rounded-lg font-semibold text-body-lg hover:bg-secondary-container transition-colors duration-200 shadow-lg active:scale-95">Get Started for Free</button>
+      <button class="border-2 border-on-primary-container text-on-primary-container px-unit-xl py-unit-md rounded-lg font-semibold text-body-lg hover:bg-white/10 transition-colors duration-200 active:scale-95">Learn about APIs</button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="w-full py-unit-xl bg-inverse-surface">
+  <div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter">
+    <div class="md:col-span-1">
+      <span class="font-headline-md text-headline-md font-bold text-inverse-on-surface mb-unit-md block">OpenDataBD</span>
+      <p class="text-surface-dim font-body-md mb-unit-md">Empowering citizens through transparency and technological innovation. Built for a smarter Bangladesh.</p>
+    </div>
+    <div>
+      <h5 class="text-white font-semibold mb-unit-md">Quick Links</h5>
+      <ul class="space-y-unit-sm text-surface-dim font-body-md">
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200 underline-offset-4 hover:underline" href="#">About Us</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200 underline-offset-4 hover:underline" href="#">Privacy Policy</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200 underline-offset-4 hover:underline" href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="text-white font-semibold mb-unit-md">Resources</h5>
+      <ul class="space-y-unit-sm text-surface-dim font-body-md">
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200 underline-offset-4 hover:underline" href="#">Open Data Policy</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200 underline-offset-4 hover:underline" href="#">Developer Portal</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200 underline-offset-4 hover:underline" href="#">API Documentation</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="text-white font-semibold mb-unit-md">Support</h5>
+      <ul class="space-y-unit-sm text-surface-dim font-body-md">
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200 underline-offset-4 hover:underline" href="#">Contact Support</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200 underline-offset-4 hover:underline" href="#">Help Center</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200 underline-offset-4 hover:underline" href="#">Report a Bug</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-container-max mx-auto px-margin-desktop mt-unit-xl pt-unit-md border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-surface-dim text-sm gap-4">
+    <span>© 2025 OpenDataBD. Empowering citizens through transparency.</span>
+    <div class="flex gap-unit-md">
+      <a class="hover:text-white transition-colors duration-200" href="#" aria-label="Website"><span class="material-symbols-outlined">public</span></a>
+      <a class="hover:text-white transition-colors duration-200" href="#" aria-label="Email"><span class="material-symbols-outlined">alternate_email</span></a>
+      <a class="hover:text-white transition-colors duration-200" href="#" aria-label="RSS"><span class="material-symbols-outlined">rss_feed</span></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = parseInt(entry.target.dataset.revealDelay || 0);
+        setTimeout(() => entry.target.classList.add('visible'), delay);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal-card').forEach(card => observer.observe(card));
+</script>
+
+<!-- ── Auth Modal ──────────────────────────────────────────────────────────── -->
+<div id="auth-modal"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden"
+  role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+
+  <div class="bg-surface-container-lowest w-full max-w-md rounded-2xl shadow-2xl border border-outline-variant/30 overflow-hidden">
+
+    <!-- Header -->
+    <div class="px-8 pt-8 pb-0">
+      <div class="flex items-center justify-between mb-6">
+        <span class="font-bold text-base bg-secondary text-on-secondary px-3 py-1 rounded-lg" id="auth-modal-title">OpenDataBD</span>
+        <button id="auth-modal-close" aria-label="Close"
+          class="text-on-surface-variant hover:text-on-surface p-1.5 rounded-full hover:bg-surface-container transition-colors duration-200">
+          <span class="material-symbols-outlined" style="font-size:20px;">close</span>
+        </button>
+      </div>
+
+      <!-- Tab bar -->
+      <div class="flex bg-surface-container rounded-xl p-1 mb-6">
+        <button id="tab-signin"
+          class="flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition-all duration-200 bg-surface-container-lowest text-on-surface shadow-sm">
+          Sign In
+        </button>
+        <button id="tab-signup"
+          class="flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-on-surface-variant">
+          Sign Up
+        </button>
+      </div>
+
+      <!-- Feedback banner -->
+      <div id="auth-message" class="hidden text-sm px-4 py-3 rounded-xl mb-5"></div>
+
+      <!-- ── Sign In form ──────────────────────────────────────────────────── -->
+      <div id="form-signin">
+        <form id="signin-form" class="space-y-4" novalidate>
+          <div>
+            <label class="text-sm font-medium text-on-surface-variant block mb-1.5">Email</label>
+            <input id="signin-email" type="email" placeholder="you@example.com" autocomplete="email" required
+              class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors" />
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-sm font-medium text-on-surface-variant">Password</label>
+              <button type="button" id="forgot-password-btn"
+                class="text-xs text-secondary hover:underline underline-offset-2">Forgot password?</button>
+            </div>
+            <input id="signin-password" type="password" placeholder="••••••••" autocomplete="current-password" required
+              class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors" />
+          </div>
+          <button type="submit"
+            class="w-full bg-secondary text-on-secondary py-3 rounded-xl font-semibold text-sm hover:bg-secondary-container transition-colors duration-200 active:scale-95 flex items-center justify-center gap-2">
+            <span id="signin-btn-text">Sign In</span>
+            <svg id="signin-spinner" class="hidden animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+          </button>
+        </form>
+
+        <div class="relative my-5">
+          <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-outline-variant/50"></div></div>
+          <div class="relative flex justify-center">
+            <span class="bg-surface-container-lowest px-3 text-xs text-on-surface-variant">or</span>
+          </div>
+        </div>
+
+        <button id="magic-link-btn"
+          class="w-full py-3 rounded-xl border border-outline-variant text-on-surface-variant text-sm font-medium hover:bg-surface-container hover:border-secondary/30 hover:text-on-surface transition-all duration-200 flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-base">auto_awesome</span>
+          Send Magic Link
+        </button>
+      </div>
+
+      <!-- ── Sign Up form ──────────────────────────────────────────────────── -->
+      <div id="form-signup" class="hidden">
+        <form id="signup-form" class="space-y-4" novalidate>
+          <div>
+            <label class="text-sm font-medium text-on-surface-variant block mb-1.5">Full Name</label>
+            <input id="signup-name" type="text" placeholder="Rahel Islam" autocomplete="name"
+              class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors" />
+          </div>
+          <div>
+            <label class="text-sm font-medium text-on-surface-variant block mb-1.5">Email</label>
+            <input id="signup-email" type="email" placeholder="you@example.com" autocomplete="email" required
+              class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors" />
+          </div>
+          <div>
+            <label class="text-sm font-medium text-on-surface-variant block mb-1.5">Password</label>
+            <input id="signup-password" type="password" placeholder="Min. 8 characters" autocomplete="new-password" required minlength="8"
+              class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors" />
+          </div>
+          <button type="submit"
+            class="w-full bg-secondary text-on-secondary py-3 rounded-xl font-semibold text-sm hover:bg-secondary-container transition-colors duration-200 active:scale-95 flex items-center justify-center gap-2">
+            <span id="signup-btn-text">Create Account</span>
+            <svg id="signup-spinner" class="hidden animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <!-- ── Forgot password form ──────────────────────────────────────────── -->
+      <div id="form-reset" class="hidden">
+        <p class="text-sm text-on-surface-variant mb-5">Enter your email and we'll send a reset link.</p>
+        <form id="reset-form" class="space-y-4" novalidate>
+          <input id="reset-email" type="email" placeholder="you@example.com" required
+            class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors" />
+          <button type="submit"
+            class="w-full bg-secondary text-on-secondary py-3 rounded-xl font-semibold text-sm hover:bg-secondary-container transition-colors duration-200">
+            Send Reset Link
+          </button>
+          <button type="button" id="back-to-signin"
+            class="w-full text-on-surface-variant text-sm hover:text-on-surface transition-colors duration-200">
+            ← Back to Sign In
+          </button>
+        </form>
+      </div>
+
+      <p class="text-xs text-on-surface-variant text-center mt-6 mb-8">
+        By continuing you agree to our
+        <a href="#" class="text-secondary hover:underline underline-offset-2">Terms</a> and
+        <a href="#" class="text-secondary hover:underline underline-offset-2">Privacy Policy</a>.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ── Auth boot script ───────────────────────────────────────────────────── -->
+<script type="module">
+import {
+  initAuth, signIn, signUp, signOut,
+  signInWithMagicLink, resetPassword,
+} from './js/auth.js';
+
+// ── Modal helpers ─────────────────────────────────────────────────────────────
+const modal      = document.getElementById('auth-modal');
+const msgEl      = document.getElementById('auth-message');
+const formSignIn = document.getElementById('form-signin');
+const formSignUp = document.getElementById('form-signup');
+const formReset  = document.getElementById('form-reset');
+const tabSignIn  = document.getElementById('tab-signin');
+const tabSignUp  = document.getElementById('tab-signup');
+
+window.openAuthModal  = () => modal.classList.remove('hidden');
+window.closeAuthModal = () => { modal.classList.add('hidden'); clearMsg(); };
+window.handleSignOut  = () => signOut();
+
+document.getElementById('auth-modal-close').onclick = closeAuthModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeAuthModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuthModal(); });
+
+function showMsg(text, type = 'error') {
+  msgEl.textContent = text;
+  msgEl.className = `text-sm px-4 py-3 rounded-xl mb-5 ${
+    type === 'success'
+      ? 'bg-tertiary-fixed text-on-tertiary-fixed'
+      : 'bg-error-container text-on-error-container'
+  }`;
+  msgEl.classList.remove('hidden');
+}
+function clearMsg() { msgEl.classList.add('hidden'); }
+
+function setLoading(form, on) {
+  const labels  = { signin: ['Sign In', 'Signing in…'],  signup: ['Create Account', 'Creating…'] };
+  const [off, on_] = labels[form] ?? ['Submit', 'Sending…'];
+  const btnText = document.getElementById(`${form}-btn-text`);
+  const spinner = document.getElementById(`${form}-spinner`);
+  if (btnText) btnText.textContent = on ? on_ : off;
+  if (spinner) spinner.classList.toggle('hidden', !on);
+}
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  const active   = 'bg-surface-container-lowest text-on-surface shadow-sm';
+  const inactive = 'text-on-surface-variant';
+  tabSignIn.className = `flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${tab === 'signin' ? active : inactive}`;
+  tabSignUp.className = `flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${tab === 'signup' ? active : inactive}`;
+  formSignIn.classList.toggle('hidden', tab !== 'signin');
+  formSignUp.classList.toggle('hidden', tab !== 'signup');
+  formReset.classList.add('hidden');
+  clearMsg();
+}
+tabSignIn.onclick = () => switchTab('signin');
+tabSignUp.onclick = () => switchTab('signup');
+
+// ── Sign In ───────────────────────────────────────────────────────────────────
+document.getElementById('signin-form').onsubmit = async e => {
+  e.preventDefault();
+  clearMsg();
+  setLoading('signin', true);
+  const { error } = await signIn(
+    document.getElementById('signin-email').value,
+    document.getElementById('signin-password').value,
+  );
+  setLoading('signin', false);
+  if (error) { showMsg(error.message); return; }
+  closeAuthModal();
+};
+
+// ── Sign Up ───────────────────────────────────────────────────────────────────
+document.getElementById('signup-form').onsubmit = async e => {
+  e.preventDefault();
+  clearMsg();
+  setLoading('signup', true);
+  const { error } = await signUp(
+    document.getElementById('signup-email').value,
+    document.getElementById('signup-password').value,
+    document.getElementById('signup-name').value,
+  );
+  setLoading('signup', false);
+  if (error) { showMsg(error.message); return; }
+  showMsg('Check your email to confirm your account.', 'success');
+};
+
+// ── Magic Link ────────────────────────────────────────────────────────────────
+document.getElementById('magic-link-btn').onclick = async () => {
+  const email = document.getElementById('signin-email').value.trim();
+  if (!email) { showMsg('Enter your email address above first.'); return; }
+  const { error } = await signInWithMagicLink(email);
+  if (error) { showMsg(error.message); return; }
+  showMsg('Magic link sent — check your inbox.', 'success');
+};
+
+// ── Reset Password ────────────────────────────────────────────────────────────
+document.getElementById('forgot-password-btn').onclick = () => {
+  formSignIn.classList.add('hidden');
+  formReset.classList.remove('hidden');
+  clearMsg();
+};
+document.getElementById('back-to-signin').onclick = () => {
+  formReset.classList.add('hidden');
+  formSignIn.classList.remove('hidden');
+  clearMsg();
+};
+document.getElementById('reset-form').onsubmit = async e => {
+  e.preventDefault();
+  const result = await resetPassword(document.getElementById('reset-email').value);
+  if (result.error) { showMsg(result.error); return; }
+  showMsg(result.message, 'success');
+};
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+initAuth().catch(err => console.error('[auth] init failed:', err));
+</script>
+
+</body>
+</html>

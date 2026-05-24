@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>API Documentation — opendatabd</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;font-size:13px;background:#fff;color:#333}
+a{color:#7c3f00;text-decoration:none}
+a:hover{text-decoration:underline}
+
+#header{border-bottom:1px solid #ccc;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+#header h1{font-size:26px;font-weight:bold;color:#591C8B;letter-spacing:-0.5px}
+#header h1 span{color:#006633}
+.header-links{display:flex;gap:6px;flex-wrap:wrap;font-size:12px}
+.header-links a{font-size:12px}
+.tagline{color:#666;font-size:12px}
+
+#breadcrumb{background:#fafafa;border-bottom:1px solid #eee;padding:5px 16px;font-size:12px;color:#666}
+#breadcrumb a{font-size:12px;color:#591C8B}
+
+#main{max-width:960px;margin:0 auto;padding:16px;display:flex;gap:20px}
+#toc{width:180px;flex-shrink:0}
+#content{flex:1;min-width:0}
+
+/* TOC */
+.toc-box{border:1px solid #ddd;padding:10px;background:#fafafa;position:sticky;top:10px}
+.toc-box h4{font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#591C8B;margin-bottom:6px;padding-bottom:3px;border-bottom:1px solid #ddd}
+.toc-box ul{list-style:none}
+.toc-box ul li{line-height:1.9;font-size:12px}
+.toc-box ul li a{color:#591C8B}
+
+/* CONTENT */
+h2{font-size:17px;font-weight:bold;color:#111;margin-bottom:8px;padding-top:8px;border-top:2px solid #591C8B;margin-top:20px}
+h2:first-child{border-top:none;margin-top:0}
+h3{font-size:14px;font-weight:bold;color:#333;margin:14px 0 6px}
+p{font-size:13px;line-height:1.7;color:#333;margin-bottom:10px}
+ul.doc-list{margin-left:16px;margin-bottom:10px}
+ul.doc-list li{font-size:13px;line-height:1.7}
+
+/* CODE */
+code{font-family:monospace;font-size:12px;background:#f4f0ff;padding:1px 4px;border:1px solid #e0d0ff;border-radius:2px;color:#333}
+pre{background:#1a1a2e;color:#e0e0ff;padding:12px;margin:8px 0 12px;overflow-x:auto;font-size:12px;line-height:1.6;font-family:monospace;border-radius:4px}
+pre .cm{color:#888}
+pre .ky{color:#82aaff}
+pre .st{color:#c3e88d}
+pre .nu{color:#f78c6c}
+pre .fn{color:#ffcb6b}
+
+/* ENDPOINT */
+.endpoint{border:1px solid #ddd;margin-bottom:14px}
+.endpoint-head{background:#f4f0ff;border-bottom:1px solid #ddd;padding:8px 12px;display:flex;align-items:center;gap:10px}
+.method{font-family:monospace;font-size:12px;font-weight:bold;padding:2px 8px;border-radius:2px}
+.method.GET{background:#dff0d8;color:#2a6d2a;border:1px solid #b2dfb2}
+.method.POST{background:#d0e4ff;color:#0039a6;border:1px solid #90caf9}
+.endpoint-path{font-family:monospace;font-size:13px;color:#333;font-weight:bold}
+.endpoint-desc{font-size:12px;color:#666;margin-left:auto}
+.endpoint-body{padding:10px 12px}
+.param-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px}
+.param-table th{text-align:left;color:#666;font-size:11px;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid #ddd;padding:3px 6px}
+.param-table td{padding:4px 6px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+.param-table td code{background:none;border:none;padding:0}
+.param-table tr:last-child td{border-bottom:none}
+.optional{color:#999;font-size:10px}
+.required{color:#c00;font-size:10px}
+
+/* API KEY FORM */
+.apikey-form{border:1px solid #ddd;padding:14px;background:#fafafa;max-width:480px}
+.apikey-form input{width:100%;font-size:13px;padding:6px 8px;border:1px solid #bbb;margin-bottom:8px;outline:none;font-family:inherit}
+.apikey-form input:focus{border-color:#591C8B}
+.apikey-form button{background:#591C8B;color:#fff;border:none;padding:7px 18px;font-size:13px;font-weight:bold;cursor:pointer}
+.apikey-form button:hover{background:#006633}
+.key-result{background:#dff0d8;border:1px solid #b2dfb2;padding:10px;margin-top:8px;display:none}
+.key-result code{font-size:14px;background:none;border:none;padding:0;color:#006633;font-weight:bold}
+
+.badge-box{display:inline-block;background:#e8f5e9;border:1px solid #a5d6a7;color:#1b5e20;font-size:11px;padding:2px 8px;border-radius:2px}
+.note{background:#fff8e1;border-left:3px solid #ffca28;padding:8px 12px;margin:10px 0;font-size:12px;color:#555}
+
+#footer{border-top:1px solid #ccc;padding:8px 16px;font-size:11px;color:#888;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+#footer a{font-size:11px;color:#888}
+
+@media(max-width:720px){
+  #main{flex-direction:column}
+  #toc{width:100%;position:static}
+}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1><a href="/" style="color:inherit;text-decoration:none">open<span>data</span>bd</a></h1>
+  <div>
+    <div class="tagline">open data for bangladesh — free, public, accessible</div>
+    <div class="header-links">
+      <a href="/">browse datasets</a> |
+      <a href="/submit.html">submit dataset</a> |
+      <a href="#apikey">get api key</a>
+    </div>
+  </div>
+</div>
+
+<div id="breadcrumb">
+  <a href="/">opendatabd</a> &rsaquo; api documentation
+</div>
+
+<div id="main">
+
+  <div id="toc">
+    <div class="toc-box">
+      <h4>contents</h4>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#apikey">Get API Key</a></li>
+        <li><a href="#baseurl">Base URL</a></li>
+        <li><a href="#endpoints">Endpoints</a></li>
+        <li><a href="#ep-list">— List Datasets</a></li>
+        <li><a href="#ep-get">— Get Dataset</a></li>
+        <li><a href="#ep-submit">— Submit Dataset</a></li>
+        <li><a href="#ep-categories">— Categories</a></li>
+        <li><a href="#ep-stats">— Platform Stats</a></li>
+        <li><a href="#ep-news">— News</a></li>
+        <li><a href="#ep-popular">— Popular</a></li>
+        <li><a href="#ep-suggest">— Search Suggest</a></li>
+        <li><a href="#examples">Examples</a></li>
+        <li><a href="#dictionary">Data Dictionary</a></li>
+        <li><a href="#license">License</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="content">
+
+    <h2 id="overview">Overview</h2>
+    <p>
+      The OpenDataBD REST API provides programmatic access to Bangladesh's largest open data catalog.
+      All endpoints return JSON. Most read endpoints require no authentication.
+      Submitting datasets and generating API keys uses the endpoints below.
+    </p>
+    <p>
+      <span class="badge-box">Base URL: <code>http://localhost:3000/api</code></span>
+      &nbsp;&nbsp; <span class="badge-box">Format: JSON</span>
+      &nbsp;&nbsp; <span class="badge-box">Auth: optional API key</span>
+    </p>
+
+    <!-- API KEY -->
+    <h2 id="apikey">Get a Free API Key</h2>
+    <p>API keys are free and give you higher rate limits. Fill in your email below to get one instantly.</p>
+
+    <div class="apikey-form">
+      <input type="text" id="k-name" placeholder="Your name (optional)"/>
+      <input type="text" id="k-org" placeholder="Organization (optional)"/>
+      <input type="email" id="k-email" placeholder="Email address *" required/>
+      <div id="k-error" style="color:#c00;font-size:12px;margin-bottom:6px;display:none"></div>
+      <button onclick="generateKey()">Generate API Key</button>
+      <div class="key-result" id="key-result">
+        <div style="font-size:12px;margin-bottom:4px">Your API key:</div>
+        <code id="key-value"></code>
+        <div style="font-size:11px;color:#555;margin-top:6px">Include as header: <code>X-API-Key: YOUR_KEY</code></div>
+      </div>
+    </div>
+
+    <h2 id="baseurl">Base URL</h2>
+    <p>All endpoints are relative to:</p>
+    <pre>http://localhost:3000/api</pre>
+    <p>Pass your API key as a header (optional for read endpoints):</p>
+    <pre>X-API-Key: odbk_your_key_here</pre>
+
+    <h2 id="endpoints">Endpoints</h2>
+
+    <!-- LIST DATASETS -->
+    <h3 id="ep-list">List Datasets</h3>
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/datasets</span>
+        <span class="endpoint-desc">Search and filter all datasets</span>
+      </div>
+      <div class="endpoint-body">
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>q</code> <span class="optional">optional</span></td><td>string</td><td>Full-text search across title, description, tags, source</td></tr>
+          <tr><td><code>category</code> <span class="optional">optional</span></td><td>string</td><td>Filter by category slug (e.g. <code>health</code>, <code>agriculture</code>)</td></tr>
+          <tr><td><code>format</code> <span class="optional">optional</span></td><td>string</td><td><code>CSV</code>, <code>JSON</code>, <code>API</code>, <code>XLS</code>, <code>GEO</code></td></tr>
+          <tr><td><code>division</code> <span class="optional">optional</span></td><td>string</td><td><code>Dhaka</code>, <code>Chittagong</code>, <code>nationwide</code>, etc.</td></tr>
+          <tr><td><code>license</code> <span class="optional">optional</span></td><td>string</td><td><code>CC0</code>, <code>CC-BY 4.0</code>, <code>Govt. Open</code></td></tr>
+          <tr><td><code>sort</code> <span class="optional">optional</span></td><td>string</td><td><code>newest</code> (default), <code>popular</code>, <code>downloads</code>, <code>az</code></td></tr>
+          <tr><td><code>page</code> <span class="optional">optional</span></td><td>integer</td><td>Page number (default: 1)</td></tr>
+          <tr><td><code>limit</code> <span class="optional">optional</span></td><td>integer</td><td>Results per page (default: 20, max: 100)</td></tr>
+        </table>
+        <pre><span class="cm"># Example: search health datasets in Dhaka</span>
+GET /api/datasets?category=health&division=Dhaka&sort=popular
+
+<span class="cm"># Example response</span>
+{
+  <span class="st">"total"</span>: 12,
+  <span class="st">"page"</span>: <span class="nu">1</span>,
+  <span class="st">"limit"</span>: <span class="nu">20</span>,
+  <span class="st">"pages"</span>: <span class="nu">1</span>,
+  <span class="st">"datasets"</span>: [
+    {
+      <span class="st">"id"</span>: <span class="nu">7</span>,
+      <span class="st">"title"</span>: <span class="st">"National Immunization Coverage by Upazila"</span>,
+      <span class="st">"category"</span>: <span class="st">"health"</span>,
+      <span class="st">"format"</span>: <span class="st">"CSV"</span>,
+      <span class="st">"source"</span>: <span class="st">"dghs.gov.bd"</span>,
+      <span class="st">"division"</span>: <span class="st">"nationwide"</span>,
+      <span class="st">"license"</span>: <span class="st">"Govt. Open"</span>,
+      <span class="st">"rows_count"</span>: <span class="st">"12,800 rows"</span>,
+      <span class="st">"views"</span>: <span class="nu">16200</span>,
+      <span class="st">"tags"</span>: [<span class="st">"EPI"</span>, <span class="st">"vaccination"</span>],
+      <span class="st">"created_at"</span>: <span class="st">"2026-04-15T09:00:00"</span>
+    }
+  ]
+}</pre>
+      </div>
+    </div>
+
+    <!-- GET DATASET -->
+    <h3 id="ep-get">Get Single Dataset</h3>
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/datasets/:id</span>
+        <span class="endpoint-desc">Get full details for one dataset</span>
+      </div>
+      <div class="endpoint-body">
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>id</code> <span class="required">required</span></td><td>integer</td><td>Dataset ID</td></tr>
+        </table>
+        <pre>GET /api/datasets/6
+
+<span class="cm"># Returns full dataset object including description, download_url, tags, etc.</span></pre>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <h3 id="ep-submit">Submit a Dataset</h3>
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/api/datasets</span>
+        <span class="endpoint-desc">Submit a new dataset for review</span>
+      </div>
+      <div class="endpoint-body">
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>title</code> <span class="required">required</span></td><td>string</td><td>Dataset title</td></tr>
+          <tr><td><code>description</code> <span class="required">required</span></td><td>string</td><td>What the dataset contains</td></tr>
+          <tr><td><code>category</code> <span class="required">required</span></td><td>string</td><td>Category name (e.g. <code>health</code>)</td></tr>
+          <tr><td><code>format</code> <span class="required">required</span></td><td>string</td><td><code>CSV</code>, <code>JSON</code>, <code>API</code>, <code>XLS</code>, <code>GEO</code>, <code>PDF</code>, <code>XML</code></td></tr>
+          <tr><td><code>source</code> <span class="required">required</span></td><td>string</td><td>Source organization name</td></tr>
+          <tr><td><code>source_url</code> <span class="optional">optional</span></td><td>string</td><td>Official source URL</td></tr>
+          <tr><td><code>division</code> <span class="optional">optional</span></td><td>string</td><td>Division or <code>nationwide</code> (default)</td></tr>
+          <tr><td><code>license</code> <span class="optional">optional</span></td><td>string</td><td>Default: <code>CC-BY 4.0</code></td></tr>
+          <tr><td><code>rows_count</code> <span class="optional">optional</span></td><td>string</td><td>e.g. <code>"4,200 rows"</code> or <code>"live"</code></td></tr>
+          <tr><td><code>download_url</code> <span class="optional">optional</span></td><td>string</td><td>Direct download link</td></tr>
+          <tr><td><code>tags</code> <span class="optional">optional</span></td><td>array</td><td>Array of tag strings</td></tr>
+          <tr><td><code>submitted_by</code> <span class="optional">optional</span></td><td>string</td><td>Submitter name or org</td></tr>
+        </table>
+        <pre>POST /api/datasets
+Content-Type: application/json
+
+{
+  <span class="st">"title"</span>: <span class="st">"Dhaka Air Quality Index — 2025 Hourly Readings"</span>,
+  <span class="st">"description"</span>: <span class="st">"Hourly PM2.5 readings from 20 stations in Dhaka."</span>,
+  <span class="st">"category"</span>: <span class="st">"environment"</span>,
+  <span class="st">"format"</span>: <span class="st">"CSV"</span>,
+  <span class="st">"source"</span>: <span class="st">"doe.gov.bd"</span>,
+  <span class="st">"tags"</span>: [<span class="st">"AQI"</span>, <span class="st">"Dhaka"</span>, <span class="st">"air quality"</span>]
+}
+
+<span class="cm"># Returns 201 Created</span>
+{ <span class="st">"id"</span>: <span class="nu">42</span>, <span class="st">"status"</span>: <span class="st">"pending"</span>, <span class="st">"message"</span>: <span class="st">"Dataset submitted for review."</span> }</pre>
+      </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <h3 id="ep-categories">List Categories</h3>
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/categories</span>
+        <span class="endpoint-desc">All categories with dataset counts</span>
+      </div>
+      <div class="endpoint-body">
+        <pre>GET /api/categories
+
+[
+  { <span class="st">"slug"</span>: <span class="st">"health"</span>, <span class="st">"name"</span>: <span class="st">"health"</span>, <span class="st">"icon"</span>: <span class="st">"🏥"</span>, <span class="st">"count"</span>: <span class="nu">3</span> },
+  { <span class="st">"slug"</span>: <span class="st">"agriculture"</span>, <span class="st">"name"</span>: <span class="st">"agriculture"</span>, <span class="st">"icon"</span>: <span class="st">"🌾"</span>, <span class="st">"count"</span>: <span class="nu">2</span> },
+  ...
+]</pre>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <h3 id="ep-stats">Platform Statistics</h3>
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/stats</span>
+        <span class="endpoint-desc">Aggregate platform stats</span>
+      </div>
+      <div class="endpoint-body">
+        <pre>GET /api/stats
+
+{ <span class="st">"datasets"</span>: <span class="nu">25</span>, <span class="st">"categories"</span>: <span class="nu">14</span>, <span class="st">"liveFeeds"</span>: <span class="nu">3</span>, <span class="st">"sources"</span>: <span class="nu">20</span>, <span class="st">"totalDownloads"</span>: <span class="nu">209800</span>, <span class="st">"license"</span>: <span class="st">"free"</span> }</pre>
+      </div>
+    </div>
+
+    <!-- NEWS -->
+    <h3 id="ep-news">News &amp; Updates</h3>
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/news</span>
+        <span class="endpoint-desc">Latest platform news (up to 10)</span>
+      </div>
+    </div>
+
+    <!-- POPULAR -->
+    <h3 id="ep-popular">Popular Datasets</h3>
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/popular</span>
+        <span class="endpoint-desc">Top 8 datasets by view count</span>
+      </div>
+    </div>
+
+    <!-- SUGGEST -->
+    <h3 id="ep-suggest">Search Autocomplete</h3>
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/search/suggest?q=</span>
+        <span class="endpoint-desc">Autocomplete suggestions (min 2 chars)</span>
+      </div>
+      <div class="endpoint-body">
+        <pre>GET /api/search/suggest?q=dhaka
+
+[
+  { <span class="st">"id"</span>: <span class="nu">6</span>, <span class="st">"title"</span>: <span class="st">"Dhaka Air Quality Index"</span>, <span class="st">"category"</span>: <span class="st">"environment"</span>, <span class="st">"format"</span>: <span class="st">"API"</span> },
+  { <span class="st">"id"</span>: <span class="nu">3</span>, <span class="st">"title"</span>: <span class="st">"Dhaka City Upazila Boundaries"</span>, <span class="st">"category"</span>: <span class="st">"land & maps"</span>, <span class="st">"format"</span>: <span class="st">"JSON"</span> }
+]</pre>
+      </div>
+    </div>
+
+    <!-- API KEY ENDPOINT -->
+    <h3>Generate API Key (via API)</h3>
+    <div class="endpoint">
+      <div class="endpoint-head">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/api/apikeys</span>
+        <span class="endpoint-desc">Generate a free API key</span>
+      </div>
+      <div class="endpoint-body">
+        <pre>POST /api/apikeys
+Content-Type: application/json
+
+{ <span class="st">"email"</span>: <span class="st">"you@example.com"</span>, <span class="st">"name"</span>: <span class="st">"Your Name"</span>, <span class="st">"organization"</span>: <span class="st">"BRAC"</span> }
+
+{ <span class="st">"key"</span>: <span class="st">"odbk_4f3a..."</span>, <span class="st">"message"</span>: <span class="st">"API key created successfully"</span> }</pre>
+      </div>
+    </div>
+
+    <!-- EXAMPLES -->
+    <h2 id="examples">Code Examples</h2>
+    <h3>Python</h3>
+    <pre><span class="ky">import</span> requests
+
+<span class="cm"># List health datasets</span>
+resp = requests.<span class="fn">get</span>(<span class="st">"http://localhost:3000/api/datasets"</span>, params={
+    <span class="st">"category"</span>: <span class="st">"health"</span>,
+    <span class="st">"format"</span>: <span class="st">"CSV"</span>,
+    <span class="st">"sort"</span>: <span class="st">"popular"</span>
+})
+datasets = resp.<span class="fn">json</span>()[<span class="st">"datasets"</span>]
+<span class="ky">for</span> d <span class="ky">in</span> datasets:
+    <span class="fn">print</span>(d[<span class="st">"title"</span>], d[<span class="st">"source"</span>])</pre>
+
+    <h3>JavaScript (fetch)</h3>
+    <pre><span class="ky">const</span> res = <span class="ky">await</span> <span class="fn">fetch</span>(<span class="st">'http://localhost:3000/api/datasets?q=flood&sort=newest'</span>);
+<span class="ky">const</span> { datasets, total } = <span class="ky">await</span> res.<span class="fn">json</span>();
+console.<span class="fn">log</span>(<span class="st">`Found </span>${total}<span class="st"> datasets`</span>);
+datasets.<span class="fn">forEach</span>(d => console.<span class="fn">log</span>(d.title));</pre>
+
+    <h3>curl</h3>
+    <pre><span class="cm"># Search for all CSV datasets</span>
+curl "http://localhost:3000/api/datasets?format=CSV&sort=popular"
+
+<span class="cm"># Get a single dataset</span>
+curl "http://localhost:3000/api/datasets/1"
+
+<span class="cm"># Submit a dataset</span>
+curl -X POST http://localhost:3000/api/datasets \
+  -H "Content-Type: application/json" \
+  -d '{"title":"My Dataset","category":"health","format":"CSV","source":"dghs.gov.bd","description":"..."}'</pre>
+
+    <!-- DATA DICTIONARY -->
+    <h2 id="dictionary">Data Dictionary</h2>
+    <p>Every dataset object returned by the API contains these fields:</p>
+    <table class="param-table" style="border:1px solid #ddd">
+      <tr style="background:#f4f0ff"><th>Field</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>id</code></td><td>integer</td><td>Unique dataset ID</td></tr>
+      <tr><td><code>title</code></td><td>string</td><td>Dataset title</td></tr>
+      <tr><td><code>description</code></td><td>string</td><td>Full description</td></tr>
+      <tr><td><code>category</code></td><td>string</td><td>Category name</td></tr>
+      <tr><td><code>subcategory</code></td><td>string|null</td><td>More specific subcategory</td></tr>
+      <tr><td><code>format</code></td><td>string</td><td>CSV, JSON, API, XLS, GEO, PDF, XML</td></tr>
+      <tr><td><code>source</code></td><td>string</td><td>Source organization</td></tr>
+      <tr><td><code>source_url</code></td><td>string|null</td><td>Link to source page</td></tr>
+      <tr><td><code>division</code></td><td>string</td><td>Bangladesh division or "nationwide"</td></tr>
+      <tr><td><code>license</code></td><td>string</td><td>CC0, CC-BY 4.0, Govt. Open, etc.</td></tr>
+      <tr><td><code>rows_count</code></td><td>string|null</td><td>Row count or "live"</td></tr>
+      <tr><td><code>file_size</code></td><td>string|null</td><td>File size (e.g. "18MB")</td></tr>
+      <tr><td><code>download_url</code></td><td>string|null</td><td>Direct download link</td></tr>
+      <tr><td><code>tags</code></td><td>array</td><td>Array of tag strings</td></tr>
+      <tr><td><code>downloads</code></td><td>integer</td><td>Download count</td></tr>
+      <tr><td><code>views</code></td><td>integer</td><td>Page view count</td></tr>
+      <tr><td><code>created_at</code></td><td>string</td><td>ISO datetime added</td></tr>
+      <tr><td><code>updated_at</code></td><td>string</td><td>ISO datetime last updated</td></tr>
+      <tr><td><code>status</code></td><td>string</td><td>active / pending / rejected</td></tr>
+    </table>
+
+    <!-- LICENSE -->
+    <h2 id="license">Data License</h2>
+    <p>
+      OpenDataBD aggregates data from multiple sources under various open licenses.
+      Each dataset carries its own license field. Most common licenses:
+    </p>
+    <ul class="doc-list">
+      <li><b>CC0</b> — Public domain. No restrictions. Use freely.</li>
+      <li><b>CC-BY 4.0</b> — Credit the source. Commercial use allowed.</li>
+      <li><b>Govt. Open</b> — Bangladesh Government Open Data License. Free for non-commercial use; credit required.</li>
+      <li><b>CC-BY-SA 4.0</b> — Credit + share alike. Derivatives must use the same license.</li>
+    </ul>
+    <div class="note">
+      Always verify the license of each individual dataset before publication. OpenDataBD provides
+      data in good faith but cannot guarantee completeness or accuracy of government sources.
+    </div>
+
+  </div>
+</div>
+
+<div id="footer">
+  <a href="/">home</a>
+  <a href="/submit.html">submit dataset</a>
+  <a href="mailto:hello@opendatabd.com">contact</a>
+  <span>© 2026 opendatabd</span>
+</div>
+
+<script>
+const API = '';
+
+async function generateKey() {
+  const email = document.getElementById('k-email').value.trim();
+  const name = document.getElementById('k-name').value.trim();
+  const org = document.getElementById('k-org').value.trim();
+  const errEl = document.getElementById('k-error');
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errEl.textContent = 'Please enter a valid email address.';
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
+
+  try {
+    const res = await fetch(`${API}/api/apikeys`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, name, organization: org }),
+    });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error);
+    document.getElementById('key-value').textContent = d.key;
+    document.getElementById('key-result').style.display = 'block';
+  } catch (e) {
+    errEl.textContent = e.message || 'Error generating key. Is the backend running?';
+    errEl.style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>

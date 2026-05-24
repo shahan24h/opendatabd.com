@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dataset — opendatabd</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;font-size:13px;background:#fff;color:#333}
+a{color:#7c3f00;text-decoration:none}
+a:hover{text-decoration:underline}
+a:visited{color:#551a8b}
+
+#header{border-bottom:1px solid #ccc;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+#header h1{font-size:26px;font-weight:bold;color:#591C8B;letter-spacing:-0.5px}
+#header h1 span{color:#006633}
+.header-right{font-size:12px;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.header-right .tagline{color:#666}
+.header-links{display:flex;gap:6px;flex-wrap:wrap}
+.header-links a{font-size:12px}
+
+#breadcrumb{background:#fafafa;border-bottom:1px solid #eee;padding:5px 16px;font-size:12px;color:#666}
+#breadcrumb a{font-size:12px;color:#591C8B}
+
+#main{max-width:940px;margin:0 auto;padding:16px;display:flex;gap:20px}
+#left{flex:1;min-width:0}
+#right{width:200px;flex-shrink:0}
+
+h2.ds-title{font-size:18px;font-weight:bold;color:#111;margin-bottom:8px;line-height:1.4}
+
+.meta-bar{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap;font-size:12px;color:#666}
+.ds-tag{font-size:11px;font-weight:bold;padding:2px 7px;border-radius:2px;text-transform:uppercase}
+.tag-CSV{background:#dff0d8;color:#2a6d2a;border:1px solid #b2dfb2}
+.tag-JSON{background:#fff3cd;color:#7a5800;border:1px solid #ffe082}
+.tag-API{background:#d0e4ff;color:#0039a6;border:1px solid #90caf9}
+.tag-XLS{background:#fde8e8;color:#8b0000;border:1px solid #f5c6c6}
+.tag-GEO{background:#e8f5e9;color:#1b5e20;border:1px solid #a5d6a7}
+.tag-PDF{background:#f3e5f5;color:#4a148c;border:1px solid #ce93d8}
+
+.section{margin-bottom:16px}
+.section h3{font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:.05em;color:#666;border-bottom:1px solid #ddd;padding-bottom:3px;margin-bottom:8px}
+
+.description{font-size:13px;line-height:1.7;color:#333}
+
+.info-table{width:100%;border-collapse:collapse;font-size:12px}
+.info-table tr td{padding:5px 8px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+.info-table tr td:first-child{color:#666;width:130px;white-space:nowrap}
+.info-table tr td:last-child{color:#333;font-weight:500}
+.info-table tr:last-child td{border-bottom:none}
+
+.tags-list{display:flex;gap:6px;flex-wrap:wrap}
+.tag-pill{background:#f0e8ff;color:#591C8B;border:1px solid #d9c4f5;font-size:11px;padding:1px 7px;border-radius:10px;cursor:pointer}
+.tag-pill:hover{background:#591C8B;color:#fff}
+
+.btn{display:inline-block;padding:7px 16px;font-size:13px;font-weight:bold;cursor:pointer;border:none;text-decoration:none;text-align:center}
+.btn-primary{background:#591C8B;color:#fff}
+.btn-primary:hover{background:#006633;color:#fff}
+.btn-secondary{background:#006633;color:#fff;margin-left:6px}
+.btn-secondary:hover{background:#591C8B;color:#fff}
+.btn-outline{background:#fff;color:#591C8B;border:1px solid #591C8B}
+.btn-outline:hover{background:#f0e8ff}
+
+.action-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+
+.side-box{border:1px solid #ddd;padding:10px;margin-bottom:12px;background:#fafafa}
+.side-box h4{font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#591C8B;margin-bottom:6px;padding-bottom:3px;border-bottom:1px solid #ddd}
+.side-box ul{list-style:none}
+.side-box ul li{line-height:1.9;font-size:12px}
+
+.badge{display:inline-block;background:#e8f5e9;color:#1b5e20;border:1px solid #a5d6a7;font-size:11px;padding:1px 6px;border-radius:2px}
+
+#footer{border-top:1px solid #ccc;padding:8px 16px;font-size:11px;color:#888;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+#footer a{font-size:11px;color:#888}
+#footer a:hover{text-decoration:underline}
+
+.loading{color:#999;font-size:13px;padding:20px 0}
+.error-box{color:#8b0000;background:#fde8e8;border:1px solid #f5c6c6;padding:12px;margin:16px 0;font-size:13px}
+
+@media(max-width:720px){
+  #main{flex-direction:column}
+  #right{width:100%;display:flex;flex-wrap:wrap;gap:8px}
+  .side-box{flex:1;min-width:160px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <h1><a href="/" style="color:inherit;text-decoration:none">open<span>data</span>bd</a></h1>
+  <div class="header-right">
+    <span class="tagline">open data for bangladesh &mdash; free, public, accessible</span>
+    <div class="header-links">
+      <a href="/submit.html">submit dataset</a> |
+      <a href="/api-docs.html">api docs</a> |
+      <a href="/api-docs.html#apikey">get api key</a> |
+      <a href="mailto:hello@opendatabd.com">contact</a>
+    </div>
+  </div>
+</div>
+
+<div id="breadcrumb">
+  <a href="/">opendatabd</a> &rsaquo; <a href="/" id="bc-category">datasets</a> &rsaquo; <span id="bc-title">loading...</span>
+</div>
+
+<div id="main">
+  <div id="left">
+    <div class="loading" id="loading-msg">Loading dataset...</div>
+    <div id="ds-content" style="display:none">
+
+      <h2 class="ds-title" id="ds-title"></h2>
+
+      <div class="meta-bar">
+        <span class="ds-tag" id="ds-format-tag"></span>
+        <span id="ds-category-badge"></span>
+        <span id="ds-division"></span>
+        <span id="ds-license-badge"></span>
+        <span style="color:#aaa">|</span>
+        <span id="ds-views"></span>
+        <span id="ds-downloads"></span>
+      </div>
+
+      <div class="action-row">
+        <a href="#" id="btn-download" class="btn btn-primary" target="_blank">⬇ Download Dataset</a>
+        <a href="/api-docs.html" id="btn-api" class="btn btn-secondary">📡 API Access</a>
+        <a href="mailto:hello@opendatabd.com?subject=Report broken data" class="btn btn-outline">⚑ Report Issue</a>
+      </div>
+
+      <div class="section">
+        <h3>description</h3>
+        <p class="description" id="ds-description"></p>
+      </div>
+
+      <div class="section">
+        <h3>dataset details</h3>
+        <table class="info-table">
+          <tr><td>Source</td><td id="ds-source-link"></td></tr>
+          <tr><td>Format</td><td id="ds-format"></td></tr>
+          <tr><td>Division / Region</td><td id="ds-division-detail"></td></tr>
+          <tr><td>Size / Rows</td><td id="ds-size"></td></tr>
+          <tr><td>License</td><td id="ds-license"></td></tr>
+          <tr><td>Last Updated</td><td id="ds-updated"></td></tr>
+          <tr><td>Date Added</td><td id="ds-added"></td></tr>
+          <tr><td>Submitted By</td><td id="ds-submitted"></td></tr>
+        </table>
+      </div>
+
+      <div class="section" id="tags-section">
+        <h3>tags</h3>
+        <div class="tags-list" id="ds-tags"></div>
+      </div>
+
+      <div class="section">
+        <h3>how to use this data</h3>
+        <p class="description">
+          This dataset is available under the license indicated above. You may download it directly or access it via the OpenDataBD REST API.
+          See the <a href="/api-docs.html">API documentation</a> for authentication, filtering, and field selection options.
+          To embed live data in your application, <a href="/api-docs.html#apikey">get a free API key</a>.
+        </p>
+      </div>
+
+    </div>
+    <div class="error-box" id="error-box" style="display:none">Dataset not found or an error occurred. <a href="/">Return to listings</a></div>
+  </div>
+
+  <div id="right">
+    <div class="side-box">
+      <h4>quick facts</h4>
+      <ul id="quick-facts">
+        <li>Loading...</li>
+      </ul>
+    </div>
+    <div class="side-box">
+      <h4>similar datasets</h4>
+      <ul id="similar-list">
+        <li>Loading...</li>
+      </ul>
+    </div>
+    <div class="side-box">
+      <h4>need the api?</h4>
+      <ul>
+        <li><a href="/api-docs.html">API documentation</a></li>
+        <li><a href="/api-docs.html#apikey">get free api key</a></li>
+        <li><a href="/api-docs.html#endpoints">endpoints reference</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div id="footer">
+  <span>© 2026 opendatabd</span>
+  <a href="/">home</a>
+  <a href="/api-docs.html">api</a>
+  <a href="/submit.html">submit dataset</a>
+  <a href="mailto:hello@opendatabd.com">contact</a>
+</div>
+
+<script>
+const API = '';
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('en-GB', {year:'numeric', month:'long', day:'numeric'});
+}
+
+const params = new URLSearchParams(location.search);
+const id = params.get('id');
+
+if (!id) {
+  document.getElementById('loading-msg').style.display = 'none';
+  document.getElementById('error-box').style.display = 'block';
+} else {
+  fetch(`${API}/api/datasets/${id}`)
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(renderDataset)
+    .catch(() => {
+      document.getElementById('loading-msg').style.display = 'none';
+      document.getElementById('error-box').style.display = 'block';
+    });
+}
+
+function renderDataset(d) {
+  document.title = `${d.title} — opendatabd`;
+  document.getElementById('loading-msg').style.display = 'none';
+  document.getElementById('ds-content').style.display = 'block';
+
+  document.getElementById('bc-title').textContent = d.title.length > 50 ? d.title.slice(0,48)+'…' : d.title;
+  document.getElementById('bc-category').textContent = d.category;
+  document.getElementById('bc-category').href = `/?category=${encodeURIComponent(d.category)}`;
+
+  document.getElementById('ds-title').textContent = d.title;
+
+  const ftag = document.getElementById('ds-format-tag');
+  ftag.textContent = d.format;
+  ftag.className = `ds-tag tag-${d.format}`;
+
+  document.getElementById('ds-category-badge').innerHTML = `<a href="/?category=${encodeURIComponent(d.category)}" style="color:#591C8B;font-size:12px">${esc(d.category)}</a>`;
+  document.getElementById('ds-division').textContent = d.division || 'nationwide';
+  document.getElementById('ds-license-badge').innerHTML = `<span class="badge">${esc(d.license)}</span>`;
+  document.getElementById('ds-views').textContent = `${(d.views||0).toLocaleString()} views`;
+  document.getElementById('ds-downloads').textContent = `${(d.downloads||0).toLocaleString()} downloads`;
+
+  if (d.download_url) {
+    document.getElementById('btn-download').href = d.download_url;
+  } else {
+    document.getElementById('btn-download').textContent = '⬇ Request Download';
+    document.getElementById('btn-download').href = `mailto:hello@opendatabd.com?subject=Download request: ${encodeURIComponent(d.title)}`;
+  }
+
+  document.getElementById('ds-description').textContent = d.description || 'No description provided.';
+
+  document.getElementById('ds-source-link').innerHTML = d.source_url
+    ? `<a href="${esc(d.source_url)}" target="_blank">${esc(d.source)}</a>`
+    : esc(d.source);
+  document.getElementById('ds-format').textContent = d.format;
+  document.getElementById('ds-division-detail').textContent = d.division || 'nationwide';
+  document.getElementById('ds-size').textContent = [d.rows_count, d.file_size].filter(Boolean).join(' · ') || '—';
+  document.getElementById('ds-license').innerHTML = `${esc(d.license)} — <a href="/api-docs.html#license">details</a>`;
+  document.getElementById('ds-updated').textContent = fmtDate(d.updated_at);
+  document.getElementById('ds-added').textContent = fmtDate(d.created_at);
+  document.getElementById('ds-submitted').textContent = d.submitted_by || 'OpenDataBD team';
+
+  const tags = Array.isArray(d.tags) ? d.tags : [];
+  if (tags.length) {
+    document.getElementById('ds-tags').innerHTML = tags.map(t =>
+      `<span class="tag-pill" onclick="window.location='/?q=${encodeURIComponent(t)}'">${esc(t)}</span>`
+    ).join('');
+  } else {
+    document.getElementById('tags-section').style.display = 'none';
+  }
+
+  document.getElementById('quick-facts').innerHTML = [
+    `<li><b>Format:</b> ${esc(d.format)}</li>`,
+    `<li><b>Category:</b> ${esc(d.category)}</li>`,
+    `<li><b>Region:</b> ${esc(d.division||'nationwide')}</li>`,
+    d.rows_count ? `<li><b>Rows:</b> ${esc(d.rows_count)}</li>` : '',
+    d.file_size ? `<li><b>Size:</b> ${esc(d.file_size)}</li>` : '',
+    `<li><b>License:</b> ${esc(d.license)}</li>`,
+    `<li><b>Source:</b> ${esc(d.source)}</li>`,
+  ].filter(Boolean).join('');
+
+  // Load similar datasets in same category
+  fetch(`${API}/api/datasets?category=${encodeURIComponent(d.category)}&limit=6`)
+    .then(r => r.json())
+    .then(data => {
+      const similar = data.datasets.filter(x => x.id !== d.id).slice(0, 5);
+      const ul = document.getElementById('similar-list');
+      if (!similar.length) { ul.innerHTML = '<li>No similar datasets found.</li>'; return; }
+      ul.innerHTML = similar.map(x =>
+        `<li><a href="/dataset.html?id=${x.id}">${esc(x.title.length > 42 ? x.title.slice(0,40)+'…' : x.title)}</a></li>`
+      ).join('');
+    })
+    .catch(() => { document.getElementById('similar-list').innerHTML = '<li>—</li>'; });
+}
+</script>
+</body>
+</html>

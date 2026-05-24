@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>OpenDataBD | Empowering Bangladesh Through Data</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "on-secondary-container": "#fffbff",
+        "inverse-on-surface": "#eff1f3",
+        "background": "#f7f9fb",
+        "on-surface": "#191c1e",
+        "inverse-surface": "#2d3133",
+        "secondary-fixed-dim": "#ffb3b6",
+        "surface-dim": "#d8dadc",
+        "outline": "#76777d",
+        "on-secondary-fixed": "#40000c",
+        "tertiary-fixed-dim": "#6bd8cb",
+        "surface-container-high": "#e6e8ea",
+        "on-background": "#191c1e",
+        "on-secondary": "#ffffff",
+        "primary-fixed-dim": "#bec6e0",
+        "surface-bright": "#f7f9fb",
+        "secondary-container": "#e21e49",
+        "tertiary-container": "#00201d",
+        "secondary": "#ba0035",
+        "on-tertiary-fixed": "#00201d",
+        "on-primary-fixed-variant": "#3f465c",
+        "on-primary-fixed": "#131b2e",
+        "surface-container-highest": "#e0e3e5",
+        "surface-container-lowest": "#ffffff",
+        "primary-fixed": "#dae2fd",
+        "on-error-container": "#93000a",
+        "primary-container": "#131b2e",
+        "on-tertiary-container": "#0c9488",
+        "surface-container-low": "#f2f4f6",
+        "on-tertiary-fixed-variant": "#005049",
+        "tertiary": "#000000",
+        "surface": "#f7f9fb",
+        "on-primary": "#ffffff",
+        "inverse-primary": "#bec6e0",
+        "error": "#ba1a1a",
+        "on-tertiary": "#ffffff",
+        "surface-container": "#eceef0",
+        "tertiary-fixed": "#89f5e7",
+        "on-surface-variant": "#45464d",
+        "primary": "#000000",
+        "on-primary-container": "#7c839b",
+        "on-secondary-fixed-variant": "#920028",
+        "on-error": "#ffffff",
+        "secondary-fixed": "#ffdada",
+        "outline-variant": "#c6c6cd",
+        "surface-tint": "#565e74",
+        "error-container": "#ffdad6",
+        "surface-variant": "#e0e3e5"
+      },
+      spacing: {
+        "margin-desktop": "64px",
+        "unit-lg": "32px",
+        "container-max": "1280px",
+        "unit-xs": "4px",
+        "margin-mobile": "20px",
+        "unit-xl": "64px",
+        "gutter": "24px",
+        "unit-sm": "8px",
+        "unit-md": "16px"
+      },
+      fontFamily: {
+        "label-caps": ["JetBrains Mono"],
+        "body-md": ["Inter"],
+        "headline-lg": ["Hanken Grotesk"],
+        "body-lg": ["Inter"],
+        "display-lg": ["Hanken Grotesk"],
+        "headline-md": ["Hanken Grotesk"]
+      },
+      fontSize: {
+        "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "600" }],
+        "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }],
+        "headline-lg": ["32px", { lineHeight: "1.2", letterSpacing: "-0.01em", fontWeight: "700" }],
+        "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+        "display-lg": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "800" }],
+        "headline-md": ["24px", { lineHeight: "1.3", fontWeight: "600" }]
+      }
+    }
+  }
+}
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+
+  /* Glass card — large feature cards */
+  .glass-card {
+    background: rgba(22, 24, 27, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .glass-card:hover {
+    border-color: rgba(186, 0, 53, 0.38);
+    background: rgba(22, 24, 27, 0.82);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.45), 0 0 24px rgba(186,0,53,0.08);
+  }
+
+  /* Compact card — categories + datasets + audience */
+  .dark-card {
+    background: rgba(18, 20, 22, 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .dark-card:hover {
+    border-color: rgba(186, 0, 53, 0.38);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(186, 0, 53, 0.1);
+  }
+
+  /* Lifecycle node pulse */
+  .node-active {
+    border-color: rgba(186, 0, 53, 0.8) !important;
+    box-shadow: 0 0 28px rgba(186, 0, 53, 0.45), inset 0 0 14px rgba(186, 0, 53, 0.15);
+    background: rgba(186, 0, 53, 0.12) !important;
+  }
+  .node-active .node-icon {
+    color: white !important;
+  }
+
+  /* Progress pulse along the connector line */
+  @keyframes progressPulse {
+    0%   { left: -60%; }
+    100% { left: 120%; }
+  }
+  .progress-pulse {
+    animation: progressPulse 2.8s infinite linear;
+  }
+
+  /* Scroll reveal */
+  .reveal-card {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-card, .glass-card, .dark-card, .transition-all {
+      animation: none !important;
+      transition: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+</style>
+</head>
+<body class="bg-[#0a0c0e] text-white font-body-md selection:bg-secondary/30">
+
+<!-- Nav -->
+<nav class="w-full sticky top-0 z-50 bg-[#0a0c0e]/90 backdrop-blur-md border-b border-white/[0.07]">
+  <div class="max-w-container-max mx-auto px-margin-desktop flex items-center justify-between h-20">
+    <div class="flex items-center gap-gutter">
+      <button class="font-headline-md text-[22px] font-bold bg-secondary text-white px-unit-md py-unit-sm rounded-lg hover:bg-secondary-container transition-colors duration-200 active:scale-95 shadow-sm">OpenDataBD</button>
+      <div class="hidden md:flex items-center gap-1 ml-unit-lg">
+        <a class="px-4 py-2 rounded-full text-base text-white/55 hover:bg-secondary hover:text-white transition-colors duration-200" href="#">Datasets</a>
+        <a class="px-4 py-2 rounded-full text-base text-white/55 hover:bg-secondary hover:text-white transition-colors duration-200" href="#">API Docs</a>
+        <a class="px-4 py-2 rounded-full text-base text-white/55 hover:bg-secondary hover:text-white transition-colors duration-200" href="#">Dashboards</a>
+        <a class="px-4 py-2 rounded-full text-base text-white/55 hover:bg-secondary hover:text-white transition-colors duration-200" href="#">Impact</a>
+        <a class="px-4 py-2 rounded-full text-base text-white/55 hover:bg-secondary hover:text-white transition-colors duration-200" href="#">News</a>
+      </div>
+    </div>
+    <div class="flex items-center gap-unit-md">
+      <button class="material-symbols-outlined text-white/50 p-2 hover:bg-white/8 rounded-full transition-colors duration-200" aria-label="Search">search</button>
+      <button class="bg-secondary text-white px-unit-md py-unit-sm rounded-lg font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95">Sign In</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero — Open Data Lifecycle -->
+<header class="relative overflow-hidden bg-[#0a0c0e]">
+  <!-- Ambient red bloom -->
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[550px] rounded-full pointer-events-none" style="background: radial-gradient(ellipse, rgba(186,0,53,0.07) 0%, transparent 70%);"></div>
+
+  <div class="max-w-container-max mx-auto px-margin-desktop py-unit-xl md:py-28 relative z-10">
+    <div class="flex flex-col items-center text-center max-w-5xl mx-auto">
+
+      <!-- Label -->
+      <span class="font-label-caps text-label-caps text-secondary tracking-widest mb-6 bg-secondary/10 border border-secondary/20 px-4 py-1.5 rounded-full inline-block">EXPLORE THE JOURNEY</span>
+
+      <h1 class="font-display-lg text-display-lg mb-16 leading-tight text-white/90">The Open Data Lifecycle</h1>
+
+      <!-- Lifecycle Visualizer -->
+      <div class="relative w-full max-w-4xl mx-auto px-6 md:px-16 py-14 rounded-[1.75rem] bg-[#111316]/50 backdrop-blur-xl border border-white/[0.08]" style="box-shadow: 0 0 60px rgba(186,0,53,0.06);">
+
+        <!-- Connector line -->
+        <div class="absolute top-[calc(50%-2.5rem)] left-[18%] right-[18%] h-px bg-white/[0.05] overflow-hidden">
+          <div class="absolute top-0 bottom-0 w-2/5 bg-gradient-to-r from-transparent via-secondary/50 to-transparent progress-pulse"></div>
+        </div>
+
+        <!-- Nodes -->
+        <div class="relative flex justify-between items-start w-full gap-4">
+
+          <!-- Node 0 · Collection -->
+          <div class="flex flex-col items-center gap-5" id="node-0">
+            <div class="lifecycle-node w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/[0.04] border border-white/[0.09] flex items-center justify-center transition-all duration-500">
+              <span class="node-icon material-symbols-outlined text-3xl md:text-4xl text-white/35 transition-colors duration-300" style="font-variation-settings:'FILL' 1;">database</span>
+            </div>
+            <div class="text-center">
+              <p class="font-semibold text-white text-base md:text-lg leading-tight mb-1">Collection</p>
+              <p class="text-[11px] uppercase tracking-widest text-white/35">Gathering</p>
+            </div>
+          </div>
+
+          <!-- Node 1 · Processing -->
+          <div class="flex flex-col items-center gap-5" id="node-1">
+            <div class="lifecycle-node w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/[0.04] border border-white/[0.09] flex items-center justify-center transition-all duration-500">
+              <span class="node-icon material-symbols-outlined text-3xl md:text-4xl text-white/35 transition-colors duration-300" style="font-variation-settings:'FILL' 1;">settings</span>
+            </div>
+            <div class="text-center">
+              <p class="font-semibold text-white text-base md:text-lg leading-tight mb-1">Processing</p>
+              <p class="text-[11px] uppercase tracking-widest text-white/35">Refining</p>
+            </div>
+          </div>
+
+          <!-- Node 2 · Visualization -->
+          <div class="flex flex-col items-center gap-5" id="node-2">
+            <div class="lifecycle-node w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/[0.04] border border-white/[0.09] flex items-center justify-center transition-all duration-500">
+              <span class="node-icon material-symbols-outlined text-3xl md:text-4xl text-white/35 transition-colors duration-300" style="font-variation-settings:'FILL' 1;">bar_chart</span>
+            </div>
+            <div class="text-center">
+              <p class="font-semibold text-white text-base md:text-lg leading-tight mb-1">Visualization</p>
+              <p class="text-[11px] uppercase tracking-widest text-white/35">Insights</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Stats Bar -->
+<div class="bg-[#0d0f11] border-y border-white/[0.06]">
+  <div class="max-w-container-max mx-auto px-margin-desktop py-8">
+    <dl class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div class="flex flex-col items-center gap-1 md:border-r md:border-white/[0.07]">
+        <dt class="text-[2rem] font-extrabold font-headline-lg text-white tabular-nums leading-none">5,000+</dt>
+        <dd class="text-sm text-white/40">Public Datasets</dd>
+      </div>
+      <div class="flex flex-col items-center gap-1 md:border-r md:border-white/[0.07]">
+        <dt class="text-[2rem] font-extrabold font-headline-lg text-white tabular-nums leading-none">200+</dt>
+        <dd class="text-sm text-white/40">Contributors</dd>
+      </div>
+      <div class="flex flex-col items-center gap-1 md:border-r md:border-white/[0.07]">
+        <dt class="text-[2rem] font-extrabold font-headline-lg text-white tabular-nums leading-none">64</dt>
+        <dd class="text-sm text-white/40">Districts Covered</dd>
+      </div>
+      <div class="flex flex-col items-center gap-1">
+        <dt class="text-[2rem] font-extrabold font-headline-lg text-white tabular-nums leading-none">1M+</dt>
+        <dd class="text-sm text-white/40">Dataset Downloads</dd>
+      </div>
+    </dl>
+  </div>
+</div>
+
+<!-- Core Features -->
+<section class="py-unit-xl bg-[#0a0c0e] relative overflow-hidden">
+  <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(186,0,53,0.04) 0%, transparent 70%);"></div>
+  <div class="max-w-container-max mx-auto px-margin-desktop relative z-10">
+    <div class="mb-unit-xl">
+      <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-2">PLATFORM</p>
+      <h2 class="font-headline-lg text-headline-lg text-white">Core Features</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-14">
+
+      <!-- Discover -->
+      <div class="group reveal-card glass-card rounded-2xl overflow-hidden flex flex-col">
+        <div class="p-1 pb-0">
+          <div class="h-52 rounded-t-xl bg-[#111316] relative overflow-hidden flex items-center justify-center">
+            <svg class="w-40 h-40 text-secondary opacity-25 group-hover:opacity-40 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M4 7v10c0 1.1.9 2 2 2h12a2 2 0 002-2V7M4 7a2 2 0 012-2h12a2 2 0 012 2M4 7l8 4 8-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.8"/>
+            </svg>
+            <div class="absolute bottom-4 left-5">
+              <span class="font-mono text-[10px] text-secondary tracking-[0.2em] bg-secondary/10 border border-secondary/20 px-2 py-1 rounded">CATALOG_01</span>
+            </div>
+          </div>
+        </div>
+        <div class="p-8 flex flex-col flex-grow">
+          <h3 class="font-headline-lg text-headline-lg text-white mb-4 group-hover:text-secondary-fixed-dim transition-colors duration-200">Discover Data</h3>
+          <p class="text-base text-white/50 mb-8 leading-relaxed">Explore verified catalogs curated by government agencies and researchers. Export high-fidelity data in CSV, JSON, or Parquet formats.</p>
+          <div class="mt-auto flex items-center justify-between">
+            <a class="flex items-center gap-1 text-white font-semibold hover:text-secondary-fixed-dim transition-colors duration-200" href="#">
+              <span>Browse Catalog</span>
+              <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform duration-200">arrow_right_alt</span>
+            </a>
+            <div class="flex -space-x-2">
+              <div class="w-8 h-8 rounded-full border-2 border-[#111316] bg-white/10 flex items-center justify-center text-[10px] font-bold text-white/50">BD</div>
+              <div class="w-8 h-8 rounded-full border-2 border-[#111316] bg-secondary flex items-center justify-center text-[10px] font-bold text-white">DS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="group reveal-card glass-card rounded-2xl overflow-hidden flex flex-col" data-reveal-delay="150">
+        <div class="p-1 pb-0">
+          <div class="h-52 rounded-t-xl bg-[#111316] relative overflow-hidden flex items-center justify-center">
+            <svg class="w-40 h-40 text-secondary opacity-25 group-hover:opacity-40 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.8"/>
+            </svg>
+            <div class="absolute bottom-4 left-5">
+              <span class="font-mono text-[10px] text-secondary tracking-[0.2em] bg-secondary/10 border border-secondary/20 px-2 py-1 rounded">CONTRIB_X</span>
+            </div>
+          </div>
+        </div>
+        <div class="p-8 flex flex-col flex-grow">
+          <h3 class="font-headline-lg text-headline-lg text-white mb-4 group-hover:text-secondary-fixed-dim transition-colors duration-200">Submit Data</h3>
+          <p class="text-base text-white/50 mb-8 leading-relaxed">Contribute to the national data ecosystem. Securely share community research or localized statistics for public benefit and civic growth.</p>
+          <div class="mt-auto">
+            <button class="w-full py-3.5 bg-white/5 border border-white/10 text-white font-semibold rounded-xl hover:bg-secondary hover:border-secondary transition-all duration-200 flex items-center justify-center gap-2 active:scale-95">
+              <span>Contribution Portal</span>
+              <span class="material-symbols-outlined text-lg">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Browse by Category -->
+<section class="bg-[#0d0f11] py-unit-xl border-t border-white/[0.06]">
+  <div class="max-w-container-max mx-auto px-margin-desktop">
+    <div class="flex items-end justify-between mb-unit-lg">
+      <div>
+        <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-2">EXPLORE</p>
+        <h2 class="font-headline-lg text-headline-lg text-white">Browse by Category</h2>
+      </div>
+      <a href="#" class="text-secondary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all duration-200">
+        View all <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+      </a>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+
+      <a href="#" class="group dark-card flex flex-col items-center gap-2.5 px-3 py-5 rounded-xl text-center">
+        <div class="w-11 h-11 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:bg-secondary/15 group-hover:border-secondary/30 transition-colors duration-200">
+          <span class="material-symbols-outlined text-white/35 group-hover:text-secondary transition-colors duration-200" style="font-variation-settings:'FILL' 1;font-size:22px;">agriculture</span>
+        </div>
+        <div><p class="text-sm font-semibold text-white">Agriculture</p><p class="text-xs text-white/35 mt-0.5">312 datasets</p></div>
+      </a>
+
+      <a href="#" class="group dark-card flex flex-col items-center gap-2.5 px-3 py-5 rounded-xl text-center">
+        <div class="w-11 h-11 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:bg-secondary/15 group-hover:border-secondary/30 transition-colors duration-200">
+          <span class="material-symbols-outlined text-white/35 group-hover:text-secondary transition-colors duration-200" style="font-variation-settings:'FILL' 1;font-size:22px;">partly_cloudy_day</span>
+        </div>
+        <div><p class="text-sm font-semibold text-white">Climate</p><p class="text-xs text-white/35 mt-0.5">248 datasets</p></div>
+      </a>
+
+      <a href="#" class="group dark-card flex flex-col items-center gap-2.5 px-3 py-5 rounded-xl text-center">
+        <div class="w-11 h-11 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:bg-secondary/15 group-hover:border-secondary/30 transition-colors duration-200">
+          <span class="material-symbols-outlined text-white/35 group-hover:text-secondary transition-colors duration-200" style="font-variation-settings:'FILL' 1;font-size:22px;">trending_up</span>
+        </div>
+        <div><p class="text-sm font-semibold text-white">Economy</p><p class="text-xs text-white/35 mt-0.5">427 datasets</p></div>
+      </a>
+
+      <a href="#" class="group dark-card flex flex-col items-center gap-2.5 px-3 py-5 rounded-xl text-center">
+        <div class="w-11 h-11 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:bg-secondary/15 group-hover:border-secondary/30 transition-colors duration-200">
+          <span class="material-symbols-outlined text-white/35 group-hover:text-secondary transition-colors duration-200" style="font-variation-settings:'FILL' 1;font-size:22px;">school</span>
+        </div>
+        <div><p class="text-sm font-semibold text-white">Education</p><p class="text-xs text-white/35 mt-0.5">311 datasets</p></div>
+      </a>
+
+      <a href="#" class="group dark-card flex flex-col items-center gap-2.5 px-3 py-5 rounded-xl text-center">
+        <div class="w-11 h-11 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:bg-secondary/15 group-hover:border-secondary/30 transition-colors duration-200">
+          <span class="material-symbols-outlined text-white/35 group-hover:text-secondary transition-colors duration-200" style="font-variation-settings:'FILL' 1;font-size:22px;">health_and_safety</span>
+        </div>
+        <div><p class="text-sm font-semibold text-white">Health</p><p class="text-xs text-white/35 mt-0.5">389 datasets</p></div>
+      </a>
+
+      <a href="#" class="group dark-card flex flex-col items-center gap-2.5 px-3 py-5 rounded-xl text-center">
+        <div class="w-11 h-11 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:bg-secondary/15 group-hover:border-secondary/30 transition-colors duration-200">
+          <span class="material-symbols-outlined text-white/35 group-hover:text-secondary transition-colors duration-200" style="font-variation-settings:'FILL' 1;font-size:22px;">eco</span>
+        </div>
+        <div><p class="text-sm font-semibold text-white">Environment</p><p class="text-xs text-white/35 mt-0.5">203 datasets</p></div>
+      </a>
+
+      <a href="#" class="group dark-card flex flex-col items-center gap-2.5 px-3 py-5 rounded-xl text-center">
+        <div class="w-11 h-11 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:bg-secondary/15 group-hover:border-secondary/30 transition-colors duration-200">
+          <span class="material-symbols-outlined text-white/35 group-hover:text-secondary transition-colors duration-200" style="font-variation-settings:'FILL' 1;font-size:22px;">bolt</span>
+        </div>
+        <div><p class="text-sm font-semibold text-white">Energy</p><p class="text-xs text-white/35 mt-0.5">156 datasets</p></div>
+      </a>
+
+      <a href="#" class="group dark-card flex flex-col items-center gap-2.5 px-3 py-5 rounded-xl text-center">
+        <div class="w-11 h-11 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:bg-secondary/15 group-hover:border-secondary/30 transition-colors duration-200">
+          <span class="material-symbols-outlined text-white/35 group-hover:text-secondary transition-colors duration-200" style="font-variation-settings:'FILL' 1;font-size:22px;">foundation</span>
+        </div>
+        <div><p class="text-sm font-semibold text-white">Infrastructure</p><p class="text-xs text-white/35 mt-0.5">178 datasets</p></div>
+      </a>
+
+      <a href="#" class="group dark-card flex flex-col items-center gap-2.5 px-3 py-5 rounded-xl text-center">
+        <div class="w-11 h-11 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:bg-secondary/15 group-hover:border-secondary/30 transition-colors duration-200">
+          <span class="material-symbols-outlined text-white/35 group-hover:text-secondary transition-colors duration-200" style="font-variation-settings:'FILL' 1;font-size:22px;">account_balance</span>
+        </div>
+        <div><p class="text-sm font-semibold text-white">Governance</p><p class="text-xs text-white/35 mt-0.5">264 datasets</p></div>
+      </a>
+
+      <a href="#" class="group dark-card flex flex-col items-center gap-2.5 px-3 py-5 rounded-xl text-center">
+        <div class="w-11 h-11 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:bg-secondary/15 group-hover:border-secondary/30 transition-colors duration-200">
+          <span class="material-symbols-outlined text-white/35 group-hover:text-secondary transition-colors duration-200" style="font-variation-settings:'FILL' 1;font-size:22px;">group</span>
+        </div>
+        <div><p class="text-sm font-semibold text-white">Demographics</p><p class="text-xs text-white/35 mt-0.5">194 datasets</p></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- Featured Datasets -->
+<section class="py-unit-xl bg-[#0a0c0e]">
+  <div class="max-w-container-max mx-auto px-margin-desktop">
+    <div class="flex items-end justify-between mb-unit-lg">
+      <div>
+        <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-2">LATEST</p>
+        <h2 class="font-headline-lg text-headline-lg text-white">Featured Datasets</h2>
+      </div>
+      <a href="#" class="text-secondary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all duration-200">
+        Browse all <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+      </a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+
+      <!-- Dataset 1 -->
+      <article class="group dark-card flex flex-col rounded-xl overflow-hidden">
+        <div class="p-5 flex-1 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/[0.05] text-white/45 group-hover:bg-secondary/20 group-hover:text-secondary-fixed-dim transition-colors duration-200">Health</span>
+            <span class="font-mono text-xs font-bold px-2 py-0.5 rounded tracking-wide" style="background:rgba(137,245,231,0.12);color:#89f5e7;">CSV</span>
+          </div>
+          <h4 class="font-semibold text-white mb-2 leading-snug group-hover:text-secondary-fixed-dim transition-colors duration-200">District-wise Hospital Bed Capacity</h4>
+          <p class="text-sm text-white/40 mb-4 flex-1 line-clamp-2">Hospital capacity across all 64 districts, including specialists and bed availability by year.</p>
+          <div class="flex items-center gap-3 text-xs text-white/35">
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:14px;">download</span>4,210</span>
+            <span>·</span><span>Updated Apr 2024</span>
+          </div>
+        </div>
+        <div class="px-5 py-3 border-t border-white/[0.05] flex items-center justify-between" style="background:rgba(255,255,255,0.02);">
+          <span class="text-xs text-white/35">DGHS Bangladesh</span>
+          <span class="material-symbols-outlined text-secondary group-hover:translate-x-0.5 transition-transform duration-200" style="font-size:18px;">arrow_forward</span>
+        </div>
+      </article>
+
+      <!-- Dataset 2 -->
+      <article class="group dark-card flex flex-col rounded-xl overflow-hidden">
+        <div class="p-5 flex-1 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/[0.05] text-white/45 group-hover:bg-secondary/20 group-hover:text-secondary-fixed-dim transition-colors duration-200">Economy</span>
+            <span class="font-mono text-xs font-bold px-2 py-0.5 rounded tracking-wide" style="background:rgba(218,226,253,0.12);color:#bec6e0;">JSON</span>
+          </div>
+          <h4 class="font-semibold text-white mb-2 leading-snug group-hover:text-secondary-fixed-dim transition-colors duration-200">Bangladesh GDP Growth Rate 2000–2023</h4>
+          <p class="text-sm text-white/40 mb-4 flex-1 line-clamp-2">Annual GDP and sector-wise growth rate from the Bangladesh Bureau of Statistics over two decades.</p>
+          <div class="flex items-center gap-3 text-xs text-white/35">
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:14px;">download</span>8,542</span>
+            <span>·</span><span>Updated Jan 2024</span>
+          </div>
+        </div>
+        <div class="px-5 py-3 border-t border-white/[0.05] flex items-center justify-between" style="background:rgba(255,255,255,0.02);">
+          <span class="text-xs text-white/35">Bangladesh Bureau of Statistics</span>
+          <span class="material-symbols-outlined text-secondary group-hover:translate-x-0.5 transition-transform duration-200" style="font-size:18px;">arrow_forward</span>
+        </div>
+      </article>
+
+      <!-- Dataset 3 -->
+      <article class="group dark-card flex flex-col rounded-xl overflow-hidden">
+        <div class="p-5 flex-1 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/[0.05] text-white/45 group-hover:bg-secondary/20 group-hover:text-secondary-fixed-dim transition-colors duration-200">Education</span>
+            <span class="font-mono text-xs font-bold px-2 py-0.5 rounded tracking-wide" style="background:rgba(186,0,53,0.15);color:#ffb3b6;">API</span>
+          </div>
+          <h4 class="font-semibold text-white mb-2 leading-snug group-hover:text-secondary-fixed-dim transition-colors duration-200">Primary School Enrollment by Division</h4>
+          <p class="text-sm text-white/40 mb-4 flex-1 line-clamp-2">Division and district-level primary enrollment stats with gender disaggregation from 2010 to present.</p>
+          <div class="flex items-center gap-3 text-xs text-white/35">
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:14px;">download</span>6,103</span>
+            <span>·</span><span>Updated Mar 2024</span>
+          </div>
+        </div>
+        <div class="px-5 py-3 border-t border-white/[0.05] flex items-center justify-between" style="background:rgba(255,255,255,0.02);">
+          <span class="text-xs text-white/35">Ministry of Education</span>
+          <span class="material-symbols-outlined text-secondary group-hover:translate-x-0.5 transition-transform duration-200" style="font-size:18px;">arrow_forward</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- Audience -->
+<section class="bg-[#0d0f11] py-unit-xl border-t border-white/[0.06]">
+  <div class="max-w-container-max mx-auto px-margin-desktop">
+    <div class="text-center mb-unit-xl">
+      <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-3">COMMUNITY</p>
+      <h2 class="font-headline-lg text-headline-lg text-white mb-3">Data for Everyone</h2>
+      <p class="text-white/40 max-w-xl mx-auto">Tailored tools and high-fidelity experiences designed for our diverse professional community.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+      <div class="reveal-card group dark-card p-8 rounded-2xl flex flex-col items-center text-center">
+        <div class="w-14 h-14 bg-white/[0.04] border border-white/[0.07] rounded-2xl flex items-center justify-center mb-6 group-hover:bg-secondary/15 group-hover:border-secondary/30 transition-colors duration-200">
+          <span class="material-symbols-outlined text-white/35 text-3xl group-hover:text-secondary transition-colors duration-200" style="font-variation-settings:'FILL' 1;">biotech</span>
+        </div>
+        <h4 class="font-headline-md text-headline-md text-white mb-4">Researchers</h4>
+        <p class="text-base text-white/40">Access raw historical data and enterprise API endpoints for deep longitudinal analysis and predictive modeling.</p>
+      </div>
+
+      <div class="reveal-card group dark-card p-8 rounded-2xl flex flex-col items-center text-center" data-reveal-delay="150">
+        <div class="w-14 h-14 bg-white/[0.04] border border-white/[0.07] rounded-2xl flex items-center justify-center mb-6 group-hover:bg-secondary/15 group-hover:border-secondary/30 transition-colors duration-200">
+          <span class="material-symbols-outlined text-white/35 text-3xl group-hover:text-secondary transition-colors duration-200" style="font-variation-settings:'FILL' 1;">school</span>
+        </div>
+        <h4 class="font-headline-md text-headline-md text-white mb-4">Students</h4>
+        <p class="text-base text-white/40">Learning resources and curated, clean datasets for data science projects, university research, and visual storytelling.</p>
+      </div>
+
+      <div class="reveal-card group dark-card p-8 rounded-2xl flex flex-col items-center text-center" data-reveal-delay="300">
+        <div class="w-14 h-14 bg-white/[0.04] border border-white/[0.07] rounded-2xl flex items-center justify-center mb-6 group-hover:bg-secondary/15 group-hover:border-secondary/30 transition-colors duration-200">
+          <span class="material-symbols-outlined text-white/35 text-3xl group-hover:text-secondary transition-colors duration-200" style="font-variation-settings:'FILL' 1;">account_balance</span>
+        </div>
+        <h4 class="font-headline-md text-headline-md text-white mb-4">Government</h4>
+        <p class="text-base text-white/40">Secure inter-departmental data sharing protocols to enhance policy making and service delivery through data-driven insights.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="relative bg-primary-container py-unit-xl overflow-hidden">
+  <div class="absolute inset-0 opacity-10 pointer-events-none">
+    <img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkqVN6EYcquhI-0Tgrtz1Zi3l6_Y_Yv1zJw9A5wgJa7f4VDqGBndUq4gc1CzEV7n3_i-Q1sA9l1djZ9bnKCVGE4LCEnOoXGukFkf_ZPnHdYWwRYKz0nK48fka0s1YbJ3opMW8niHsMM5KaU_t5jJa1fc6Y5uDK-Za5cdLhsyRNR8zgrx021Mu7QamAkOYIOP5EgEyKZLh7IYWKach1rVX3BpCKBhCe0Lt1jJoW-ViEoMcbxD9rJMNwgVXATJhNDLeqkJO8SFFwglg">
+  </div>
+  <div class="max-w-container-max mx-auto px-margin-desktop relative z-10 flex flex-col md:flex-row items-center justify-between gap-unit-xl">
+    <div class="max-w-2xl text-center md:text-left">
+      <h2 class="font-display-lg text-headline-lg md:text-display-lg mb-unit-md leading-tight text-white">Join the National Data Network</h2>
+      <p class="font-body-lg text-body-lg text-on-primary-container">Build the future of Bangladesh with open, accessible, and high-quality data. Sign up for free today.</p>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-unit-md shrink-0">
+      <button class="bg-secondary text-white px-unit-xl py-unit-md rounded-lg font-semibold text-body-lg hover:bg-secondary-container transition-colors duration-200 shadow-lg active:scale-95">Get Started for Free</button>
+      <button class="border-2 border-on-primary-container text-on-primary-container px-unit-xl py-unit-md rounded-lg font-semibold text-body-lg hover:bg-white/10 transition-colors duration-200 active:scale-95">Learn about APIs</button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="w-full py-unit-xl bg-[#06080a]">
+  <div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter">
+    <div class="md:col-span-1">
+      <span class="font-headline-md text-[22px] font-bold text-white mb-unit-md block">OpenDataBD</span>
+      <p class="text-white/35 text-base mb-unit-md leading-relaxed">Empowering citizens through transparency and technological innovation. Built for a smarter Bangladesh.</p>
+    </div>
+    <div>
+      <h5 class="text-white font-semibold mb-unit-md">Quick Links</h5>
+      <ul class="space-y-unit-sm text-white/35 text-base">
+        <li><a class="hover:text-secondary-fixed-dim transition-colors duration-200 underline-offset-4 hover:underline" href="#">About Us</a></li>
+        <li><a class="hover:text-secondary-fixed-dim transition-colors duration-200 underline-offset-4 hover:underline" href="#">Privacy Policy</a></li>
+        <li><a class="hover:text-secondary-fixed-dim transition-colors duration-200 underline-offset-4 hover:underline" href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="text-white font-semibold mb-unit-md">Resources</h5>
+      <ul class="space-y-unit-sm text-white/35 text-base">
+        <li><a class="hover:text-secondary-fixed-dim transition-colors duration-200 underline-offset-4 hover:underline" href="#">Open Data Policy</a></li>
+        <li><a class="hover:text-secondary-fixed-dim transition-colors duration-200 underline-offset-4 hover:underline" href="#">Developer Portal</a></li>
+        <li><a class="hover:text-secondary-fixed-dim transition-colors duration-200 underline-offset-4 hover:underline" href="#">API Documentation</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="text-white font-semibold mb-unit-md">Support</h5>
+      <ul class="space-y-unit-sm text-white/35 text-base">
+        <li><a class="hover:text-secondary-fixed-dim transition-colors duration-200 underline-offset-4 hover:underline" href="#">Contact Support</a></li>
+        <li><a class="hover:text-secondary-fixed-dim transition-colors duration-200 underline-offset-4 hover:underline" href="#">Help Center</a></li>
+        <li><a class="hover:text-secondary-fixed-dim transition-colors duration-200 underline-offset-4 hover:underline" href="#">Report a Bug</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-container-max mx-auto px-margin-desktop mt-unit-xl pt-unit-md border-t border-white/[0.07] flex flex-col md:flex-row justify-between items-center text-white/30 text-sm gap-4">
+    <span>© 2025 OpenDataBD. Empowering citizens through transparency.</span>
+    <div class="flex gap-unit-md">
+      <a class="hover:text-white transition-colors duration-200" href="#" aria-label="Website"><span class="material-symbols-outlined">public</span></a>
+      <a class="hover:text-white transition-colors duration-200" href="#" aria-label="Email"><span class="material-symbols-outlined">alternate_email</span></a>
+      <a class="hover:text-white transition-colors duration-200" href="#" aria-label="RSS"><span class="material-symbols-outlined">rss_feed</span></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Lifecycle node cycling ──────────────────────────────────────────────
+  const lifecycleNodes = [
+    document.getElementById('node-0').querySelector('.lifecycle-node'),
+    document.getElementById('node-1').querySelector('.lifecycle-node'),
+    document.getElementById('node-2').querySelector('.lifecycle-node'),
+  ];
+  let activeNode = 0;
+
+  function activateNode(idx) {
+    lifecycleNodes.forEach(n => n.classList.remove('node-active'));
+    const node = lifecycleNodes[idx];
+    node.classList.add('node-active');
+    node.style.transform = 'scale(1.08)';
+    setTimeout(() => { node.style.transform = ''; }, 420);
+  }
+
+  activateNode(0);
+  setInterval(() => {
+    activeNode = (activeNode + 1) % lifecycleNodes.length;
+    activateNode(activeNode);
+  }, 3000);
+
+  // ── Scroll reveal with stagger via data-reveal-delay ───────────────────
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = parseInt(entry.target.dataset.revealDelay || 0);
+        setTimeout(() => entry.target.classList.add('visible'), delay);
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal-card').forEach(card => revealObserver.observe(card));
+</script>
+
+</body>
+</html>

@@ -1,5 +1,21 @@
-/.quarto/
-/_site/
-*.DS_Store
+# Dependencies
+node_modules/
 
-**/*.quarto_ipynb
+# Environment — never commit real secrets
+.env
+.env.local
+.env.*.local
+
+# Vercel build output
+.vercel/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Local dev uploads
+uploads/
