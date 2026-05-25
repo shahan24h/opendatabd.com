@@ -132,8 +132,20 @@ tailwind.config = {
     transform: translateY(0);
   }
 
+  @keyframes heroFloat {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-10px); }
+  }
+  .hero-float-1 {
+    animation: heroFloat 4s ease-in-out 0.8s infinite;
+  }
+  .hero-float-2 {
+    animation: heroFloat 4s ease-in-out 1.4s infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .animate-fade-up, .reveal-card, .transition-all {
+    .animate-fade-up, .reveal-card, .transition-all,
+    .hero-float-1, .hero-float-2 {
       animation: none !important;
       transition: none !important;
       opacity: 1 !important;
@@ -150,11 +162,11 @@ tailwind.config = {
     <div class="flex items-center gap-gutter">
       <button class="font-headline-md text-headline-md font-bold bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg hover:bg-secondary-container transition-colors duration-200 active:scale-95 shadow-sm">OpenDataBD</button>
       <div class="hidden md:flex items-center gap-1 ml-unit-lg">
-        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="#">Datasets</a>
-        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="#">API Docs</a>
-        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="#">Dashboards</a>
-        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="#">Impact</a>
-        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="#">News</a>
+        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/datasets">Datasets</a>
+        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/api-docs">API Docs</a>
+        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/about">About Us</a>
+        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/impact">Impact</a>
+        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/news">News</a>
       </div>
     </div>
     <div class="flex items-center gap-unit-md">
@@ -185,10 +197,14 @@ tailwind.config = {
 <header class="relative overflow-hidden" style="background-image: linear-gradient(rgba(0,0,0,0.58), rgba(0,0,0,0.58)), url('https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/hero-bg.jpg'); background-size: cover; background-position: center;">
   <div class="max-w-container-max mx-auto px-margin-desktop py-unit-xl md:py-32 relative z-10">
     <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
-      <h1 class="opacity-0 animate-fade-up animate-delay-100 font-display-lg text-display-lg mb-unit-lg text-[#f8fafc]">Empowering Bangladesh<br>through Data</h1>
-      <p class="opacity-0 animate-fade-up animate-delay-200 font-body-lg text-body-lg mb-unit-xl max-w-2xl text-[#cbd5e1]">
-        Access public datasets across health, education, transport, and economy to drive civic transparency and innovation.
-      </p>
+      <div class="hero-float-1 mb-unit-lg">
+        <h1 class="opacity-0 animate-fade-up animate-delay-100 font-display-lg text-display-lg text-[#f8fafc]">Empowering Bangladesh<br>through Data</h1>
+      </div>
+      <div class="hero-float-2 mb-unit-xl">
+        <p class="opacity-0 animate-fade-up animate-delay-200 font-body-lg text-body-lg max-w-2xl text-[#cbd5e1]">
+          Access public datasets across health, education, transport, and economy to drive civic transparency and innovation.
+        </p>
+      </div>
       <!-- Search -->
       <div class="opacity-0 animate-fade-up animate-delay-300 w-full max-w-2xl glass-search p-1.5 rounded-full border border-white/30 shadow-xl flex items-center group focus-within:ring-2 focus-within:ring-secondary/50 transition-shadow duration-200">
         <div class="pl-4 pr-2 text-outline group-focus-within:text-secondary transition-colors duration-200">

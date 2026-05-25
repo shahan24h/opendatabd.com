@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Impact — OpenDataBD</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  darkMode:"class",
+  theme:{extend:{
+    colors:{
+      "background":"#f7f9fb","on-surface":"#191c1e","on-secondary":"#ffffff",
+      "secondary-container":"#e21e49","secondary":"#ba0035",
+      "surface-container-lowest":"#ffffff","surface-container-low":"#f2f4f6",
+      "surface-container":"#eceef0","surface-container-high":"#e6e8ea",
+      "on-surface-variant":"#45464d","outline-variant":"#c6c6cd","outline":"#76777d",
+      "secondary-fixed":"#ffdada","secondary-fixed-dim":"#ffb3b6",
+      "tertiary-fixed":"#89f5e7","on-tertiary-fixed-variant":"#005049",
+      "primary-fixed":"#dae2fd","on-primary-fixed-variant":"#3f465c",
+      "primary-container":"#131b2e","on-primary-container":"#7c839b",
+      "inverse-surface":"#2d3133","inverse-on-surface":"#eff1f3","surface-dim":"#d8dadc",
+      "error-container":"#ffdad6","on-error-container":"#93000a",
+    },
+    spacing:{
+      "margin-desktop":"64px","unit-lg":"32px","container-max":"1280px",
+      "unit-xs":"4px","unit-xl":"64px","gutter":"24px","unit-sm":"8px","unit-md":"16px","margin-mobile":"20px"
+    },
+    fontFamily:{
+      "label-caps":["JetBrains Mono"],"body-md":["Inter"],"body-lg":["Inter"],
+      "headline-lg":["Hanken Grotesk"],"headline-md":["Hanken Grotesk"],"display-lg":["Hanken Grotesk"]
+    },
+    fontSize:{
+      "label-caps":["12px",{lineHeight:"1",letterSpacing:"0.1em",fontWeight:"600"}],
+      "body-md":["16px",{lineHeight:"1.5",fontWeight:"400"}],
+      "body-lg":["18px",{lineHeight:"1.6",fontWeight:"400"}],
+      "headline-lg":["32px",{lineHeight:"1.2",letterSpacing:"-0.01em",fontWeight:"700"}],
+      "headline-md":["24px",{lineHeight:"1.3",fontWeight:"600"}],
+      "display-lg":["48px",{lineHeight:"1.1",letterSpacing:"-0.02em",fontWeight:"800"}]
+    }
+  }}
+}
+</script>
+<style>
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}
+  html{scroll-behavior:smooth;}
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity 0.55s cubic-bezier(0.16,1,0.3,1),transform 0.55s cubic-bezier(0.16,1,0.3,1);}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+  .counter{display:inline-block;}
+  @media(prefers-reduced-motion:reduce){.reveal{animation:none!important;transition:none!important;opacity:1!important;transform:none!important;}}
+</style>
+</head>
+<body class="bg-background text-on-surface font-body-md">
+
+<!-- Nav -->
+<nav class="w-full sticky top-0 z-50 bg-surface-container-lowest border-b border-outline-variant/30 shadow-sm">
+  <div class="max-w-container-max mx-auto px-margin-desktop flex items-center justify-between h-20">
+    <div class="flex items-center gap-gutter">
+      <a href="/" class="font-bold text-base bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg hover:bg-secondary-container transition-colors duration-200 shadow-sm">OpenDataBD</a>
+      <div class="hidden md:flex items-center gap-1 ml-unit-lg">
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/datasets">Datasets</a>
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/api-docs">API Docs</a>
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/about">About Us</a>
+        <a class="px-4 py-2 rounded-full text-sm bg-secondary-fixed text-secondary font-semibold" href="/impact">Impact</a>
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/news">News</a>
+      </div>
+    </div>
+    <a href="/" class="text-sm text-secondary font-semibold hover:underline underline-offset-4">← Back to portal</a>
+  </div>
+</nav>
+
+<!-- Page Hero -->
+<section class="bg-primary-container py-20 px-margin-mobile md:px-margin-desktop">
+  <div class="max-w-container-max mx-auto">
+    <p class="font-label-caps text-label-caps text-on-primary-container tracking-widest mb-4">IMPACT</p>
+    <h1 class="font-display-lg text-display-lg text-white mb-4 max-w-2xl">Data Driving Real Change</h1>
+    <p class="font-body-lg text-body-lg text-on-primary-container max-w-xl">From policy decisions to grassroots research, see how OpenDataBD is shaping a more informed Bangladesh.</p>
+  </div>
+</section>
+
+<!-- Live Stats -->
+<section class="bg-surface-container-lowest border-b border-outline-variant/30 py-unit-lg">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+    <dl class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div class="flex flex-col items-center gap-1">
+        <dt class="text-[2.5rem] font-extrabold font-headline-lg text-secondary tabular-nums leading-none counter" data-target="247">0</dt>
+        <dd class="text-sm text-on-surface-variant font-semibold">Public Datasets</dd>
+      </div>
+      <div class="flex flex-col items-center gap-1 md:border-x md:border-outline-variant/30">
+        <dt class="text-[2.5rem] font-extrabold font-headline-lg text-secondary tabular-nums leading-none counter" data-target="1200000">0</dt>
+        <dd class="text-sm text-on-surface-variant font-semibold">API Requests</dd>
+      </div>
+      <div class="flex flex-col items-center gap-1 md:border-r md:border-outline-variant/30">
+        <dt class="text-[2.5rem] font-extrabold font-headline-lg text-secondary tabular-nums leading-none counter" data-target="64">0</dt>
+        <dd class="text-sm text-on-surface-variant font-semibold">Districts Covered</dd>
+      </div>
+      <div class="flex flex-col items-center gap-1">
+        <dt class="text-[2.5rem] font-extrabold font-headline-lg text-secondary tabular-nums leading-none counter" data-target="34">0</dt>
+        <dd class="text-sm text-on-surface-variant font-semibold">Countries Reached</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<!-- Impact Areas -->
+<section class="py-unit-xl">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="text-center mb-unit-lg reveal">
+      <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-3">WHERE WE MATTER</p>
+      <h2 class="font-headline-lg text-headline-lg">Impact across sectors</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+      <div class="reveal bg-tertiary-fixed/20 border border-tertiary-fixed rounded-xl p-8" data-delay="0">
+        <div class="w-12 h-12 bg-tertiary-fixed rounded-xl flex items-center justify-center mb-5">
+          <span class="material-symbols-outlined text-on-tertiary-fixed-variant" style="font-variation-settings:'FILL' 1;">health_and_safety</span>
+        </div>
+        <h3 class="font-headline-md text-headline-md mb-3">Public Health</h3>
+        <p class="text-on-surface-variant text-sm mb-4">Disease surveillance, hospital capacity, and maternal health datasets used by IEDCR and WHO Bangladesh in outbreak modelling and resource planning.</p>
+        <p class="text-2xl font-extrabold text-on-tertiary-fixed-variant">12 datasets</p>
+        <p class="text-xs text-on-surface-variant">actively cited in public health research</p>
+      </div>
+      <div class="reveal bg-primary-fixed/30 border border-primary-fixed rounded-xl p-8" data-delay="120">
+        <div class="w-12 h-12 bg-primary-fixed rounded-xl flex items-center justify-center mb-5">
+          <span class="material-symbols-outlined text-on-primary-fixed-variant" style="font-variation-settings:'FILL' 1;">school</span>
+        </div>
+        <h3 class="font-headline-md text-headline-md mb-3">Education</h3>
+        <p class="text-on-surface-variant text-sm mb-4">Enrollment rates, teacher-student ratios, and school infrastructure data informing policy at the Ministry of Primary and Mass Education.</p>
+        <p class="text-2xl font-extrabold text-on-primary-fixed-variant">8 datasets</p>
+        <p class="text-xs text-on-surface-variant">contributed to national education policy briefs</p>
+      </div>
+      <div class="reveal bg-secondary-fixed/30 border border-secondary-fixed rounded-xl p-8" data-delay="240">
+        <div class="w-12 h-12 bg-secondary-fixed rounded-xl flex items-center justify-center mb-5">
+          <span class="material-symbols-outlined text-secondary" style="font-variation-settings:'FILL' 1;">partly_cloudy_day</span>
+        </div>
+        <h3 class="font-headline-md text-headline-md mb-3">Climate & Disaster</h3>
+        <p class="text-on-surface-variant text-sm mb-4">Flood inundation maps, cyclone track data, and air quality indices enabling early warning systems and climate vulnerability assessments.</p>
+        <p class="text-2xl font-extrabold text-secondary">19 datasets</p>
+        <p class="text-xs text-on-surface-variant">used in disaster preparedness programmes</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Case Studies -->
+<section class="bg-surface-container-low py-unit-xl">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="text-center mb-unit-lg reveal">
+      <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-3">STORIES</p>
+      <h2 class="font-headline-lg text-headline-lg">Who's using OpenDataBD</h2>
+    </div>
+    <div class="flex flex-col gap-gutter">
+
+      <!-- Case Study 1 -->
+      <div class="reveal group bg-surface-container-lowest border border-outline-variant/50 rounded-2xl overflow-hidden hover:border-secondary/30 hover:shadow-md transition-all duration-200 grid grid-cols-1 md:grid-cols-3">
+        <div class="bg-gradient-to-br from-tertiary-fixed/60 to-tertiary-fixed/20 flex items-center justify-center p-10 min-h-[160px]">
+          <span class="material-symbols-outlined text-on-tertiary-fixed-variant text-6xl" style="font-variation-settings:'FILL' 1;">water</span>
+        </div>
+        <div class="p-8 md:col-span-2">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant">Climate</span>
+            <span class="text-xs text-on-surface-variant font-semibold">BUET Research Lab</span>
+          </div>
+          <h3 class="font-headline-md text-headline-md mb-3 group-hover:text-secondary transition-colors duration-200">Flood early-warning model for Sylhet Division</h3>
+          <p class="text-on-surface-variant text-sm mb-4">Engineers at BUET combined five years of OpenDataBD rainfall and river-level data with satellite imagery to train a 72-hour flood prediction model. The model was piloted with BWDB during the 2024 monsoon season, issuing 14 accurate early warnings and helping evacuate over 8,000 households ahead of flash floods.</p>
+          <div class="flex items-center gap-4 text-sm">
+            <span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined" style="font-size:16px;">download</span> 4,200 downloads</span>
+            <span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined" style="font-size:16px;">person</span> BUET, BWDB</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case Study 2 -->
+      <div class="reveal group bg-surface-container-lowest border border-outline-variant/50 rounded-2xl overflow-hidden hover:border-secondary/30 hover:shadow-md transition-all duration-200 grid grid-cols-1 md:grid-cols-3" data-delay="100">
+        <div class="bg-gradient-to-br from-primary-fixed/60 to-primary-fixed/20 flex items-center justify-center p-10 min-h-[160px]">
+          <span class="material-symbols-outlined text-on-primary-fixed-variant text-6xl" style="font-variation-settings:'FILL' 1;">school</span>
+        </div>
+        <div class="p-8 md:col-span-2">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant">Education</span>
+            <span class="text-xs text-on-surface-variant font-semibold">BRAC Institute of Educational Development</span>
+          </div>
+          <h3 class="font-headline-md text-headline-md mb-3 group-hover:text-secondary transition-colors duration-200">Identifying learning deserts in char island communities</h3>
+          <p class="text-on-surface-variant text-sm mb-4">BRAC IED used OpenDataBD's upazila-level school enrollment and infrastructure datasets to identify 37 "learning deserts" — communities with zero secondary schools within 10 km. Their analysis directly informed the placement of 12 new satellite schools in 2025 Q1, reaching an estimated 3,600 students.</p>
+          <div class="flex items-center gap-4 text-sm">
+            <span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined" style="font-size:16px;">download</span> 2,850 downloads</span>
+            <span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined" style="font-size:16px;">person</span> BRAC IED, MoPME</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case Study 3 -->
+      <div class="reveal group bg-surface-container-lowest border border-outline-variant/50 rounded-2xl overflow-hidden hover:border-secondary/30 hover:shadow-md transition-all duration-200 grid grid-cols-1 md:grid-cols-3" data-delay="200">
+        <div class="bg-gradient-to-br from-secondary-fixed/60 to-secondary-fixed/20 flex items-center justify-center p-10 min-h-[160px]">
+          <span class="material-symbols-outlined text-secondary text-6xl" style="font-variation-settings:'FILL' 1;">trending_up</span>
+        </div>
+        <div class="p-8 md:col-span-2">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-secondary-fixed text-secondary">Economy</span>
+            <span class="text-xs text-on-surface-variant font-semibold">Independent journalism — The Daily Star Data Desk</span>
+          </div>
+          <h3 class="font-headline-md text-headline-md mb-3 group-hover:text-secondary transition-colors duration-200">Visualising regional income inequality for public accountability</h3>
+          <p class="text-on-surface-variant text-sm mb-4">The Daily Star's data journalism team built an interactive inequality map from OpenDataBD's GDP-per-capita and poverty headcount datasets. The piece, published in February 2025, was read by over 180,000 people and cited in a parliamentary committee hearing on regional development budgets.</p>
+          <div class="flex items-center gap-4 text-sm">
+            <span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined" style="font-size:16px;">download</span> 6,100 downloads</span>
+            <span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined" style="font-size:16px;">person</span> The Daily Star</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SDG Alignment -->
+<section class="py-unit-xl">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="text-center mb-unit-lg reveal">
+      <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-3">GLOBAL GOALS</p>
+      <h2 class="font-headline-lg text-headline-lg">Contributing to the SDGs</h2>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 reveal">
+      <div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-4 text-center">
+        <p class="text-2xl font-extrabold text-secondary mb-1">SDG 3</p>
+        <p class="text-xs text-on-surface-variant">Good Health & Well-being</p>
+      </div>
+      <div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-4 text-center">
+        <p class="text-2xl font-extrabold text-secondary mb-1">SDG 4</p>
+        <p class="text-xs text-on-surface-variant">Quality Education</p>
+      </div>
+      <div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-4 text-center">
+        <p class="text-2xl font-extrabold text-secondary mb-1">SDG 10</p>
+        <p class="text-xs text-on-surface-variant">Reduced Inequalities</p>
+      </div>
+      <div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-4 text-center">
+        <p class="text-2xl font-extrabold text-secondary mb-1">SDG 13</p>
+        <p class="text-xs text-on-surface-variant">Climate Action</p>
+      </div>
+      <div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-4 text-center">
+        <p class="text-2xl font-extrabold text-secondary mb-1">SDG 16</p>
+        <p class="text-xs text-on-surface-variant">Peace, Justice & Institutions</p>
+      </div>
+      <div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-4 text-center">
+        <p class="text-2xl font-extrabold text-secondary mb-1">SDG 17</p>
+        <p class="text-xs text-on-surface-variant">Partnerships for the Goals</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="bg-primary-container py-unit-xl">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-center reveal">
+    <h2 class="font-headline-lg text-headline-lg text-white mb-4">Add your story</h2>
+    <p class="font-body-lg text-body-lg text-on-primary-container mb-unit-lg max-w-xl mx-auto">Built something meaningful with OpenDataBD data? We'd love to feature your work and help others discover it.</p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="mailto:impact@opendatabd.com" class="bg-secondary text-on-secondary px-8 py-3 rounded-xl font-semibold hover:bg-secondary-container transition-colors duration-200">Share Your Story</a>
+      <a href="/datasets" class="border-2 border-on-primary-container text-on-primary-container px-8 py-3 rounded-xl font-semibold hover:bg-white/10 transition-colors duration-200">Explore Datasets</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="w-full py-unit-xl bg-inverse-surface">
+  <div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter">
+    <div class="md:col-span-1">
+      <span class="font-bold text-base text-inverse-on-surface mb-unit-md block">OpenDataBD</span>
+      <p class="text-surface-dim font-body-md mb-unit-md">Empowering citizens through transparency and technological innovation.</p>
+    </div>
+    <div>
+      <h5 class="text-white font-semibold mb-unit-md">Quick Links</h5>
+      <ul class="space-y-unit-sm text-surface-dim font-body-md">
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="/about">About Us</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="#">Privacy Policy</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="text-white font-semibold mb-unit-md">Resources</h5>
+      <ul class="space-y-unit-sm text-surface-dim font-body-md">
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="/api-docs">API Documentation</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="/submit">Submit Data</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="text-white font-semibold mb-unit-md">Explore</h5>
+      <ul class="space-y-unit-sm text-surface-dim font-body-md">
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="/news">News</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="/impact">Impact</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="/datasets">Datasets</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-container-max mx-auto px-margin-desktop mt-unit-xl pt-unit-md border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-surface-dim text-sm gap-4">
+    <span>© 2025 OpenDataBD. Empowering citizens through transparency.</span>
+  </div>
+</footer>
+
+<script>
+  // Animated counters
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target);
+    const duration = 1800;
+    const start = performance.now();
+    function tick(now) {
+      const elapsed = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - elapsed, 3);
+      const current = Math.round(eased * target);
+      if (target >= 1000000) {
+        el.textContent = (current / 1000000).toFixed(1) + 'M+';
+      } else if (target >= 1000) {
+        el.textContent = (current / 1000).toFixed(target < 10000 ? 1 : 0) + (current >= 1000 ? 'K+' : '');
+      } else {
+        el.textContent = current;
+      }
+      if (elapsed < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        counterObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = parseInt(entry.target.dataset.delay || 0);
+        setTimeout(() => entry.target.classList.add('visible'), delay);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

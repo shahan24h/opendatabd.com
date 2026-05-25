@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>About Us — OpenDataBD</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  darkMode:"class",
+  theme:{extend:{
+    colors:{
+      "background":"#f7f9fb","on-surface":"#191c1e","on-secondary":"#ffffff",
+      "secondary-container":"#e21e49","secondary":"#ba0035",
+      "surface-container-lowest":"#ffffff","surface-container-low":"#f2f4f6",
+      "surface-container":"#eceef0","surface-container-high":"#e6e8ea",
+      "on-surface-variant":"#45464d","outline-variant":"#c6c6cd","outline":"#76777d",
+      "secondary-fixed":"#ffdada","secondary-fixed-dim":"#ffb3b6",
+      "tertiary-fixed":"#89f5e7","on-tertiary-fixed-variant":"#005049",
+      "primary-fixed":"#dae2fd","on-primary-fixed-variant":"#3f465c",
+      "primary-container":"#131b2e","on-primary-container":"#7c839b",
+      "inverse-surface":"#2d3133","inverse-on-surface":"#eff1f3",
+      "surface-dim":"#d8dadc",
+    },
+    spacing:{
+      "margin-desktop":"64px","unit-lg":"32px","container-max":"1280px",
+      "unit-xs":"4px","unit-xl":"64px","gutter":"24px","unit-sm":"8px","unit-md":"16px","margin-mobile":"20px"
+    },
+    fontFamily:{
+      "label-caps":["JetBrains Mono"],"body-md":["Inter"],"body-lg":["Inter"],
+      "headline-lg":["Hanken Grotesk"],"headline-md":["Hanken Grotesk"],"display-lg":["Hanken Grotesk"]
+    },
+    fontSize:{
+      "label-caps":["12px",{lineHeight:"1",letterSpacing:"0.1em",fontWeight:"600"}],
+      "body-md":["16px",{lineHeight:"1.5",fontWeight:"400"}],
+      "body-lg":["18px",{lineHeight:"1.6",fontWeight:"400"}],
+      "headline-lg":["32px",{lineHeight:"1.2",letterSpacing:"-0.01em",fontWeight:"700"}],
+      "headline-md":["24px",{lineHeight:"1.3",fontWeight:"600"}],
+      "display-lg":["48px",{lineHeight:"1.1",letterSpacing:"-0.02em",fontWeight:"800"}]
+    }
+  }}
+}
+</script>
+<style>
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}
+  html{scroll-behavior:smooth;}
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity 0.55s cubic-bezier(0.16,1,0.3,1),transform 0.55s cubic-bezier(0.16,1,0.3,1);}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+  @media(prefers-reduced-motion:reduce){.reveal{animation:none!important;transition:none!important;opacity:1!important;transform:none!important;}}
+</style>
+</head>
+<body class="bg-background text-on-surface font-body-md">
+
+<!-- Nav -->
+<nav class="w-full sticky top-0 z-50 bg-surface-container-lowest border-b border-outline-variant/30 shadow-sm">
+  <div class="max-w-container-max mx-auto px-margin-desktop flex items-center justify-between h-20">
+    <div class="flex items-center gap-gutter">
+      <a href="/" class="font-bold text-base bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg hover:bg-secondary-container transition-colors duration-200 shadow-sm">OpenDataBD</a>
+      <div class="hidden md:flex items-center gap-1 ml-unit-lg">
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/datasets">Datasets</a>
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/api-docs">API Docs</a>
+        <a class="px-4 py-2 rounded-full text-sm bg-secondary-fixed text-secondary font-semibold" href="/about">About Us</a>
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/impact">Impact</a>
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/news">News</a>
+      </div>
+    </div>
+    <a href="/" class="text-sm text-secondary font-semibold hover:underline underline-offset-4">← Back to portal</a>
+  </div>
+</nav>
+
+<!-- Page Hero -->
+<section class="bg-primary-container py-20 px-margin-mobile md:px-margin-desktop">
+  <div class="max-w-container-max mx-auto text-center">
+    <p class="font-label-caps text-label-caps text-on-primary-container tracking-widest mb-4">OUR STORY</p>
+    <h1 class="font-display-lg text-display-lg text-white mb-6 max-w-3xl mx-auto">Building Bangladesh's<br>Data Commons</h1>
+    <p class="font-body-lg text-body-lg text-on-primary-container max-w-2xl mx-auto">OpenDataBD was founded on a simple belief: transparent, accessible data is the foundation of a stronger, fairer Bangladesh.</p>
+  </div>
+</section>
+
+<!-- Mission -->
+<section class="py-unit-xl">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+      <div class="reveal">
+        <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-3">MISSION</p>
+        <h2 class="font-headline-lg text-headline-lg mb-6">Why we exist</h2>
+        <p class="font-body-lg text-body-lg text-on-surface-variant mb-5">Bangladesh generates vast amounts of data — from health outcomes in rural upazilas to flood records across river basins. Yet much of it remains locked in departmental silos, inaccessible to researchers, journalists, and citizens who need it most.</p>
+        <p class="font-body-lg text-body-lg text-on-surface-variant">OpenDataBD exists to change that. We curate, verify, and publish public datasets under open licenses so anyone can explore, download, and build with them — for free.</p>
+      </div>
+      <div class="reveal grid grid-cols-2 gap-4" data-delay="150">
+        <div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-6 flex flex-col gap-2">
+          <span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings:'FILL' 1;">verified</span>
+          <h4 class="font-headline-md text-headline-md">Verified</h4>
+          <p class="text-sm text-on-surface-variant">Every dataset is reviewed for source credibility and completeness before publication.</p>
+        </div>
+        <div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-6 flex flex-col gap-2">
+          <span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings:'FILL' 1;">lock_open</span>
+          <h4 class="font-headline-md text-headline-md">Open</h4>
+          <p class="text-sm text-on-surface-variant">All datasets are published under open licenses. No paywalls, no sign-up required to browse.</p>
+        </div>
+        <div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-6 flex flex-col gap-2">
+          <span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings:'FILL' 1;">diversity_3</span>
+          <h4 class="font-headline-md text-headline-md">Community</h4>
+          <p class="text-sm text-on-surface-variant">Researchers, NGOs, and individuals can contribute datasets through our submission portal.</p>
+        </div>
+        <div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-6 flex flex-col gap-2">
+          <span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings:'FILL' 1;">api</span>
+          <h4 class="font-headline-md text-headline-md">API-First</h4>
+          <p class="text-sm text-on-surface-variant">Programmatic access via REST API so developers can build apps and services on top of the data.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Values -->
+<section class="bg-surface-container-low py-unit-xl">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="text-center mb-unit-lg reveal">
+      <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-3">PRINCIPLES</p>
+      <h2 class="font-headline-lg text-headline-lg">What guides us</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+      <div class="reveal bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-8" data-delay="0">
+        <div class="w-12 h-12 bg-secondary-fixed rounded-xl flex items-center justify-center mb-5">
+          <span class="material-symbols-outlined text-secondary" style="font-variation-settings:'FILL' 1;">balance</span>
+        </div>
+        <h3 class="font-headline-md text-headline-md mb-3">Civic Accountability</h3>
+        <p class="text-on-surface-variant font-body-md">Public data belongs to the public. We publish government and institutional datasets that citizens have a right to access and scrutinise.</p>
+      </div>
+      <div class="reveal bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-8" data-delay="120">
+        <div class="w-12 h-12 bg-tertiary-fixed rounded-xl flex items-center justify-center mb-5">
+          <span class="material-symbols-outlined text-on-tertiary-fixed-variant" style="font-variation-settings:'FILL' 1;">science</span>
+        </div>
+        <h3 class="font-headline-md text-headline-md mb-3">Evidence-Based Policy</h3>
+        <p class="text-on-surface-variant font-body-md">Better data leads to better decisions. We work with researchers and institutions to surface datasets that can directly inform public policy.</p>
+      </div>
+      <div class="reveal bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-8" data-delay="240">
+        <div class="w-12 h-12 bg-primary-fixed rounded-xl flex items-center justify-center mb-5">
+          <span class="material-symbols-outlined text-on-primary-fixed-variant" style="font-variation-settings:'FILL' 1;">groups</span>
+        </div>
+        <h3 class="font-headline-md text-headline-md mb-3">Inclusive Access</h3>
+        <p class="text-on-surface-variant font-body-md">We design for low-bandwidth conditions and offer data in multiple formats (CSV, JSON, XML) so even resource-constrained teams can participate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Team -->
+<section class="py-unit-xl">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="text-center mb-unit-lg reveal">
+      <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-3">THE TEAM</p>
+      <h2 class="font-headline-lg text-headline-lg">People behind the platform</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-gutter">
+      <div class="reveal flex flex-col items-center text-center" data-delay="0">
+        <div class="w-20 h-20 rounded-full bg-secondary-fixed flex items-center justify-center mb-4 text-2xl font-bold text-secondary">RI</div>
+        <h4 class="font-headline-md text-headline-md">Rahim Islam</h4>
+        <p class="text-sm text-secondary font-semibold mt-0.5">Founder & Director</p>
+        <p class="text-sm text-on-surface-variant mt-2">Former data policy advisor at ICT Division, Bangladesh.</p>
+      </div>
+      <div class="reveal flex flex-col items-center text-center" data-delay="100">
+        <div class="w-20 h-20 rounded-full bg-tertiary-fixed flex items-center justify-center mb-4 text-2xl font-bold text-on-tertiary-fixed-variant">SC</div>
+        <h4 class="font-headline-md text-headline-md">Sadia Chowdhury</h4>
+        <p class="text-sm text-secondary font-semibold mt-0.5">Head of Data Curation</p>
+        <p class="text-sm text-on-surface-variant mt-2">Geospatial analyst with 8 years of experience in public sector data.</p>
+      </div>
+      <div class="reveal flex flex-col items-center text-center" data-delay="200">
+        <div class="w-20 h-20 rounded-full bg-primary-fixed flex items-center justify-center mb-4 text-2xl font-bold text-on-primary-fixed-variant">MH</div>
+        <h4 class="font-headline-md text-headline-md">Mahbub Hossain</h4>
+        <p class="text-sm text-secondary font-semibold mt-0.5">Lead Engineer</p>
+        <p class="text-sm text-on-surface-variant mt-2">Full-stack developer focused on open infrastructure and developer tooling.</p>
+      </div>
+      <div class="reveal flex flex-col items-center text-center" data-delay="300">
+        <div class="w-20 h-20 rounded-full bg-surface-container flex items-center justify-center mb-4 text-2xl font-bold text-on-surface-variant">FA</div>
+        <h4 class="font-headline-md text-headline-md">Fatema Akter</h4>
+        <p class="text-sm text-secondary font-semibold mt-0.5">Community & Outreach</p>
+        <p class="text-sm text-on-surface-variant mt-2">Connects universities, NGOs, and government bodies to the platform.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Partners -->
+<section class="bg-surface-container-low py-unit-xl">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-center">
+    <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-3 reveal">SUPPORTED BY</p>
+    <h2 class="font-headline-lg text-headline-lg mb-unit-lg reveal">Our partners & supporters</h2>
+    <div class="flex flex-wrap justify-center gap-6 reveal">
+      <div class="px-8 py-5 bg-surface-container-lowest border border-outline-variant/40 rounded-xl text-on-surface-variant font-semibold text-sm">ICT Division, Bangladesh</div>
+      <div class="px-8 py-5 bg-surface-container-lowest border border-outline-variant/40 rounded-xl text-on-surface-variant font-semibold text-sm">Bangladesh Bureau of Statistics</div>
+      <div class="px-8 py-5 bg-surface-container-lowest border border-outline-variant/40 rounded-xl text-on-surface-variant font-semibold text-sm">BRAC</div>
+      <div class="px-8 py-5 bg-surface-container-lowest border border-outline-variant/40 rounded-xl text-on-surface-variant font-semibold text-sm">Open Knowledge Foundation</div>
+      <div class="px-8 py-5 bg-surface-container-lowest border border-outline-variant/40 rounded-xl text-on-surface-variant font-semibold text-sm">UNDP Bangladesh</div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="py-unit-xl">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="max-w-2xl mx-auto text-center reveal">
+      <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-3">CONTACT</p>
+      <h2 class="font-headline-lg text-headline-lg mb-5">Get in touch</h2>
+      <p class="font-body-lg text-body-lg text-on-surface-variant mb-unit-lg">Whether you're a researcher, journalist, developer, or government agency — we'd love to hear from you.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="mailto:hello@opendatabd.com" class="flex items-center gap-2 bg-secondary text-on-secondary px-6 py-3 rounded-xl font-semibold hover:bg-secondary-container transition-colors duration-200">
+          <span class="material-symbols-outlined text-base">alternate_email</span>
+          hello@opendatabd.com
+        </a>
+        <a href="/submit" class="flex items-center gap-2 border border-outline-variant text-on-surface-variant px-6 py-3 rounded-xl font-semibold hover:bg-surface-container transition-colors duration-200">
+          <span class="material-symbols-outlined text-base">upload_file</span>
+          Submit a Dataset
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="w-full py-unit-xl bg-inverse-surface">
+  <div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter">
+    <div class="md:col-span-1">
+      <span class="font-bold text-base text-inverse-on-surface mb-unit-md block">OpenDataBD</span>
+      <p class="text-surface-dim font-body-md mb-unit-md">Empowering citizens through transparency and technological innovation.</p>
+    </div>
+    <div>
+      <h5 class="text-white font-semibold mb-unit-md">Quick Links</h5>
+      <ul class="space-y-unit-sm text-surface-dim font-body-md">
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="/about">About Us</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="#">Privacy Policy</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="text-white font-semibold mb-unit-md">Resources</h5>
+      <ul class="space-y-unit-sm text-surface-dim font-body-md">
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="#">Open Data Policy</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="/api-docs">API Documentation</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="/submit">Submit Data</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="text-white font-semibold mb-unit-md">Explore</h5>
+      <ul class="space-y-unit-sm text-surface-dim font-body-md">
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="/news">News</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="/impact">Impact</a></li>
+        <li><a class="hover:text-secondary-fixed transition-colors duration-200" href="/datasets">Datasets</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-container-max mx-auto px-margin-desktop mt-unit-xl pt-unit-md border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-surface-dim text-sm gap-4">
+    <span>© 2025 OpenDataBD. Empowering citizens through transparency.</span>
+    <div class="flex gap-unit-md">
+      <a class="hover:text-white transition-colors duration-200" href="#" aria-label="Website"><span class="material-symbols-outlined">public</span></a>
+      <a class="hover:text-white transition-colors duration-200" href="#" aria-label="Email"><span class="material-symbols-outlined">alternate_email</span></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = parseInt(entry.target.dataset.delay || 0);
+        setTimeout(() => entry.target.classList.add('visible'), delay);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
