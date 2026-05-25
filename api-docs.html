@@ -433,39 +433,75 @@ r = requests.get(meta[<span class="code-string">"url"</span>])
     <section id="playground">
       <h2 class="font-headline-md text-headline-md mb-2">Playground</h2>
       <div class="w-12 h-1 bg-secondary rounded-full mb-6"></div>
-      <p class="text-on-surface-variant mb-6">Try the public API directly from your browser.</p>
+      <p class="text-on-surface-variant mb-6">Try the API directly from your browser. Uses relative URLs so it works in local dev too.</p>
 
       <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-2xl overflow-hidden">
-        <!-- Input -->
-        <div class="p-6 border-b border-outline-variant/30">
-          <div class="flex gap-3">
-            <span class="badge-get font-mono text-sm font-bold px-3 py-2.5 rounded-lg shrink-0 self-start">GET</span>
+
+        <!-- URL + Method row -->
+        <div class="p-6 border-b border-outline-variant/30 space-y-3">
+          <div class="flex gap-2">
+            <select id="pg-method"
+              class="font-mono text-sm font-bold px-3 py-2.5 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors shrink-0">
+              <option value="GET"    class="text-[#005049]">GET</option>
+              <option value="POST"   class="text-[#3f465c]">POST</option>
+              <option value="DELETE" class="text-[#93000a]">DELETE</option>
+            </select>
             <input id="pg-url" type="text"
-              value="https://opendatabd.com/api/datasets?limit=3"
+              value="/api/datasets?limit=3"
               class="flex-1 font-mono text-sm px-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors" />
-            <button onclick="runPlayground()"
-              class="bg-secondary text-on-secondary px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-secondary-container transition-colors active:scale-95 shrink-0">
-              Run
+            <button onclick="runPlayground()" id="pg-run-btn"
+              class="bg-secondary text-on-secondary px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-secondary-container transition-colors active:scale-95 shrink-0 flex items-center gap-2">
+              <span id="pg-run-label">Run</span>
+              <svg id="pg-spinner" class="hidden animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+              </svg>
             </button>
           </div>
-          <div class="flex flex-wrap gap-2 mt-3">
-            <button onclick="setUrl('https://opendatabd.com/api/datasets?limit=3')" class="text-xs px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Datasets</button>
-            <button onclick="setUrl('https://opendatabd.com/api/stats')" class="text-xs px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Stats</button>
-            <button onclick="setUrl('https://opendatabd.com/api/datasets?category=Health')" class="text-xs px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Health datasets</button>
-            <button onclick="setUrl('https://opendatabd.com/api/datasets?q=education&limit=5')" class="text-xs px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Search "education"</button>
+
+          <!-- Bearer token (optional, for auth endpoints) -->
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-on-surface-variant font-mono shrink-0">Bearer</span>
+            <input id="pg-token" type="password" placeholder="Paste JWT token for auth-required endpoints (optional)"
+              class="flex-1 font-mono text-xs px-3 py-2 rounded-lg border border-outline-variant bg-surface-container-low text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors" />
+          </div>
+
+          <!-- POST body (shown only when POST is selected) -->
+          <div id="pg-body-wrap" class="hidden">
+            <p class="text-xs text-on-surface-variant mb-1.5">Request body <span class="font-mono">(JSON)</span></p>
+            <textarea id="pg-body" rows="5"
+              class="w-full font-mono text-xs px-3 py-2.5 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors resize-y"
+              placeholder='{"title": "My Dataset", "category": "Health", "format": ["CSV"]}'></textarea>
+          </div>
+
+          <!-- Quick-fill presets -->
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs text-on-surface-variant self-center">Try:</span>
+            <button onclick="pgPreset('GET','/api/datasets?limit=3')"           class="pg-preset text-xs px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Datasets</button>
+            <button onclick="pgPreset('GET','/api/stats')"                      class="pg-preset text-xs px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Stats</button>
+            <button onclick="pgPreset('GET','/api/datasets?category=Health')"   class="pg-preset text-xs px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Health</button>
+            <button onclick="pgPreset('GET','/api/datasets?q=flood&limit=5')"   class="pg-preset text-xs px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Search "flood"</button>
+            <button onclick="pgPreset('GET','/api/datasets?category=Education')" class="pg-preset text-xs px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors">Education</button>
           </div>
         </div>
 
-        <!-- Response -->
+        <!-- Response panel -->
         <div class="p-6">
           <div class="flex items-center justify-between mb-3">
             <p class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Response</p>
-            <span id="pg-status" class="text-xs font-mono text-on-surface-variant"></span>
+            <div class="flex items-center gap-3">
+              <span id="pg-status" class="text-xs font-mono"></span>
+              <button id="pg-copy-btn" onclick="pgCopy()" class="hidden text-xs text-on-surface-variant hover:text-on-surface flex items-center gap-1 transition-colors">
+                <span class="material-symbols-outlined" style="font-size:15px;">content_copy</span>
+                Copy
+              </button>
+            </div>
           </div>
-          <div class="code-block min-h-[120px]">
-            <code id="pg-output" class="text-on-surface-variant text-xs">// Click Run to execute the request</code>
+          <div class="code-block min-h-[140px] relative">
+            <pre id="pg-output" class="text-xs leading-relaxed whitespace-pre-wrap break-all"><span class="text-on-surface-variant">// Click Run to execute the request</span></pre>
           </div>
         </div>
+
       </div>
     </section>
 
@@ -497,32 +533,116 @@ r = requests.get(meta[<span class="code-string">"url"</span>])
 
 <script>
 // ── Playground ────────────────────────────────────────────────────────────────
-function setUrl(url) {
-  document.getElementById('pg-url').value = url;
+
+// Show/hide body textarea based on method
+document.getElementById('pg-method').addEventListener('change', function() {
+  document.getElementById('pg-body-wrap').classList.toggle('hidden', this.value === 'GET' || this.value === 'DELETE');
+});
+
+function pgPreset(method, path) {
+  document.getElementById('pg-method').value = method;
+  document.getElementById('pg-url').value = path;
+  document.getElementById('pg-body-wrap').classList.toggle('hidden', method === 'GET' || method === 'DELETE');
+}
+
+function pgCopy() {
+  const text = document.getElementById('pg-output').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('pg-copy-btn');
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:15px;">check</span> Copied';
+    setTimeout(() => { btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:15px;">content_copy</span> Copy'; }, 2000);
+  });
+}
+
+function syntaxHighlight(json) {
+  return json
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, match => {
+      if (/^"/.test(match)) {
+        if (/:$/.test(match)) return `<span class="code-key">${match}</span>`;
+        return `<span class="code-string">${match}</span>`;
+      }
+      if (/true|false/.test(match)) return `<span class="code-keyword">${match}</span>`;
+      if (/null/.test(match))       return `<span class="code-comment">${match}</span>`;
+      return `<span class="code-number">${match}</span>`;
+    });
 }
 
 async function runPlayground() {
-  const url    = document.getElementById('pg-url').value.trim();
+  const rawUrl = document.getElementById('pg-url').value.trim();
+  const method = document.getElementById('pg-method').value;
+  const token  = document.getElementById('pg-token').value.trim();
+  const body   = document.getElementById('pg-body').value.trim();
   const output = document.getElementById('pg-output');
   const status = document.getElementById('pg-status');
-  output.textContent = '// Loading…';
+  const copyBtn = document.getElementById('pg-copy-btn');
+  const runLabel = document.getElementById('pg-run-label');
+  const spinner  = document.getElementById('pg-spinner');
+
+  if (!rawUrl) return;
+
+  // Resolve relative URLs against current origin so local dev works
+  const url = rawUrl.startsWith('/') ? `${location.origin}${rawUrl}` : rawUrl;
+
+  // Loading state
+  runLabel.textContent = 'Running…';
+  spinner.classList.remove('hidden');
+  output.innerHTML = '<span class="text-on-surface-variant">// Loading…</span>';
   status.textContent = '';
+  copyBtn.classList.add('hidden');
+
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const options = { method, headers };
+  if ((method === 'POST') && body) {
+    try { JSON.parse(body); options.body = body; }
+    catch { output.innerHTML = '<span style="color:#ba1a1a">// Invalid JSON in request body</span>'; resetBtn(); return; }
+  }
+
   try {
     const t0  = performance.now();
-    const res = await fetch(url);
+    const res = await fetch(url, options);
     const ms  = Math.round(performance.now() - t0);
-    const data = await res.json();
-    status.textContent = `${res.status} · ${ms}ms`;
+
+    let data;
+    const ct = res.headers.get('content-type') || '';
+    if (ct.includes('application/json')) {
+      data = await res.json();
+    } else {
+      data = await res.text();
+    }
+
+    const pretty = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+    output.innerHTML = syntaxHighlight(pretty);
+
+    status.textContent = `${res.status} ${res.statusText} · ${ms}ms`;
     status.className = res.ok
       ? 'text-xs font-mono text-on-tertiary-fixed-variant'
       : 'text-xs font-mono text-on-error-container';
-    output.textContent = JSON.stringify(data, null, 2);
+    copyBtn.classList.remove('hidden');
+
   } catch (err) {
-    output.textContent = `// Error: ${err.message}`;
+    const isCors = err.message.toLowerCase().includes('failed to fetch') || err.message.toLowerCase().includes('network');
+    output.innerHTML = isCors
+      ? `<span style="color:#ba1a1a">// Network error — possible CORS issue if calling a cross-origin URL.\n// Use a relative path like /api/datasets instead.</span>`
+      : `<span style="color:#ba1a1a">// Error: ${err.message}</span>`;
     status.textContent = 'Failed';
     status.className = 'text-xs font-mono text-on-error-container';
+  } finally {
+    resetBtn();
   }
 }
+
+function resetBtn() {
+  document.getElementById('pg-run-label').textContent = 'Run';
+  document.getElementById('pg-spinner').classList.add('hidden');
+}
+
+// Run on Enter key in URL input
+document.getElementById('pg-url').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runPlayground();
+});
 
 // ── Sidebar active link on scroll ─────────────────────────────────────────────
 const sections = document.querySelectorAll('section[id]');
@@ -541,13 +661,6 @@ const io = new IntersectionObserver(entries => {
 }, { rootMargin: '-30% 0px -60% 0px' });
 
 sections.forEach(s => io.observe(s));
-
-// ── Render valid categories (template literal in static HTML)  ────────────────
-document.querySelectorAll('section').forEach(s => {
-  if (s.textContent.includes("['Agriculture'")) {
-    // already rendered via template literal — skip
-  }
-});
 </script>
 </body>
 </html>
