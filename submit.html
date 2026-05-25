@@ -1,142 +1,165 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Submit a Dataset — opendatabd</title>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Submit a Dataset — OpenDataBD</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "background": "#f7f9fb", "on-surface": "#191c1e", "on-secondary": "#ffffff",
+        "secondary-container": "#e21e49", "secondary": "#ba0035",
+        "surface-container-lowest": "#ffffff", "surface-container-low": "#f2f4f6",
+        "surface-container": "#eceef0", "surface-container-high": "#e6e8ea",
+        "on-surface-variant": "#45464d", "outline-variant": "#c6c6cd", "outline": "#76777d",
+        "secondary-fixed": "#ffdada", "secondary-fixed-dim": "#ffb3b6",
+        "tertiary-fixed": "#89f5e7", "on-tertiary-fixed-variant": "#005049",
+        "primary-fixed": "#dae2fd", "on-primary-fixed-variant": "#3f465c",
+        "primary-container": "#131b2e", "on-primary-container": "#7c839b",
+        "error": "#ba1a1a", "error-container": "#ffdad6", "on-error-container": "#93000a",
+        "inverse-surface": "#2d3133", "inverse-on-surface": "#eff1f3",
+      },
+      spacing: {
+        "margin-desktop": "64px", "unit-lg": "32px", "container-max": "1280px",
+        "unit-xs": "4px", "unit-xl": "64px", "gutter": "24px",
+        "unit-sm": "8px", "unit-md": "16px"
+      },
+      fontFamily: {
+        "label-caps": ["JetBrains Mono"], "body-md": ["Inter"],
+        "headline-lg": ["Hanken Grotesk"], "headline-md": ["Hanken Grotesk"]
+      },
+      fontSize: {
+        "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "600" }],
+        "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }],
+        "headline-lg": ["32px", { lineHeight: "1.2", letterSpacing: "-0.01em", fontWeight: "700" }],
+        "headline-md": ["24px", { lineHeight: "1.3", fontWeight: "600" }]
+      }
+    }
+  }
+}
+</script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,Helvetica,sans-serif;font-size:13px;background:#fff;color:#333}
-a{color:#7c3f00;text-decoration:none}
-a:hover{text-decoration:underline}
-
-#header{border-bottom:1px solid #ccc;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
-#header h1{font-size:26px;font-weight:bold;color:#591C8B;letter-spacing:-0.5px}
-#header h1 span{color:#006633}
-.header-right{font-size:12px;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
-.header-right .tagline{color:#666}
-.header-links{display:flex;gap:6px;flex-wrap:wrap}
-.header-links a{font-size:12px}
-
-#breadcrumb{background:#fafafa;border-bottom:1px solid #eee;padding:5px 16px;font-size:12px;color:#666}
-#breadcrumb a{font-size:12px;color:#591C8B}
-
-#main{max-width:760px;margin:0 auto;padding:20px 16px}
-
-h2{font-size:16px;font-weight:bold;color:#333;margin-bottom:4px}
-.subtitle{font-size:12px;color:#666;margin-bottom:20px}
-
-.form-section{margin-bottom:20px;border:1px solid #ddd;padding:14px;background:#fafafa}
-.form-section h3{font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:.05em;color:#591C8B;margin-bottom:10px;border-bottom:1px solid #ddd;padding-bottom:4px}
-
-.form-row{margin-bottom:10px}
-.form-row label{display:block;font-size:12px;font-weight:bold;color:#444;margin-bottom:3px}
-.form-row label .req{color:#c00}
-.form-row input,.form-row select,.form-row textarea{width:100%;font-size:13px;padding:6px 8px;border:1px solid #bbb;background:#fff;outline:none;font-family:inherit}
-.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:#591C8B;box-shadow:0 0 0 2px rgba(89,28,139,0.1)}
-.form-row textarea{height:80px;resize:vertical}
-.form-row .hint{font-size:11px;color:#888;margin-top:2px}
-
-.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-
-.btn{display:inline-block;padding:8px 20px;font-size:13px;font-weight:bold;cursor:pointer;border:none;text-decoration:none}
-.btn-primary{background:#591C8B;color:#fff}
-.btn-primary:hover{background:#006633;color:#fff}
-.btn-secondary{background:#006633;color:#fff;margin-left:8px}
-
-.success-box{background:#dff0d8;border:1px solid #b2dfb2;color:#2a6d2a;padding:14px;margin-bottom:16px;display:none}
-.success-box h3{font-size:14px;margin-bottom:4px}
-.error-msg{color:#c00;font-size:12px;margin-top:4px;display:none}
-#submit-error{color:#c00;background:#fde8e8;border:1px solid #f5c6c6;padding:10px;margin-bottom:12px;display:none;font-size:12px}
-
-.info-box{background:#d0e4ff;border:1px solid #90caf9;padding:10px 12px;font-size:12px;margin-bottom:16px;color:#0039a6}
-
-#footer{border-top:1px solid #ccc;padding:8px 16px;font-size:11px;color:#888;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:30px}
-#footer a{font-size:11px;color:#888}
-#footer a:hover{text-decoration:underline}
-
-@media(max-width:600px){.form-row-2{grid-template-columns:1fr}}
+  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+  .input-base {
+    @apply w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low
+           text-on-surface text-sm placeholder:text-outline
+           focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary
+           transition-colors duration-200;
+  }
+  .drop-active { border-color: #ba0035 !important; background: #ffdada33; }
 </style>
 </head>
-<body>
+<body class="bg-background text-on-surface font-body-md min-h-screen">
 
-<div id="header">
-  <h1><a href="/" style="color:inherit;text-decoration:none">open<span>data</span>bd</a></h1>
-  <div class="header-right">
-    <span class="tagline">open data for bangladesh &mdash; free, public, accessible</span>
-    <div class="header-links">
-      <a href="/">browse datasets</a> |
-      <a href="/api-docs.html">api docs</a> |
-      <a href="/api-docs.html#apikey">get api key</a>
+<!-- Nav -->
+<nav class="w-full sticky top-0 z-50 bg-surface-container-lowest border-b border-outline-variant/30 shadow-sm">
+  <div class="max-w-container-max mx-auto px-margin-desktop flex items-center justify-between h-20">
+    <div class="flex items-center gap-gutter">
+      <a href="/" class="font-bold text-base bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg hover:bg-secondary-container transition-colors duration-200 active:scale-95 shadow-sm">OpenDataBD</a>
+      <div class="hidden md:flex items-center gap-1 ml-unit-lg">
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/">Datasets</a>
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/api-docs">API Docs</a>
+      </div>
+    </div>
+    <div class="flex items-center gap-unit-md">
+      <button id="auth-signin-btn" onclick="openAuthModal()" class="bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg text-sm font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95">Sign In</button>
+      <div id="auth-user-menu" class="hidden items-center gap-2">
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container text-sm font-medium text-on-surface">
+          <span id="auth-user-avatar" class="w-7 h-7 bg-secondary text-on-secondary rounded-full flex items-center justify-center text-xs font-bold shrink-0">U</span>
+          <span id="auth-user-name" class="max-w-[120px] truncate">User</span>
+        </div>
+        <button onclick="handleSignOut()" class="text-sm text-on-surface-variant px-3 py-1.5 rounded-lg hover:bg-surface-container transition-colors duration-200">Sign Out</button>
+      </div>
     </div>
   </div>
+</nav>
+
+<!-- Auth wall (shown when logged out) -->
+<div id="auth-wall" class="hidden max-w-md mx-auto text-center py-24 px-6">
+  <span class="material-symbols-outlined text-5xl text-outline mb-4 block">lock</span>
+  <h2 class="font-headline-md text-headline-md mb-2">Sign in to submit</h2>
+  <p class="text-on-surface-variant mb-6 text-sm">You need an account to submit datasets for review.</p>
+  <button onclick="openAuthModal()" class="bg-secondary text-on-secondary px-8 py-3 rounded-xl font-semibold hover:bg-secondary-container transition-colors duration-200">Sign In / Sign Up</button>
 </div>
 
-<div id="breadcrumb">
-  <a href="/">opendatabd</a> &rsaquo; submit a dataset
-</div>
+<!-- Main form -->
+<main id="submit-main" class="hidden max-w-2xl mx-auto px-6 py-10">
 
-<div id="main">
-  <h2>Submit a Dataset</h2>
-  <p class="subtitle">Share a Bangladesh dataset with the open data community. All submissions are reviewed before publishing (usually within 24–48 hours).</p>
-
-  <div class="info-box">
-    Datasets must relate to Bangladesh, be from a credible source, and be legally shareable under an open license.
-    Government, NGO, research institution, and UN agency data are all welcome.
+  <!-- Header -->
+  <div class="mb-8">
+    <a href="/" class="text-sm text-on-surface-variant hover:text-secondary transition-colors flex items-center gap-1 mb-4">
+      <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span> Back to portal
+    </a>
+    <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-2">CONTRIBUTE</p>
+    <h1 class="font-headline-lg text-headline-lg mb-2">Submit a Dataset</h1>
+    <p class="text-on-surface-variant text-sm">Share Bangladesh data with the open community. All submissions are reviewed before publishing.</p>
   </div>
 
-  <div class="success-box" id="success-box">
-    <h3>Thank you for your submission!</h3>
-    <p>Your dataset has been submitted for review. We'll publish it within 24–48 hours. <a href="/">Browse existing datasets →</a></p>
+  <!-- Success state -->
+  <div id="success-state" class="hidden text-center py-12">
+    <span class="material-symbols-outlined text-5xl text-on-tertiary-fixed-variant mb-4 block" style="font-variation-settings:'FILL' 1;">check_circle</span>
+    <h2 class="font-headline-md text-headline-md mb-2">Submitted for review</h2>
+    <p class="text-on-surface-variant mb-6 text-sm">We'll publish your dataset within 24–48 hours. You'll receive an email confirmation.</p>
+    <div class="flex justify-center gap-3">
+      <button onclick="resetForm()" class="px-6 py-3 border border-outline-variant text-on-surface-variant rounded-xl text-sm font-semibold hover:bg-surface-container transition-colors">Submit another</button>
+      <a href="/" class="px-6 py-3 bg-secondary text-on-secondary rounded-xl text-sm font-semibold hover:bg-secondary-container transition-colors">Browse datasets</a>
+    </div>
   </div>
 
-  <div id="submit-error"></div>
+  <!-- Form -->
+  <form id="submit-form" class="space-y-6" novalidate>
 
-  <form id="submit-form" novalidate>
+    <!-- Error banner -->
+    <div id="form-error" class="hidden text-sm px-4 py-3 rounded-xl bg-error-container text-on-error-container"></div>
 
-    <div class="form-section">
-      <h3>dataset information</h3>
+    <!-- Section 1: Dataset details -->
+    <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-6 space-y-5">
+      <h2 class="font-semibold text-on-surface text-base pb-3 border-b border-outline-variant/40">Dataset Details</h2>
 
-      <div class="form-row">
-        <label>Dataset Title <span class="req">*</span></label>
-        <input type="text" id="f-title" placeholder="e.g. Dhaka District Population by Age Group 2022" maxlength="200"/>
-        <div class="error-msg" id="err-title">Title is required.</div>
+      <div>
+        <label class="text-sm font-medium text-on-surface-variant block mb-1.5">Title <span class="text-secondary">*</span></label>
+        <input id="f-title" type="text" placeholder="e.g. Dhaka District Population by Age Group 2022" maxlength="200"
+          class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors" />
       </div>
 
-      <div class="form-row">
-        <label>Description <span class="req">*</span></label>
-        <textarea id="f-description" placeholder="What does this dataset contain? What time period does it cover? Any important caveats?"></textarea>
-        <div class="error-msg" id="err-description">Description is required.</div>
+      <div>
+        <label class="text-sm font-medium text-on-surface-variant block mb-1.5">Description <span class="text-secondary">*</span></label>
+        <textarea id="f-description" rows="4" placeholder="What does this dataset contain? Time period? Any important caveats?"
+          class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors resize-none"></textarea>
       </div>
 
-      <div class="form-row-2">
-        <div class="form-row">
-          <label>Category <span class="req">*</span></label>
-          <select id="f-category">
-            <option value="">— select category —</option>
-            <option value="agriculture">Agriculture</option>
-            <option value="climate & weather">Climate &amp; Weather</option>
-            <option value="demographics">Demographics</option>
-            <option value="economy & finance">Economy &amp; Finance</option>
-            <option value="education">Education</option>
-            <option value="energy">Energy</option>
-            <option value="environment">Environment</option>
-            <option value="governance">Governance</option>
-            <option value="health">Health</option>
-            <option value="infrastructure">Infrastructure</option>
-            <option value="land & maps">Land &amp; Maps</option>
-            <option value="labor & employment">Labor &amp; Employment</option>
-            <option value="rivers & water">Rivers &amp; Water</option>
-            <option value="trade & exports">Trade &amp; Exports</option>
-            <option value="transport">Transport</option>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="text-sm font-medium text-on-surface-variant block mb-1.5">Category <span class="text-secondary">*</span></label>
+          <select id="f-category" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors">
+            <option value="">— select —</option>
+            <option value="Agriculture">Agriculture</option>
+            <option value="Climate & Weather">Climate &amp; Weather</option>
+            <option value="Demographics">Demographics</option>
+            <option value="Economy & Finance">Economy &amp; Finance</option>
+            <option value="Education">Education</option>
+            <option value="Energy">Energy</option>
+            <option value="Environment">Environment</option>
+            <option value="Governance">Governance</option>
+            <option value="Health">Health</option>
+            <option value="Infrastructure">Infrastructure</option>
+            <option value="Land & Maps">Land &amp; Maps</option>
+            <option value="Labor & Employment">Labor &amp; Employment</option>
+            <option value="Rivers & Water">Rivers &amp; Water</option>
+            <option value="Trade & Exports">Trade &amp; Exports</option>
+            <option value="Transport">Transport</option>
           </select>
-          <div class="error-msg" id="err-category">Please select a category.</div>
         </div>
 
-        <div class="form-row">
-          <label>Format <span class="req">*</span></label>
-          <select id="f-format">
-            <option value="">— select format —</option>
+        <div>
+          <label class="text-sm font-medium text-on-surface-variant block mb-1.5">Format <span class="text-secondary">*</span></label>
+          <select id="f-format" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors">
+            <option value="">— select —</option>
             <option value="CSV">CSV</option>
             <option value="JSON">JSON</option>
             <option value="XLS">XLS / Excel</option>
@@ -145,14 +168,11 @@ h2{font-size:16px;font-weight:bold;color:#333;margin-bottom:4px}
             <option value="PDF">PDF</option>
             <option value="XML">XML</option>
           </select>
-          <div class="error-msg" id="err-format">Please select a format.</div>
         </div>
-      </div>
 
-      <div class="form-row-2">
-        <div class="form-row">
-          <label>Division / Region</label>
-          <select id="f-division">
+        <div>
+          <label class="text-sm font-medium text-on-surface-variant block mb-1.5">Division / Region</label>
+          <select id="f-division" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors">
             <option value="nationwide">Nationwide</option>
             <option value="Dhaka">Dhaka</option>
             <option value="Chittagong">Chittagong</option>
@@ -165,146 +185,372 @@ h2{font-size:16px;font-weight:bold;color:#333;margin-bottom:4px}
           </select>
         </div>
 
-        <div class="form-row">
-          <label>License</label>
-          <select id="f-license">
-            <option value="CC0">CC0 (Public Domain)</option>
+        <div>
+          <label class="text-sm font-medium text-on-surface-variant block mb-1.5">License</label>
+          <select id="f-license" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors">
+            <option value="CC0">CC0 — Public Domain</option>
             <option value="CC-BY 4.0" selected>CC-BY 4.0</option>
-            <option value="Govt. Open">Govt. Open License</option>
             <option value="CC-BY-SA 4.0">CC-BY-SA 4.0</option>
             <option value="CC-BY-NC 4.0">CC-BY-NC 4.0</option>
+            <option value="Govt. Open">Government Open License</option>
           </select>
         </div>
       </div>
 
-      <div class="form-row-2">
-        <div class="form-row">
-          <label>Row Count / Size</label>
-          <input type="text" id="f-rows" placeholder="e.g. 4,200 rows or 18MB or live"/>
-          <div class="hint">How many records, or the file size.</div>
+      <div>
+        <label class="text-sm font-medium text-on-surface-variant block mb-1.5">Tags <span class="text-xs font-normal">(comma-separated)</span></label>
+        <input id="f-tags" type="text" placeholder="e.g. census, population, Dhaka"
+          class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors" />
+      </div>
+    </div>
+
+    <!-- Section 2: Source -->
+    <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-6 space-y-5">
+      <h2 class="font-semibold text-on-surface text-base pb-3 border-b border-outline-variant/40">Source Information</h2>
+
+      <div>
+        <label class="text-sm font-medium text-on-surface-variant block mb-1.5">Source Organization <span class="text-secondary">*</span></label>
+        <input id="f-source" type="text" placeholder="e.g. Bangladesh Bureau of Statistics (BBS)"
+          class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors" />
+      </div>
+
+      <div>
+        <label class="text-sm font-medium text-on-surface-variant block mb-1.5">Source URL <span class="text-xs font-normal text-on-surface-variant">(link to original data)</span></label>
+        <input id="f-source-url" type="url" placeholder="https://bbs.gov.bd/..."
+          class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors" />
+      </div>
+    </div>
+
+    <!-- Section 3: File upload -->
+    <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-6 space-y-4">
+      <h2 class="font-semibold text-on-surface text-base pb-3 border-b border-outline-variant/40">Upload Dataset File <span class="text-xs font-normal text-on-surface-variant">(optional — max 50 MB)</span></h2>
+
+      <!-- Dropzone -->
+      <div id="dropzone"
+        class="border-2 border-dashed border-outline-variant rounded-xl p-8 text-center cursor-pointer hover:border-secondary/50 hover:bg-secondary-fixed/20 transition-all duration-200"
+        onclick="document.getElementById('file-input').click()"
+        ondragover="handleDragOver(event)"
+        ondragleave="handleDragLeave(event)"
+        ondrop="handleDrop(event)">
+        <span class="material-symbols-outlined text-4xl text-outline mb-3 block" style="font-variation-settings:'FILL' 0;">upload_file</span>
+        <p class="font-medium text-on-surface text-sm mb-1">Drop your file here or <span class="text-secondary">browse</span></p>
+        <p class="text-xs text-on-surface-variant">CSV · JSON · XLS · XLSX · PDF · GeoJSON · XML · Max 50 MB</p>
+        <input id="file-input" type="file" class="hidden"
+          accept=".csv,.json,.xls,.xlsx,.pdf,.geojson,.xml,.txt" onchange="handleFileSelect(event)" />
+      </div>
+
+      <!-- File selected info -->
+      <div id="file-info" class="hidden flex items-center gap-3 px-4 py-3 bg-surface-container-low rounded-xl border border-outline-variant/50">
+        <span class="material-symbols-outlined text-secondary" style="font-variation-settings:'FILL' 1;">description</span>
+        <div class="flex-1 min-w-0">
+          <p id="file-name" class="text-sm font-medium text-on-surface truncate"></p>
+          <p id="file-size" class="text-xs text-on-surface-variant"></p>
         </div>
-        <div class="form-row">
-          <label>Tags (comma-separated)</label>
-          <input type="text" id="f-tags" placeholder="e.g. census, population, Dhaka"/>
+        <button type="button" onclick="clearFile()" class="text-on-surface-variant hover:text-secondary transition-colors">
+          <span class="material-symbols-outlined" style="font-size:20px;">close</span>
+        </button>
+      </div>
+
+      <!-- Progress bar -->
+      <div id="upload-progress" class="hidden space-y-2">
+        <div class="flex items-center justify-between text-xs text-on-surface-variant">
+          <span id="progress-label">Uploading…</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="h-1.5 bg-surface-container rounded-full overflow-hidden">
+          <div id="progress-bar" class="h-full bg-secondary rounded-full transition-all duration-200" style="width:0%"></div>
         </div>
       </div>
-    </div>
 
-    <div class="form-section">
-      <h3>source information</h3>
-
-      <div class="form-row">
-        <label>Source Organization <span class="req">*</span></label>
-        <input type="text" id="f-source" placeholder="e.g. Bangladesh Bureau of Statistics (BBS)"/>
-        <div class="error-msg" id="err-source">Source organization is required.</div>
-      </div>
-
-      <div class="form-row">
-        <label>Source URL</label>
-        <input type="url" id="f-source-url" placeholder="https://bbs.gov.bd/..."/>
-        <div class="hint">Link to the official source page or dataset download.</div>
-      </div>
-
-      <div class="form-row">
-        <label>Download URL</label>
-        <input type="url" id="f-download-url" placeholder="https://... (direct link to file, if available)"/>
+      <!-- Upload success -->
+      <div id="upload-success" class="hidden flex items-center gap-2 text-sm text-on-tertiary-fixed-variant">
+        <span class="material-symbols-outlined" style="font-size:18px;font-variation-settings:'FILL' 1;">check_circle</span>
+        File uploaded successfully
       </div>
     </div>
 
-    <div class="form-section">
-      <h3>your information (optional)</h3>
+    <!-- Submit -->
+    <button type="submit" id="submit-btn"
+      class="w-full bg-secondary text-on-secondary py-4 rounded-xl font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95 flex items-center justify-center gap-2 text-base">
+      <span id="submit-label">Submit for Review</span>
+      <svg id="submit-spinner" class="hidden animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+      </svg>
+    </button>
 
-      <div class="form-row">
-        <label>Your Name or Organization</label>
-        <input type="text" id="f-submitted-by" placeholder="e.g. BRAC Institute of Governance and Development"/>
-        <div class="hint">We may credit you as the submitter.</div>
-      </div>
-    </div>
-
-    <div>
-      <button type="button" class="btn btn-primary" onclick="submitForm()">Submit Dataset</button>
-      <a href="/" class="btn btn-secondary" style="text-decoration:none">Cancel</a>
-    </div>
+    <p class="text-xs text-center text-on-surface-variant">
+      By submitting you confirm this data is legally shareable and relates to Bangladesh.
+      Reviewed within 24–48 hours.
+    </p>
 
   </form>
+</main>
+
+<!-- Auth Modal (same as index.html) -->
+<div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden" role="dialog" aria-modal="true">
+  <div class="bg-surface-container-lowest w-full max-w-md rounded-2xl shadow-2xl border border-outline-variant/30 overflow-hidden">
+    <div class="px-8 pt-8 pb-0">
+      <div class="flex items-center justify-between mb-6">
+        <span class="font-bold text-sm bg-secondary text-on-secondary px-3 py-1 rounded-lg">OpenDataBD</span>
+        <button id="auth-modal-close" class="text-on-surface-variant hover:text-on-surface p-1.5 rounded-full hover:bg-surface-container transition-colors">
+          <span class="material-symbols-outlined" style="font-size:20px;">close</span>
+        </button>
+      </div>
+      <div class="flex bg-surface-container rounded-xl p-1 mb-6">
+        <button id="tab-signin" class="flex-1 py-2 px-4 rounded-lg text-sm font-semibold bg-surface-container-lowest text-on-surface shadow-sm transition-all duration-200">Sign In</button>
+        <button id="tab-signup" class="flex-1 py-2 px-4 rounded-lg text-sm font-semibold text-on-surface-variant transition-all duration-200">Sign Up</button>
+      </div>
+      <div id="auth-message" class="hidden text-sm px-4 py-3 rounded-xl mb-5"></div>
+      <div id="form-signin">
+        <form id="signin-form" class="space-y-4" novalidate>
+          <input id="signin-email" type="email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors"/>
+          <input id="signin-password" type="password" placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors"/>
+          <button type="submit" class="w-full bg-secondary text-on-secondary py-3 rounded-xl font-semibold text-sm hover:bg-secondary-container transition-colors active:scale-95">Sign In</button>
+        </form>
+      </div>
+      <div id="form-signup" class="hidden">
+        <form id="signup-form" class="space-y-4" novalidate>
+          <input id="signup-name" type="text" placeholder="Full name" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors"/>
+          <input id="signup-email" type="email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors"/>
+          <input id="signup-password" type="password" placeholder="Min. 8 characters" minlength="8" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors"/>
+          <button type="submit" class="w-full bg-secondary text-on-secondary py-3 rounded-xl font-semibold text-sm hover:bg-secondary-container transition-colors active:scale-95">Create Account</button>
+        </form>
+      </div>
+      <p class="text-xs text-on-surface-variant text-center mt-5 mb-8">
+        By continuing you agree to our <a href="#" class="text-secondary hover:underline">Terms</a> and <a href="#" class="text-secondary hover:underline">Privacy Policy</a>.
+      </p>
+    </div>
+  </div>
 </div>
 
-<div id="footer">
-  <a href="/">home</a>
-  <a href="/api-docs.html">api docs</a>
-  <a href="/api-docs.html#apikey">get api key</a>
-  <a href="mailto:hello@opendatabd.com">contact</a>
-  <span>© 2026 opendatabd</span>
-</div>
+<script type="module">
+import { initAuth, signIn, signUp, signOut, getUser, getToken } from './js/auth.js';
 
-<script>
-const API = '';
+let uploadedFileUrl = null;
 
-function getVal(id) { return document.getElementById(id).value.trim(); }
-
-function showErr(id, show) {
-  document.getElementById(id).style.display = show ? 'block' : 'none';
-}
-
-async function submitForm() {
-  let valid = true;
-
-  const title = getVal('f-title');
-  const description = getVal('f-description');
-  const category = getVal('f-category');
-  const format = getVal('f-format');
-  const source = getVal('f-source');
-
-  showErr('err-title', !title);
-  showErr('err-description', !description);
-  showErr('err-category', !category);
-  showErr('err-format', !format);
-  showErr('err-source', !source);
-
-  if (!title || !description || !category || !format || !source) return;
-
-  const rawTags = getVal('f-tags');
-  const tags = rawTags ? rawTags.split(',').map(t => t.trim()).filter(Boolean) : [];
-
-  const body = {
-    title,
-    description,
-    category,
-    format,
-    source,
-    source_url: getVal('f-source-url'),
-    division: getVal('f-division'),
-    license: getVal('f-license'),
-    rows_count: getVal('f-rows'),
-    download_url: getVal('f-download-url'),
-    tags,
-    submitted_by: getVal('f-submitted-by'),
-  };
-
-  const errBox = document.getElementById('submit-error');
-  errBox.style.display = 'none';
-  const btn = document.querySelector('.btn-primary');
-  btn.textContent = 'Submitting...';
-  btn.disabled = true;
-
-  try {
-    const res = await fetch(`${API}/api/datasets`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Submission failed');
-    document.getElementById('submit-form').style.display = 'none';
-    document.getElementById('success-box').style.display = 'block';
-    window.scrollTo(0, 0);
-  } catch (e) {
-    errBox.textContent = `Error: ${e.message}. Please try again or email hello@opendatabd.com`;
-    errBox.style.display = 'block';
-    btn.textContent = 'Submit Dataset';
-    btn.disabled = false;
+// ── Boot ──────────────────────────────────────────────────────────────────────
+async function boot() {
+  await initAuth();
+  const user = getUser();
+  if (user) {
+    showForm();
+  } else {
+    document.getElementById('auth-wall').classList.remove('hidden');
+    // Auto-open modal after short delay
+    setTimeout(() => openAuthModal(), 600);
   }
 }
+
+function showForm() {
+  document.getElementById('auth-wall').classList.add('hidden');
+  document.getElementById('submit-main').classList.remove('hidden');
+}
+
+// ── Auth modal ────────────────────────────────────────────────────────────────
+const modal    = document.getElementById('auth-modal');
+const msgEl    = document.getElementById('auth-message');
+const tabSI    = document.getElementById('tab-signin');
+const tabSU    = document.getElementById('tab-signup');
+const formSI   = document.getElementById('form-signin');
+const formSU   = document.getElementById('form-signup');
+
+window.openAuthModal  = () => modal.classList.remove('hidden');
+window.closeAuthModal = () => { modal.classList.add('hidden'); clearMsg(); };
+window.handleSignOut  = () => signOut();
+
+document.getElementById('auth-modal-close').onclick = closeAuthModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeAuthModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuthModal(); });
+
+function showMsg(text, type = 'error') {
+  msgEl.textContent = text;
+  msgEl.className = `text-sm px-4 py-3 rounded-xl mb-5 ${type === 'success' ? 'bg-tertiary-fixed text-on-tertiary-fixed-variant' : 'bg-error-container text-on-error-container'}`;
+  msgEl.classList.remove('hidden');
+}
+function clearMsg() { msgEl.classList.add('hidden'); }
+
+function switchTab(tab) {
+  const active = 'bg-surface-container-lowest text-on-surface shadow-sm';
+  const idle   = 'text-on-surface-variant';
+  tabSI.className = `flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${tab === 'signin' ? active : idle}`;
+  tabSU.className = `flex-1 py-2 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${tab === 'signup' ? active : idle}`;
+  formSI.classList.toggle('hidden', tab !== 'signin');
+  formSU.classList.toggle('hidden', tab !== 'signup');
+  clearMsg();
+}
+tabSI.onclick = () => switchTab('signin');
+tabSU.onclick = () => switchTab('signup');
+
+document.getElementById('signin-form').onsubmit = async e => {
+  e.preventDefault();
+  const { error } = await signIn(document.getElementById('signin-email').value, document.getElementById('signin-password').value);
+  if (error) { showMsg(error.message); return; }
+  closeAuthModal();
+  showForm();
+};
+document.getElementById('signup-form').onsubmit = async e => {
+  e.preventDefault();
+  const { error } = await signUp(document.getElementById('signup-email').value, document.getElementById('signup-password').value, document.getElementById('signup-name').value);
+  if (error) { showMsg(error.message); return; }
+  showMsg('Check your email to confirm your account, then sign in.', 'success');
+};
+
+// ── File upload ───────────────────────────────────────────────────────────────
+window.handleDragOver = e => { e.preventDefault(); document.getElementById('dropzone').classList.add('drop-active'); };
+window.handleDragLeave = () => document.getElementById('dropzone').classList.remove('drop-active');
+window.handleDrop = e => {
+  e.preventDefault();
+  document.getElementById('dropzone').classList.remove('drop-active');
+  const file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+};
+window.handleFileSelect = e => { const file = e.target.files[0]; if (file) processFile(file); };
+
+function processFile(file) {
+  const info = document.getElementById('file-info');
+  document.getElementById('file-name').textContent = file.name;
+  document.getElementById('file-size').textContent = formatBytes(file.size);
+  info.classList.remove('hidden');
+  document.getElementById('upload-success').classList.add('hidden');
+  uploadedFileUrl = null;
+  uploadFile(file);
+}
+
+window.clearFile = () => {
+  uploadedFileUrl = null;
+  document.getElementById('file-input').value = '';
+  document.getElementById('file-info').classList.add('hidden');
+  document.getElementById('upload-progress').classList.add('hidden');
+  document.getElementById('upload-success').classList.add('hidden');
+};
+
+async function uploadFile(file) {
+  const token = getToken();
+  document.getElementById('upload-progress').classList.remove('hidden');
+  document.getElementById('upload-success').classList.add('hidden');
+  setProgress(0, 'Requesting upload URL…');
+
+  // 1. Get presigned URL
+  const presignRes = await fetch('/api/upload/presign', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ contentType: file.type, size: file.size }),
+  });
+
+  if (!presignRes.ok) {
+    const err = await presignRes.json();
+    showFormError(err.error ?? 'Upload failed. Try again.');
+    document.getElementById('upload-progress').classList.add('hidden');
+    return;
+  }
+
+  const { uploadUrl, publicUrl } = await presignRes.json();
+  setProgress(10, 'Uploading…');
+
+  // 2. Upload directly to R2 via XHR (supports progress events)
+  await new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable) setProgress(10 + (e.loaded / e.total) * 85, 'Uploading…');
+    };
+    xhr.onload = () => xhr.status < 300 ? resolve() : reject(new Error(`Upload error ${xhr.status}`));
+    xhr.onerror = () => reject(new Error('Network error during upload'));
+    xhr.open('PUT', uploadUrl);
+    xhr.setRequestHeader('Content-Type', file.type);
+    xhr.send(file);
+  });
+
+  setProgress(100, 'Complete');
+  uploadedFileUrl = publicUrl;
+  document.getElementById('upload-progress').classList.add('hidden');
+  document.getElementById('upload-success').classList.remove('hidden');
+}
+
+function setProgress(pct, label) {
+  document.getElementById('progress-bar').style.width = `${pct}%`;
+  document.getElementById('progress-pct').textContent = `${Math.round(pct)}%`;
+  document.getElementById('progress-label').textContent = label;
+}
+
+// ── Form submit ───────────────────────────────────────────────────────────────
+document.getElementById('submit-form').onsubmit = async e => {
+  e.preventDefault();
+  clearFormError();
+
+  const title       = document.getElementById('f-title').value.trim();
+  const description = document.getElementById('f-description').value.trim();
+  const category    = document.getElementById('f-category').value;
+  const format      = document.getElementById('f-format').value;
+  const source      = document.getElementById('f-source').value.trim();
+
+  if (!title)       return showFormError('Title is required.');
+  if (!description) return showFormError('Description is required.');
+  if (!category)    return showFormError('Please select a category.');
+  if (!format)      return showFormError('Please select a format.');
+  if (!source)      return showFormError('Source organization is required.');
+
+  setSubmitting(true);
+  const token = getToken();
+
+  const tags = document.getElementById('f-tags').value
+    .split(',').map(t => t.trim()).filter(Boolean);
+
+  const res = await fetch('/api/datasets', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({
+      title, description, category,
+      format: [format],
+      source,
+      source_url: document.getElementById('f-source-url').value.trim() || null,
+      file_url:   uploadedFileUrl,
+      license:    document.getElementById('f-license').value,
+      division:   document.getElementById('f-division').value,
+      tags,
+    }),
+  });
+
+  setSubmitting(false);
+
+  if (!res.ok) {
+    const err = await res.json();
+    return showFormError(err.error ?? 'Submission failed. Try again.');
+  }
+
+  document.getElementById('submit-form').classList.add('hidden');
+  document.getElementById('success-state').classList.remove('hidden');
+};
+
+window.resetForm = () => {
+  document.getElementById('submit-form').reset();
+  document.getElementById('submit-form').classList.remove('hidden');
+  document.getElementById('success-state').classList.add('hidden');
+  clearFile();
+  uploadedFileUrl = null;
+};
+
+function setSubmitting(on) {
+  document.getElementById('submit-label').textContent = on ? 'Submitting…' : 'Submit for Review';
+  document.getElementById('submit-spinner').classList.toggle('hidden', !on);
+  document.getElementById('submit-btn').disabled = on;
+}
+
+function showFormError(msg) {
+  const el = document.getElementById('form-error');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function clearFormError() { document.getElementById('form-error').classList.add('hidden'); }
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function formatBytes(b) {
+  if (b > 1048576) return `${(b / 1048576).toFixed(1)} MB`;
+  return `${(b / 1024).toFixed(0)} KB`;
+}
+
+boot();
 </script>
 </body>
 </html>

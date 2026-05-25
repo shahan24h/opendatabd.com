@@ -11,6 +11,8 @@
     "deploy": "vercel --prod"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@aws-sdk/s3-request-presigner": "^3.600.0",
     "@supabase/supabase-js": "^2.39.3",
     "resend": "^3.5.0"
   }

@@ -53,6 +53,8 @@ export default async function handler(req, res) {
     if (!title?.trim())    return res.status(400).json({ error: 'Title is required.' });
     if (!category?.trim()) return res.status(400).json({ error: 'Category is required.' });
 
+    const { file_url } = req.body ?? {};
+
     const { data, error } = await supabaseAdmin
       .from('datasets')
       .insert({
@@ -62,6 +64,7 @@ export default async function handler(req, res) {
         format:       Array.isArray(format) ? format : format ? [format] : [],
         source:       source?.trim()      ?? null,
         source_url:   source_url?.trim()  ?? null,
+        file_url:     file_url?.trim()    ?? null,
         license:      license?.trim()     ?? 'Open Data',
         tags:         Array.isArray(tags) ? tags : [],
         submitted_by: user.id,
