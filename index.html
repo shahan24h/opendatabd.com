@@ -158,14 +158,14 @@ tailwind.config = {
 
 <!-- Nav -->
 <nav class="w-full sticky top-0 z-50 bg-surface-container-lowest border-b border-outline-variant/30 shadow-sm">
-  <div class="max-w-container-max mx-auto px-margin-desktop flex items-center justify-between h-20">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex items-center justify-between h-20">
     <div class="flex items-center gap-gutter">
       <button class="font-headline-md text-headline-md font-bold bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg hover:bg-secondary-container transition-colors duration-200 active:scale-95 shadow-sm">OpenDataBD</button>
       <div class="hidden md:flex items-center gap-1 ml-unit-lg">
         <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/datasets">Datasets</a>
         <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/api-docs">API Docs</a>
         <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/about">About Us</a>
-        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/impact">Impact</a>
+        <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/research">Research</a>
         <a class="px-4 py-2 rounded-full font-body-md text-body-md text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/news">News</a>
       </div>
     </div>
@@ -195,13 +195,13 @@ tailwind.config = {
 
 <!-- Hero -->
 <header class="relative overflow-hidden" style="background-image: linear-gradient(rgba(0,0,0,0.58), rgba(0,0,0,0.58)), url('https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/hero-bg.jpg'); background-size: cover; background-position: center;">
-  <div class="max-w-container-max mx-auto px-margin-desktop py-unit-xl md:py-32 relative z-10">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-32 relative z-10">
     <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
       <div class="hero-float-1 mb-unit-lg">
-        <h1 class="opacity-0 animate-fade-up animate-delay-100 font-display-lg text-display-lg text-[#f8fafc]">Empowering Bangladesh<br>through Data</h1>
+        <h1 class="opacity-0 animate-fade-up animate-delay-100 font-display-lg text-[1.75rem] sm:text-[2.25rem] md:text-display-lg leading-tight tracking-tight text-[#f8fafc]">Empowering Bangladesh<br>through Data</h1>
       </div>
       <div class="hero-float-2 mb-unit-xl">
-        <p class="opacity-0 animate-fade-up animate-delay-200 font-body-lg text-body-lg max-w-2xl text-[#cbd5e1]">
+        <p class="opacity-0 animate-fade-up animate-delay-200 font-body-lg text-base md:text-body-lg max-w-2xl text-[#cbd5e1]">
           Access public datasets across health, education, transport, and economy to drive civic transparency and innovation.
         </p>
       </div>
@@ -219,7 +219,7 @@ tailwind.config = {
 
 <!-- Stats Bar -->
 <div class="bg-surface-container-lowest border-b border-outline-variant/40">
-  <div class="max-w-container-max mx-auto px-margin-desktop py-8">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8">
     <dl class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
       <div class="flex flex-col items-center md:border-r md:border-outline-variant/40 last:border-0 gap-1">
         <dt id="stat-datasets" class="text-[2rem] font-extrabold font-headline-lg text-on-surface tabular-nums leading-none">—</dt>
@@ -242,7 +242,7 @@ tailwind.config = {
 </div>
 
 <!-- Main Features -->
-<section class="py-unit-xl max-w-container-max mx-auto px-margin-desktop">
+<section class="py-unit-xl max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
     <!-- Discover -->
     <div class="group bg-surface-container-lowest border border-outline-variant/50 p-unit-lg md:p-unit-xl rounded-xl hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col items-center text-center md:items-start md:text-left">
@@ -273,7 +273,7 @@ tailwind.config = {
 
 <!-- Browse by Category -->
 <section class="bg-surface-container-low py-unit-xl">
-  <div class="max-w-container-max mx-auto px-margin-desktop">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
     <div class="flex items-end justify-between mb-unit-lg">
       <div>
         <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-2">EXPLORE</p>
@@ -391,7 +391,7 @@ tailwind.config = {
 
 <!-- Featured Datasets -->
 <section class="py-unit-xl">
-  <div class="max-w-container-max mx-auto px-margin-desktop">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
     <div class="flex items-end justify-between mb-unit-lg">
       <div>
         <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-2">LATEST</p>
@@ -412,7 +412,7 @@ tailwind.config = {
 
 <!-- Audience Section -->
 <section class="bg-surface-container-low py-unit-xl">
-  <div class="max-w-container-max mx-auto px-margin-desktop">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
     <div class="text-center mb-unit-xl">
       <h2 class="font-headline-lg text-headline-lg mb-unit-sm">Data for Everyone</h2>
       <p class="text-on-surface-variant">Tailored tools and experiences for our diverse community.</p>
@@ -448,7 +448,7 @@ tailwind.config = {
   <div class="absolute inset-0 opacity-10 pointer-events-none">
     <img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkqVN6EYcquhI-0Tgrtz1Zi3l6_Y_Yv1zJw9A5wgJa7f4VDqGBndUq4gc1CzEV7n3_i-Q1sA9l1djZ9bnKCVGE4LCEnOoXGukFkf_ZPnHdYWwRYKz0nK48fka0s1YbJ3opMW8niHsMM5KaU_t5jJa1fc6Y5uDK-Za5cdLhsyRNR8zgrx021Mu7QamAkOYIOP5EgEyKZLh7IYWKach1rVX3BpCKBhCe0Lt1jJoW-ViEoMcbxD9rJMNwgVXATJhNDLeqkJO8SFFwglg">
   </div>
-  <div class="max-w-container-max mx-auto px-margin-desktop relative z-10 flex flex-col md:flex-row items-center justify-between gap-unit-xl">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10 flex flex-col md:flex-row items-center justify-between gap-unit-xl">
     <div class="max-w-2xl text-center md:text-left">
       <h2 class="font-display-lg text-headline-lg md:text-display-lg mb-unit-md leading-tight text-white">Join the National Data Network</h2>
       <p class="font-body-lg text-body-lg text-on-primary-container">Build the future of Bangladesh with open, accessible, and high-quality data. Sign up for free today.</p>
@@ -462,7 +462,7 @@ tailwind.config = {
 
 <!-- Footer -->
 <footer class="w-full py-unit-xl bg-inverse-surface">
-  <div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter">
     <div class="md:col-span-1">
       <span class="font-headline-md text-headline-md font-bold text-inverse-on-surface mb-unit-md block">OpenDataBD</span>
       <p class="text-surface-dim font-body-md mb-unit-md">Empowering citizens through transparency and technological innovation. Built for a smarter Bangladesh.</p>
@@ -492,7 +492,7 @@ tailwind.config = {
       </ul>
     </div>
   </div>
-  <div class="max-w-container-max mx-auto px-margin-desktop mt-unit-xl pt-unit-md border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-surface-dim text-sm gap-4">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mt-unit-xl pt-unit-md border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-surface-dim text-sm gap-4">
     <span>© 2025 OpenDataBD. Empowering citizens through transparency.</span>
     <div class="flex gap-unit-md">
       <a class="hover:text-white transition-colors duration-200" href="#" aria-label="Website"><span class="material-symbols-outlined">public</span></a>
