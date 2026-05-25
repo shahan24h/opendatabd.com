@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Admin — OpenDataBD</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "on-secondary-container": "#fffbff", "inverse-on-surface": "#eff1f3",
+        "background": "#f7f9fb", "on-surface": "#191c1e", "inverse-surface": "#2d3133",
+        "secondary-fixed-dim": "#ffb3b6", "surface-dim": "#d8dadc", "outline": "#76777d",
+        "on-secondary-fixed": "#40000c", "tertiary-fixed-dim": "#6bd8cb",
+        "surface-container-high": "#e6e8ea", "on-background": "#191c1e",
+        "on-secondary": "#ffffff", "primary-fixed-dim": "#bec6e0",
+        "surface-bright": "#f7f9fb", "secondary-container": "#e21e49",
+        "secondary": "#ba0035", "on-tertiary-fixed": "#00201d",
+        "on-primary-fixed-variant": "#3f465c", "on-primary-fixed": "#131b2e",
+        "surface-container-lowest": "#ffffff", "primary-fixed": "#dae2fd",
+        "on-error-container": "#93000a", "primary-container": "#131b2e",
+        "on-tertiary-container": "#0c9488", "surface-container-low": "#f2f4f6",
+        "on-tertiary-fixed-variant": "#005049", "surface": "#f7f9fb",
+        "on-primary": "#ffffff", "error": "#ba1a1a", "on-tertiary": "#ffffff",
+        "surface-container": "#eceef0", "tertiary-fixed": "#89f5e7",
+        "on-surface-variant": "#45464d", "primary": "#000000",
+        "on-secondary-fixed-variant": "#920028", "on-error": "#ffffff",
+        "secondary-fixed": "#ffdada", "outline-variant": "#c6c6cd",
+        "error-container": "#ffdad6", "surface-variant": "#e0e3e5"
+      },
+      spacing: {
+        "margin-desktop": "64px", "unit-lg": "32px", "container-max": "1280px",
+        "unit-xs": "4px", "unit-xl": "64px", "gutter": "24px",
+        "unit-sm": "8px", "unit-md": "16px"
+      },
+      fontFamily: {
+        "label-caps": ["JetBrains Mono"], "body-md": ["Inter"],
+        "headline-lg": ["Hanken Grotesk"], "display-lg": ["Hanken Grotesk"],
+        "headline-md": ["Hanken Grotesk"]
+      },
+      fontSize: {
+        "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "600" }],
+        "body-md": ["16px", { lineHeight: "1.5", fontWeight: "400" }],
+        "headline-lg": ["32px", { lineHeight: "1.2", letterSpacing: "-0.01em", fontWeight: "700" }],
+        "headline-md": ["24px", { lineHeight: "1.3", fontWeight: "600" }]
+      }
+    }
+  }
+}
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .status-pending  { background:#fff4e5; color:#92500a; border-color:#fcd49a; }
+  .status-active   { background:#e8faf4; color:#005049; border-color:#89f5e7; }
+  .status-rejected { background:#ffdad6; color:#93000a; border-color:#ffb4ab; }
+  .skeleton { background: linear-gradient(90deg, #eceef0 25%, #e0e3e5 50%, #eceef0 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+</style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen">
+
+<!-- Nav -->
+<nav class="w-full sticky top-0 z-50 bg-surface-container-lowest border-b border-outline-variant/30 shadow-sm">
+  <div class="max-w-container-max mx-auto px-margin-desktop flex items-center justify-between h-16">
+    <div class="flex items-center gap-3">
+      <a href="/" class="font-bold text-base bg-secondary text-on-secondary px-3 py-1.5 rounded-lg hover:bg-secondary-container transition-colors duration-200">OpenDataBD</a>
+      <span class="font-label-caps text-label-caps text-on-surface-variant tracking-widest bg-surface-container px-2.5 py-1 rounded-full border border-outline-variant/50">ADMIN</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <span id="admin-email" class="text-sm text-on-surface-variant hidden"></span>
+      <a href="/" class="text-sm text-on-surface-variant px-3 py-1.5 rounded-lg hover:bg-surface-container transition-colors duration-200 flex items-center gap-1">
+        <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span> Back to site
+      </a>
+      <button id="signout-btn" class="text-sm text-secondary px-3 py-1.5 rounded-lg hover:bg-secondary-fixed transition-colors duration-200">Sign Out</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Access denied (hidden by default) -->
+<div id="access-denied" class="hidden fixed inset-0 flex items-center justify-center bg-background z-40">
+  <div class="text-center">
+    <span class="material-symbols-outlined text-5xl text-outline mb-4 block">lock</span>
+    <h2 class="font-headline-md text-headline-md mb-2">Access Denied</h2>
+    <p class="text-on-surface-variant mb-6">You need admin privileges to view this page.</p>
+    <a href="/" class="bg-secondary text-on-secondary px-6 py-3 rounded-xl font-semibold hover:bg-secondary-container transition-colors duration-200">Go Home</a>
+  </div>
+</div>
+
+<!-- Main -->
+<main class="max-w-container-max mx-auto px-margin-desktop py-10">
+
+  <!-- Page header -->
+  <div class="mb-8">
+    <h1 class="font-headline-lg text-headline-lg mb-1">Dataset Management</h1>
+    <p class="text-on-surface-variant text-sm">Review and publish community submissions.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-3 gap-4 mb-8">
+    <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-5 text-center">
+      <p id="stat-pending" class="text-3xl font-extrabold font-headline-lg text-on-surface tabular-nums">—</p>
+      <p class="text-sm text-on-surface-variant mt-1">Pending Review</p>
+    </div>
+    <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-5 text-center">
+      <p id="stat-active" class="text-3xl font-extrabold font-headline-lg text-on-surface tabular-nums">—</p>
+      <p class="text-sm text-on-surface-variant mt-1">Published</p>
+    </div>
+    <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-5 text-center">
+      <p id="stat-rejected" class="text-3xl font-extrabold font-headline-lg text-on-surface tabular-nums">—</p>
+      <p class="text-sm text-on-surface-variant mt-1">Rejected</p>
+    </div>
+  </div>
+
+  <!-- Filter tabs + Refresh -->
+  <div class="flex items-center justify-between mb-5">
+    <div class="flex gap-1 bg-surface-container p-1 rounded-xl">
+      <button data-filter="all"      class="filter-tab active-tab px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200">All</button>
+      <button data-filter="pending"  class="filter-tab px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-on-surface-variant">Pending</button>
+      <button data-filter="active"   class="filter-tab px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-on-surface-variant">Active</button>
+      <button data-filter="rejected" class="filter-tab px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-on-surface-variant">Rejected</button>
+    </div>
+    <button id="refresh-btn" class="flex items-center gap-1.5 text-sm text-on-surface-variant px-3 py-2 rounded-lg hover:bg-surface-container transition-colors duration-200">
+      <span class="material-symbols-outlined" style="font-size:18px;">refresh</span> Refresh
+    </button>
+  </div>
+
+  <!-- Dataset list -->
+  <div id="dataset-list" class="space-y-3">
+    <!-- Skeleton loaders -->
+    <div class="skeleton h-36 rounded-xl"></div>
+    <div class="skeleton h-36 rounded-xl"></div>
+    <div class="skeleton h-36 rounded-xl"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty-state" class="hidden text-center py-16">
+    <span class="material-symbols-outlined text-5xl text-outline mb-3 block">inbox</span>
+    <p class="font-semibold text-on-surface mb-1">No datasets here</p>
+    <p class="text-sm text-on-surface-variant">Nothing to review in this category yet.</p>
+  </div>
+
+</main>
+
+<script type="module">
+import { initAuth, getUser, getToken, signOut } from './js/auth.js';
+
+let allDatasets = [];
+let activeFilter = 'all';
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+async function boot() {
+  await initAuth();
+  const user = getUser();
+
+  if (!user) { window.location.href = '/'; return; }
+
+  document.getElementById('admin-email').textContent = user.email;
+  document.getElementById('admin-email').classList.remove('hidden');
+
+  document.getElementById('signout-btn').onclick = async () => {
+    await signOut(); window.location.href = '/';
+  };
+
+  await loadDatasets();
+}
+
+// ── API ───────────────────────────────────────────────────────────────────────
+async function loadDatasets() {
+  showSkeletons();
+  const token = getToken();
+  const res = await fetch('/api/admin/datasets', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  if (res.status === 401 || res.status === 403) {
+    document.getElementById('access-denied').classList.remove('hidden');
+    document.querySelector('main').classList.add('hidden');
+    return;
+  }
+
+  const { datasets, stats } = await res.json();
+  allDatasets = datasets;
+  updateStats(stats);
+  renderList();
+}
+
+async function updateStatus(id, status) {
+  const token = getToken();
+  const res = await fetch(`/api/admin/datasets/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ status }),
+  });
+  if (!res.ok) { alert('Failed to update status. Try again.'); return; }
+
+  // Update local state
+  const idx = allDatasets.findIndex(d => d.id === id);
+  if (idx !== -1) allDatasets[idx].status = status;
+
+  // Recalculate stats
+  const stats = {
+    pending:  allDatasets.filter(d => d.status === 'pending').length,
+    active:   allDatasets.filter(d => d.status === 'active').length,
+    rejected: allDatasets.filter(d => d.status === 'rejected').length,
+  };
+  updateStats(stats);
+  renderList();
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function showSkeletons() {
+  document.getElementById('dataset-list').innerHTML = `
+    <div class="skeleton h-36 rounded-xl"></div>
+    <div class="skeleton h-36 rounded-xl"></div>
+    <div class="skeleton h-36 rounded-xl"></div>`;
+  document.getElementById('empty-state').classList.add('hidden');
+}
+
+function updateStats({ pending, active, rejected }) {
+  document.getElementById('stat-pending').textContent  = pending;
+  document.getElementById('stat-active').textContent   = active;
+  document.getElementById('stat-rejected').textContent = rejected;
+}
+
+function renderList() {
+  const filtered = activeFilter === 'all'
+    ? allDatasets
+    : allDatasets.filter(d => d.status === activeFilter);
+
+  const list = document.getElementById('dataset-list');
+  const empty = document.getElementById('empty-state');
+
+  if (!filtered.length) {
+    list.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+
+  empty.classList.add('hidden');
+  list.innerHTML = filtered.map(d => datasetCard(d)).join('');
+
+  // Wire up action buttons
+  list.querySelectorAll('[data-action]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const { id, action } = btn.dataset;
+      if (action === 'reject' && !confirm('Reject this dataset?')) return;
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+      await updateStatus(id, action);
+    });
+  });
+}
+
+function datasetCard(d) {
+  const statusClass = { pending: 'status-pending', active: 'status-active', rejected: 'status-rejected' }[d.status];
+  const statusLabel = d.status.charAt(0).toUpperCase() + d.status.slice(1);
+  const formats = Array.isArray(d.format) ? d.format : (d.format ? [d.format] : []);
+  const submitter = d.submitter?.email ?? '—';
+  const submittedAt = d.created_at ? new Date(d.created_at).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) : '—';
+
+  const actions = {
+    pending: `
+      <button data-action="active"   data-id="${d.id}" class="px-4 py-2 bg-tertiary-fixed text-on-tertiary-fixed-variant text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity active:scale-95">✓ Approve</button>
+      <button data-action="rejected" data-id="${d.id}" class="px-4 py-2 border border-outline-variant text-on-surface-variant text-sm font-semibold rounded-lg hover:bg-surface-container transition-colors active:scale-95">✗ Reject</button>`,
+    active: `
+      <button data-action="rejected" data-id="${d.id}" class="px-4 py-2 border border-outline-variant text-on-surface-variant text-sm font-semibold rounded-lg hover:bg-surface-container transition-colors active:scale-95">Deactivate</button>`,
+    rejected: `
+      <button data-action="pending"  data-id="${d.id}" class="px-4 py-2 bg-primary-fixed text-on-primary-fixed-variant text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity active:scale-95">Restore to Pending</button>`,
+  }[d.status] ?? '';
+
+  return `
+  <article class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-5 hover:shadow-md transition-shadow duration-200">
+    <div class="flex flex-wrap items-start justify-between gap-3">
+
+      <div class="flex-1 min-w-0">
+        <!-- Badges row -->
+        <div class="flex flex-wrap items-center gap-2 mb-2.5">
+          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${statusClass}">${statusLabel}</span>
+          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant">${d.category}</span>
+          ${formats.map(f => `<span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant">${f}</span>`).join('')}
+        </div>
+
+        <!-- Title -->
+        <h3 class="font-semibold text-on-surface text-base leading-snug mb-1">${d.title}</h3>
+
+        <!-- Description -->
+        ${d.description ? `<p class="text-sm text-on-surface-variant mb-2 line-clamp-2">${d.description}</p>` : ''}
+
+        <!-- Meta row -->
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-on-surface-variant">
+          ${d.source_url ? `<a href="${d.source_url}" target="_blank" rel="noopener" class="flex items-center gap-1 hover:text-secondary transition-colors"><span class="material-symbols-outlined" style="font-size:14px;">link</span>${d.source ?? d.source_url}</a>` : d.source ? `<span>${d.source}</span>` : ''}
+          <span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:14px;">person</span>${submitter}</span>
+          <span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:14px;">calendar_today</span>${submittedAt}</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-2 shrink-0">
+        ${actions}
+      </div>
+
+    </div>
+  </article>`;
+}
+
+// ── Filter tabs ───────────────────────────────────────────────────────────────
+document.querySelectorAll('.filter-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeFilter = btn.dataset.filter;
+    document.querySelectorAll('.filter-tab').forEach(b => {
+      b.classList.toggle('active-tab', b === btn);
+      b.classList.toggle('bg-surface-container-lowest', b === btn);
+      b.classList.toggle('text-on-surface', b === btn);
+      b.classList.toggle('shadow-sm', b === btn);
+      b.classList.toggle('text-on-surface-variant', b !== btn);
+    });
+    renderList();
+  });
+});
+
+// Init active tab styles
+document.querySelector('[data-filter="all"]').classList.add('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm');
+
+document.getElementById('refresh-btn').onclick = loadDatasets;
+
+boot();
+</script>
+</body>
+</html>
