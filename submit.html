@@ -435,12 +435,15 @@ async function uploadFile(file) {
   const presignRes = await fetch('/api/upload/presign', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ contentType: file.type, size: file.size }),
+    body: JSON.stringify({ contentType: file.type, size: file.size, filename: file.name }),
   });
 
   if (!presignRes.ok) {
-    const err = await presignRes.json();
-    showFormError(err.error ?? 'Upload failed. Try again.');
+    const err = await presignRes.json().catch(() => ({}));
+    const msg = typeof err.error === 'string'
+      ? err.error
+      : err.error?.message ?? 'Upload failed. Try again.';
+    showFormError(msg);
     document.getElementById('upload-progress').classList.add('hidden');
     return;
   }
@@ -514,8 +517,11 @@ document.getElementById('submit-form').onsubmit = async e => {
   setSubmitting(false);
 
   if (!res.ok) {
-    const err = await res.json();
-    return showFormError(err.error ?? 'Submission failed. Try again.');
+    const err = await res.json().catch(() => ({}));
+    const msg = typeof err.error === 'string'
+      ? err.error
+      : err.error?.message ?? 'Submission failed. Try again.';
+    return showFormError(msg);
   }
 
   document.getElementById('submit-form').classList.add('hidden');
