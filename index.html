@@ -528,6 +528,21 @@ function datasetCard(d) {
   const date     = d.created_at
     ? new Date(d.created_at).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })
     : '';
+
+  // Action button — prefer hosted file, fall back to source URL
+  let action = '';
+  if (d.file_url) {
+    action = `<a href="/api/download/${d.id}"
+      class="flex items-center gap-1 bg-secondary text-on-secondary text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-secondary-container transition-colors duration-200">
+      <span class="material-symbols-outlined" style="font-size:15px;">download</span>Download
+    </a>`;
+  } else if (d.source_url) {
+    action = `<a href="${d.source_url}" target="_blank" rel="noopener noreferrer"
+      class="flex items-center gap-1 border border-outline-variant text-on-surface-variant text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-surface-container transition-colors duration-200">
+      <span class="material-symbols-outlined" style="font-size:15px;">open_in_new</span>View Source
+    </a>`;
+  }
+
   return `
   <article class="group flex flex-col bg-surface-container-lowest border border-outline-variant/50 rounded-xl overflow-hidden hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
     <div class="p-5 flex-1 flex flex-col">
@@ -546,7 +561,7 @@ function datasetCard(d) {
     </div>
     <div class="px-5 py-3 border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/60">
       <span class="text-xs text-on-surface-variant">${d.source ?? 'OpenDataBD'}</span>
-      <span class="material-symbols-outlined text-secondary group-hover:translate-x-0.5 transition-transform duration-200" style="font-size:18px;">arrow_forward</span>
+      ${action}
     </div>
   </article>`;
 }
