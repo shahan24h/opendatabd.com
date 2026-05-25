@@ -207,11 +207,11 @@ tailwind.config = {
   <div class="max-w-container-max mx-auto px-margin-desktop py-8">
     <dl class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
       <div class="flex flex-col items-center md:border-r md:border-outline-variant/40 last:border-0 gap-1">
-        <dt class="text-[2rem] font-extrabold font-headline-lg text-on-surface tabular-nums leading-none">5,000+</dt>
+        <dt id="stat-datasets" class="text-[2rem] font-extrabold font-headline-lg text-on-surface tabular-nums leading-none">—</dt>
         <dd class="text-sm text-on-surface-variant">Public Datasets</dd>
       </div>
       <div class="flex flex-col items-center md:border-r md:border-outline-variant/40 gap-1">
-        <dt class="text-[2rem] font-extrabold font-headline-lg text-on-surface tabular-nums leading-none">200+</dt>
+        <dt id="stat-contributors" class="text-[2rem] font-extrabold font-headline-lg text-on-surface tabular-nums leading-none">—</dt>
         <dd class="text-sm text-on-surface-variant">Contributors</dd>
       </div>
       <div class="flex flex-col items-center md:border-r md:border-outline-variant/40 gap-1">
@@ -219,7 +219,7 @@ tailwind.config = {
         <dd class="text-sm text-on-surface-variant">Districts Covered</dd>
       </div>
       <div class="flex flex-col items-center gap-1">
-        <dt class="text-[2rem] font-extrabold font-headline-lg text-on-surface tabular-nums leading-none">1M+</dt>
+        <dt id="stat-downloads" class="text-[2rem] font-extrabold font-headline-lg text-on-surface tabular-nums leading-none">—</dt>
         <dd class="text-sm text-on-surface-variant">Dataset Downloads</dd>
       </div>
     </dl>
@@ -276,7 +276,7 @@ tailwind.config = {
         </div>
         <div>
           <p class="text-sm font-semibold text-on-surface">Agriculture</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">312 datasets</p>
+          <p id="cat-count-agriculture" class="text-xs text-on-surface-variant mt-0.5">—</p>
         </div>
       </a>
 
@@ -286,7 +286,7 @@ tailwind.config = {
         </div>
         <div>
           <p class="text-sm font-semibold text-on-surface">Climate</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">248 datasets</p>
+          <p id="cat-count-climate" class="text-xs text-on-surface-variant mt-0.5">—</p>
         </div>
       </a>
 
@@ -296,7 +296,7 @@ tailwind.config = {
         </div>
         <div>
           <p class="text-sm font-semibold text-on-surface">Economy</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">427 datasets</p>
+          <p id="cat-count-economy" class="text-xs text-on-surface-variant mt-0.5">—</p>
         </div>
       </a>
 
@@ -306,7 +306,7 @@ tailwind.config = {
         </div>
         <div>
           <p class="text-sm font-semibold text-on-surface">Education</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">311 datasets</p>
+          <p id="cat-count-education" class="text-xs text-on-surface-variant mt-0.5">—</p>
         </div>
       </a>
 
@@ -316,7 +316,7 @@ tailwind.config = {
         </div>
         <div>
           <p class="text-sm font-semibold text-on-surface">Health</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">389 datasets</p>
+          <p id="cat-count-health" class="text-xs text-on-surface-variant mt-0.5">—</p>
         </div>
       </a>
 
@@ -326,7 +326,7 @@ tailwind.config = {
         </div>
         <div>
           <p class="text-sm font-semibold text-on-surface">Environment</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">203 datasets</p>
+          <p id="cat-count-environment" class="text-xs text-on-surface-variant mt-0.5">—</p>
         </div>
       </a>
 
@@ -336,7 +336,7 @@ tailwind.config = {
         </div>
         <div>
           <p class="text-sm font-semibold text-on-surface">Energy</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">156 datasets</p>
+          <p id="cat-count-energy" class="text-xs text-on-surface-variant mt-0.5">—</p>
         </div>
       </a>
 
@@ -346,7 +346,7 @@ tailwind.config = {
         </div>
         <div>
           <p class="text-sm font-semibold text-on-surface">Infrastructure</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">178 datasets</p>
+          <p id="cat-count-infrastructure" class="text-xs text-on-surface-variant mt-0.5">—</p>
         </div>
       </a>
 
@@ -356,7 +356,7 @@ tailwind.config = {
         </div>
         <div>
           <p class="text-sm font-semibold text-on-surface">Governance</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">264 datasets</p>
+          <p id="cat-count-governance" class="text-xs text-on-surface-variant mt-0.5">—</p>
         </div>
       </a>
 
@@ -366,7 +366,7 @@ tailwind.config = {
         </div>
         <div>
           <p class="text-sm font-semibold text-on-surface">Demographics</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">194 datasets</p>
+          <p id="cat-count-demographics" class="text-xs text-on-surface-variant mt-0.5">—</p>
         </div>
       </a>
 
@@ -386,77 +386,11 @@ tailwind.config = {
         Browse all <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
       </a>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-
-      <!-- Dataset 1 -->
-      <article class="group flex flex-col bg-surface-container-lowest border border-outline-variant/50 rounded-xl overflow-hidden hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
-        <div class="p-5 flex-1 flex flex-col">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant group-hover:bg-secondary-fixed group-hover:text-secondary transition-colors duration-200">Health</span>
-            <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed-variant tracking-wide">CSV</span>
-          </div>
-          <h4 class="font-semibold text-on-surface mb-2 leading-snug">District-wise Hospital Bed Capacity</h4>
-          <p class="text-sm text-on-surface-variant mb-4 flex-1 line-clamp-2">Hospital capacity across all 64 districts, including specialists and bed availability by year.</p>
-          <div class="flex items-center gap-3 text-xs text-on-surface-variant">
-            <span class="flex items-center gap-1">
-              <span class="material-symbols-outlined" style="font-size: 14px;">download</span>4,210
-            </span>
-            <span aria-hidden="true">·</span>
-            <span>Updated Apr 2024</span>
-          </div>
-        </div>
-        <div class="px-5 py-3 border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/60">
-          <span class="text-xs text-on-surface-variant">DGHS Bangladesh</span>
-          <span class="material-symbols-outlined text-secondary group-hover:translate-x-0.5 transition-transform duration-200" style="font-size: 18px;">arrow_forward</span>
-        </div>
-      </article>
-
-      <!-- Dataset 2 -->
-      <article class="group flex flex-col bg-surface-container-lowest border border-outline-variant/50 rounded-xl overflow-hidden hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
-        <div class="p-5 flex-1 flex flex-col">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant group-hover:bg-secondary-fixed group-hover:text-secondary transition-colors duration-200">Economy</span>
-            <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-primary-fixed text-on-primary-fixed-variant tracking-wide">JSON</span>
-          </div>
-          <h4 class="font-semibold text-on-surface mb-2 leading-snug">Bangladesh GDP Growth Rate 2000–2023</h4>
-          <p class="text-sm text-on-surface-variant mb-4 flex-1 line-clamp-2">Annual GDP and sector-wise growth rate from the Bangladesh Bureau of Statistics over two decades.</p>
-          <div class="flex items-center gap-3 text-xs text-on-surface-variant">
-            <span class="flex items-center gap-1">
-              <span class="material-symbols-outlined" style="font-size: 14px;">download</span>8,542
-            </span>
-            <span aria-hidden="true">·</span>
-            <span>Updated Jan 2024</span>
-          </div>
-        </div>
-        <div class="px-5 py-3 border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/60">
-          <span class="text-xs text-on-surface-variant">Bangladesh Bureau of Statistics</span>
-          <span class="material-symbols-outlined text-secondary group-hover:translate-x-0.5 transition-transform duration-200" style="font-size: 18px;">arrow_forward</span>
-        </div>
-      </article>
-
-      <!-- Dataset 3 -->
-      <article class="group flex flex-col bg-surface-container-lowest border border-outline-variant/50 rounded-xl overflow-hidden hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
-        <div class="p-5 flex-1 flex flex-col">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant group-hover:bg-secondary-fixed group-hover:text-secondary transition-colors duration-200">Education</span>
-            <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed-variant tracking-wide">API</span>
-          </div>
-          <h4 class="font-semibold text-on-surface mb-2 leading-snug">Primary School Enrollment by Division</h4>
-          <p class="text-sm text-on-surface-variant mb-4 flex-1 line-clamp-2">Division and district-level primary enrollment stats with gender disaggregation from 2010 to present.</p>
-          <div class="flex items-center gap-3 text-xs text-on-surface-variant">
-            <span class="flex items-center gap-1">
-              <span class="material-symbols-outlined" style="font-size: 14px;">download</span>6,103
-            </span>
-            <span aria-hidden="true">·</span>
-            <span>Updated Mar 2024</span>
-          </div>
-        </div>
-        <div class="px-5 py-3 border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/60">
-          <span class="text-xs text-on-surface-variant">Ministry of Education</span>
-          <span class="material-symbols-outlined text-secondary group-hover:translate-x-0.5 transition-transform duration-200" style="font-size: 18px;">arrow_forward</span>
-        </div>
-      </article>
-
+    <div id="featured-datasets" class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+      <!-- Skeleton loaders while fetching -->
+      <div class="h-52 rounded-xl bg-surface-container animate-pulse"></div>
+      <div class="h-52 rounded-xl bg-surface-container animate-pulse"></div>
+      <div class="h-52 rounded-xl bg-surface-container animate-pulse"></div>
     </div>
   </div>
 </section>
@@ -552,6 +486,125 @@ tailwind.config = {
     </div>
   </div>
 </footer>
+
+<script type="module">
+// ── Live data from the API ────────────────────────────────────────────────────
+
+const FMT_COLORS = {
+  CSV:  'bg-tertiary-fixed text-on-tertiary-fixed-variant',
+  JSON: 'bg-primary-fixed text-on-primary-fixed-variant',
+  API:  'bg-secondary-fixed text-on-secondary-fixed-variant',
+  XLS:  'bg-surface-container text-on-surface-variant',
+  XLSX: 'bg-surface-container text-on-surface-variant',
+  PDF:  'bg-error-container text-on-error-container',
+  GEO:  'bg-surface-container text-on-surface-variant',
+  XML:  'bg-surface-container text-on-surface-variant',
+};
+
+// Category name → element ID mapping
+const CAT_IDS = {
+  'Agriculture':       'cat-count-agriculture',
+  'Climate & Weather': 'cat-count-climate',
+  'Economy & Finance': 'cat-count-economy',
+  'Education':         'cat-count-education',
+  'Health':            'cat-count-health',
+  'Environment':       'cat-count-environment',
+  'Energy':            'cat-count-energy',
+  'Infrastructure':    'cat-count-infrastructure',
+  'Governance':        'cat-count-governance',
+  'Demographics':      'cat-count-demographics',
+};
+
+function fmt(n) {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M+`;
+  if (n >= 1_000)     return `${(n / 1_000).toFixed(1)}K+`;
+  return n.toString();
+}
+
+function datasetCard(d) {
+  const formats  = Array.isArray(d.format) ? d.format : (d.format ? [d.format] : []);
+  const fmtLabel = formats[0] ?? '';
+  const fmtCls   = FMT_COLORS[fmtLabel] ?? 'bg-surface-container text-on-surface-variant';
+  const date     = d.created_at
+    ? new Date(d.created_at).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })
+    : '';
+  return `
+  <article class="group flex flex-col bg-surface-container-lowest border border-outline-variant/50 rounded-xl overflow-hidden hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+    <div class="p-5 flex-1 flex flex-col">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant group-hover:bg-secondary-fixed group-hover:text-secondary transition-colors duration-200">${d.category ?? '—'}</span>
+        ${fmtLabel ? `<span class="font-mono text-xs font-bold px-2 py-0.5 rounded ${fmtCls} tracking-wide">${fmtLabel}</span>` : ''}
+      </div>
+      <h4 class="font-semibold text-on-surface mb-2 leading-snug">${d.title}</h4>
+      <p class="text-sm text-on-surface-variant mb-4 flex-1 line-clamp-2">${d.description ?? ''}</p>
+      <div class="flex items-center gap-3 text-xs text-on-surface-variant">
+        <span class="flex items-center gap-1">
+          <span class="material-symbols-outlined" style="font-size:14px;">download</span>${(d.downloads ?? 0).toLocaleString()}
+        </span>
+        ${date ? `<span aria-hidden="true">·</span><span>${date}</span>` : ''}
+      </div>
+    </div>
+    <div class="px-5 py-3 border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/60">
+      <span class="text-xs text-on-surface-variant">${d.source ?? 'OpenDataBD'}</span>
+      <span class="material-symbols-outlined text-secondary group-hover:translate-x-0.5 transition-transform duration-200" style="font-size:18px;">arrow_forward</span>
+    </div>
+  </article>`;
+}
+
+function emptyCard() {
+  return `
+  <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+    <span class="material-symbols-outlined text-5xl text-outline mb-3">inbox</span>
+    <p class="font-semibold text-on-surface mb-1">No datasets published yet</p>
+    <p class="text-sm text-on-surface-variant mb-4">Submit the first dataset and approve it in the admin panel.</p>
+    <a href="/submit" class="bg-secondary text-on-secondary px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-secondary-container transition-colors">Submit a Dataset</a>
+  </div>`;
+}
+
+async function loadHomeData() {
+  try {
+    const [statsRes, datasetsRes] = await Promise.all([
+      fetch('/api/stats'),
+      fetch('/api/datasets?limit=3'),
+    ]);
+
+    if (statsRes.ok) {
+      const { totalDatasets, totalContributors, totalDownloads, categoryCounts } = await statsRes.json();
+
+      // Stats bar
+      const el = id => document.getElementById(id);
+      if (el('stat-datasets'))    el('stat-datasets').textContent    = fmt(totalDatasets);
+      if (el('stat-contributors')) el('stat-contributors').textContent = fmt(totalContributors);
+      if (el('stat-downloads'))   el('stat-downloads').textContent   = fmt(totalDownloads);
+
+      // Category counts
+      Object.entries(CAT_IDS).forEach(([catName, elemId]) => {
+        const countEl = document.getElementById(elemId);
+        if (!countEl) return;
+        const n = categoryCounts?.[catName] ?? 0;
+        countEl.textContent = n === 1 ? '1 dataset' : `${n} datasets`;
+      });
+    }
+
+    if (datasetsRes.ok) {
+      const { datasets } = await datasetsRes.json();
+      const grid = document.getElementById('featured-datasets');
+      if (grid) {
+        grid.innerHTML = datasets?.length
+          ? datasets.map(datasetCard).join('')
+          : emptyCard();
+      }
+    }
+  } catch (err) {
+    console.error('[home] data load failed:', err);
+    // Leave skeletons — don't break the page on error
+    const grid = document.getElementById('featured-datasets');
+    if (grid) grid.innerHTML = emptyCard();
+  }
+}
+
+loadHomeData();
+</script>
 
 <script>
   const observer = new IntersectionObserver((entries) => {
