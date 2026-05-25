@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Dataset — OpenDataBD</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "background":"#f7f9fb","on-surface":"#191c1e","on-secondary":"#ffffff",
+        "secondary-container":"#e21e49","secondary":"#ba0035",
+        "surface-container-lowest":"#ffffff","surface-container-low":"#f2f4f6",
+        "surface-container":"#eceef0","surface-container-high":"#e6e8ea",
+        "on-surface-variant":"#45464d","outline-variant":"#c6c6cd","outline":"#76777d",
+        "secondary-fixed":"#ffdada","secondary-fixed-dim":"#ffb3b6",
+        "tertiary-fixed":"#89f5e7","on-tertiary-fixed-variant":"#005049",
+        "primary-fixed":"#dae2fd","on-primary-fixed-variant":"#3f465c",
+        "primary-container":"#131b2e","on-primary-container":"#7c839b",
+        "error-container":"#ffdad6","on-error-container":"#93000a",
+        "inverse-surface":"#2d3133",
+      },
+      spacing: {
+        "margin-desktop":"64px","unit-lg":"32px","container-max":"1280px",
+        "unit-xs":"4px","unit-xl":"64px","gutter":"24px","unit-sm":"8px","unit-md":"16px"
+      },
+      fontFamily: {
+        "label-caps":["JetBrains Mono"],"body-md":["Inter"],
+        "headline-lg":["Hanken Grotesk"],"display-lg":["Hanken Grotesk"],"headline-md":["Hanken Grotesk"]
+      },
+      fontSize: {
+        "label-caps":["12px",{lineHeight:"1",letterSpacing:"0.1em",fontWeight:"600"}],
+        "body-md":["16px",{lineHeight:"1.5",fontWeight:"400"}],
+        "headline-lg":["32px",{lineHeight:"1.2",letterSpacing:"-0.01em",fontWeight:"700"}],
+        "display-lg":["40px",{lineHeight:"1.1",letterSpacing:"-0.02em",fontWeight:"800"}],
+        "headline-md":["24px",{lineHeight:"1.3",fontWeight:"600"}]
+      }
+    }
+  }
+}
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+  .skeleton { background:linear-gradient(90deg,#eceef0 25%,#e0e3e5 50%,#eceef0 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; }
+  @keyframes shimmer { 0%{background-position:200% 0}100%{background-position:-200% 0} }
+</style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen">
+
+<!-- Nav -->
+<nav class="w-full sticky top-0 z-50 bg-surface-container-lowest border-b border-outline-variant/30 shadow-sm">
+  <div class="max-w-container-max mx-auto px-margin-desktop flex items-center justify-between h-20">
+    <div class="flex items-center gap-gutter">
+      <a href="/" class="font-bold text-base bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg hover:bg-secondary-container transition-colors duration-200 shadow-sm">OpenDataBD</a>
+      <div class="hidden md:flex items-center gap-1 ml-unit-lg">
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/datasets">Datasets</a>
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/api-docs">API Docs</a>
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/submit">Submit</a>
+      </div>
+    </div>
+    <div class="flex items-center gap-unit-md">
+      <button id="auth-signin-btn" onclick="openAuthModal()" class="bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg text-sm font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95">Sign In</button>
+      <div id="auth-user-menu" class="hidden items-center gap-2">
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container text-sm font-medium text-on-surface">
+          <span id="auth-user-avatar" class="w-7 h-7 bg-secondary text-on-secondary rounded-full flex items-center justify-center text-xs font-bold shrink-0">U</span>
+          <span id="auth-user-name" class="max-w-[120px] truncate">User</span>
+        </div>
+        <button onclick="handleSignOut()" class="text-sm text-on-surface-variant px-3 py-1.5 rounded-lg hover:bg-surface-container transition-colors duration-200">Sign Out</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Skeleton while loading -->
+<div id="skeleton-view" class="max-w-4xl mx-auto px-margin-desktop py-10 space-y-6">
+  <div class="skeleton h-5 w-40 rounded-lg"></div>
+  <div class="skeleton h-10 w-3/4 rounded-xl"></div>
+  <div class="skeleton h-4 w-1/3 rounded-lg"></div>
+  <div class="skeleton h-32 w-full rounded-xl"></div>
+  <div class="skeleton h-48 w-full rounded-xl"></div>
+</div>
+
+<!-- Dataset detail (hidden until loaded) -->
+<div id="dataset-view" class="hidden">
+
+  <!-- Header band -->
+  <div class="bg-surface-container-lowest border-b border-outline-variant/30">
+    <div class="max-w-4xl mx-auto px-margin-desktop py-10">
+      <!-- Back -->
+      <a id="back-link" href="/datasets" class="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-secondary transition-colors duration-200 mb-6">
+        <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span>
+        Back to datasets
+      </a>
+
+      <!-- Badges -->
+      <div class="flex flex-wrap items-center gap-2 mb-4" id="badge-row"></div>
+
+      <!-- Title -->
+      <h1 id="ds-title" class="font-display-lg text-display-lg text-on-surface mb-4 leading-tight"></h1>
+
+      <!-- Meta stats row -->
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-on-surface-variant" id="meta-row"></div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="max-w-4xl mx-auto px-margin-desktop py-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+    <!-- Left: main info -->
+    <div class="lg:col-span-2 space-y-8">
+
+      <!-- Description -->
+      <section>
+        <h2 class="font-semibold text-on-surface mb-3 flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary" style="font-size:20px;">description</span>About this dataset
+        </h2>
+        <p id="ds-description" class="text-on-surface-variant leading-relaxed text-base"></p>
+      </section>
+
+      <!-- Tags -->
+      <section id="tags-section" class="hidden">
+        <h2 class="font-semibold text-on-surface mb-3 flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary" style="font-size:20px;">label</span>Tags
+        </h2>
+        <div id="ds-tags" class="flex flex-wrap gap-2"></div>
+      </section>
+
+      <!-- Source -->
+      <section>
+        <h2 class="font-semibold text-on-surface mb-3 flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary" style="font-size:20px;">source</span>Source
+        </h2>
+        <div id="ds-source-block" class="bg-surface-container-low rounded-xl p-5 space-y-3 border border-outline-variant/40"></div>
+      </section>
+
+      <!-- API access -->
+      <section>
+        <h2 class="font-semibold text-on-surface mb-3 flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary" style="font-size:20px;">code</span>API Access
+        </h2>
+        <div class="bg-inverse-surface rounded-xl p-5">
+          <p class="text-xs text-on-surface-variant mb-2 font-mono">GET</p>
+          <code id="api-url" class="text-tertiary-fixed text-sm font-mono break-all"></code>
+          <p class="text-xs text-on-surface-variant mt-3">Returns JSON metadata. Use the <a href="/api-docs" class="text-secondary hover:underline">API docs</a> to query the full dataset programmatically.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Right: download + details sidebar -->
+    <div class="space-y-5">
+
+      <!-- Download card -->
+      <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-2xl p-6 shadow-sm">
+        <h3 class="font-semibold text-on-surface mb-4">Get this dataset</h3>
+
+        <!-- Auth-gated download -->
+        <div id="download-section"></div>
+
+        <!-- Not signed in hint -->
+        <div id="signin-hint" class="hidden mt-3 text-xs text-on-surface-variant text-center">
+          <a onclick="openAuthModal()" class="text-secondary hover:underline cursor-pointer">Sign in</a> to download
+        </div>
+      </div>
+
+      <!-- Dataset details -->
+      <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-2xl p-6 shadow-sm space-y-4">
+        <h3 class="font-semibold text-on-surface">Details</h3>
+        <div id="details-list" class="space-y-3 text-sm"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Error state -->
+<div id="error-view" class="hidden text-center py-24 max-w-md mx-auto px-6">
+  <span class="material-symbols-outlined text-5xl text-outline mb-3 block">error_outline</span>
+  <h2 class="font-headline-md text-headline-md mb-2">Dataset not found</h2>
+  <p class="text-on-surface-variant mb-6 text-sm">This dataset may have been removed or is no longer public.</p>
+  <a href="/datasets" class="bg-secondary text-on-secondary px-6 py-3 rounded-xl text-sm font-semibold hover:bg-secondary-container transition-colors">Browse all datasets</a>
+</div>
+
+<!-- Auth Modal -->
+<div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden" role="dialog" aria-modal="true">
+  <div class="bg-surface-container-lowest w-full max-w-md rounded-2xl shadow-2xl border border-outline-variant/30 overflow-hidden">
+    <div class="px-8 pt-8 pb-0">
+      <div class="flex items-center justify-between mb-6">
+        <span class="font-bold text-sm bg-secondary text-on-secondary px-3 py-1 rounded-lg">OpenDataBD</span>
+        <button id="auth-modal-close" class="text-on-surface-variant hover:text-on-surface p-1.5 rounded-full hover:bg-surface-container transition-colors">
+          <span class="material-symbols-outlined" style="font-size:20px;">close</span>
+        </button>
+      </div>
+      <div id="auth-message" class="hidden text-sm px-4 py-3 rounded-xl mb-5"></div>
+      <p class="text-sm text-on-surface-variant mb-5">Sign in to download datasets.</p>
+      <form id="signin-form" class="space-y-4" novalidate>
+        <input id="signin-email" type="email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors"/>
+        <input id="signin-password" type="password" placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors"/>
+        <button type="submit" class="w-full bg-secondary text-on-secondary py-3 rounded-xl font-semibold text-sm hover:bg-secondary-container transition-colors active:scale-95">Sign In</button>
+      </form>
+      <p class="text-xs text-on-surface-variant text-center mt-5 mb-8">
+        No account? <a href="/submit" class="text-secondary hover:underline">Sign up on the submit page</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initAuth, signIn, signOut, getUser, getToken } from './js/auth.js';
+
+const FMT_COLORS = {
+  CSV:'bg-tertiary-fixed text-on-tertiary-fixed-variant',
+  JSON:'bg-primary-fixed text-on-primary-fixed-variant',
+  API:'bg-secondary-fixed text-on-secondary-fixed-variant',
+  XLS:'bg-surface-container text-on-surface-variant',
+  XLSX:'bg-surface-container text-on-surface-variant',
+  PDF:'bg-error-container text-on-error-container',
+  GEO:'bg-surface-container-high text-on-surface-variant',
+  XML:'bg-surface-container text-on-surface-variant',
+};
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+await initAuth();
+const user = getUser();
+
+const id = new URLSearchParams(location.search).get('id');
+if (!id) { showError(); } else { await loadDataset(id); }
+
+// ── Load dataset ──────────────────────────────────────────────────────────────
+async function loadDataset(id) {
+  const res = await fetch(`/api/datasets/${id}`);
+  if (!res.ok) { showError(); return; }
+  const d = await res.json();
+  renderDataset(d);
+}
+
+function renderDataset(d) {
+  document.title = `${d.title} — OpenDataBD`;
+
+  // ── Badges ────────────────────────────────────────────────────────────────
+  const formats = Array.isArray(d.format) ? d.format : (d.format ? [d.format] : []);
+  const badgeRow = document.getElementById('badge-row');
+  badgeRow.innerHTML = `
+    <span class="font-label-caps text-label-caps text-secondary tracking-widest bg-secondary-fixed px-3 py-1 rounded-full">${d.category ?? '—'}</span>
+    ${formats.map(f => `<span class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg border ${FMT_COLORS[f] ?? 'bg-surface-container text-on-surface-variant'}">${f}</span>`).join('')}
+    ${d.division && d.division !== 'nationwide' ? `<span class="text-xs font-medium px-3 py-1 rounded-full bg-surface-container text-on-surface-variant">${d.division}</span>` : ''}
+  `;
+
+  // ── Title ─────────────────────────────────────────────────────────────────
+  document.getElementById('ds-title').textContent = d.title;
+
+  // ── Meta stats ───────────────────────────────────────────────────────────
+  const date = d.created_at
+    ? new Date(d.created_at).toLocaleDateString('en-GB', { day:'2-digit', month:'long', year:'numeric' })
+    : null;
+  document.getElementById('meta-row').innerHTML = [
+    `<span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:16px;">download</span>${(d.downloads ?? 0).toLocaleString()} downloads</span>`,
+    `<span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:16px;">visibility</span>${(d.views ?? 0).toLocaleString()} views</span>`,
+    date ? `<span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:16px;">calendar_today</span>Added ${date}</span>` : '',
+    d.license ? `<span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:16px;">gavel</span>${d.license}</span>` : '',
+  ].filter(Boolean).join('');
+
+  // ── Description ───────────────────────────────────────────────────────────
+  document.getElementById('ds-description').textContent = d.description || 'No description provided.';
+
+  // ── Tags ─────────────────────────────────────────────────────────────────
+  if (d.tags?.length) {
+    document.getElementById('tags-section').classList.remove('hidden');
+    document.getElementById('ds-tags').innerHTML = d.tags
+      .map(t => `<span class="px-3 py-1 bg-surface-container text-on-surface-variant text-xs font-medium rounded-full">${t}</span>`)
+      .join('');
+  }
+
+  // ── Source block ──────────────────────────────────────────────────────────
+  const sourceRows = [
+    d.source       ? `<div class="flex items-start gap-3"><span class="material-symbols-outlined text-outline shrink-0" style="font-size:18px;">business</span><div><p class="text-xs text-on-surface-variant">Organization</p><p class="font-medium text-on-surface text-sm">${d.source}</p></div></div>` : '',
+    d.source_url   ? `<div class="flex items-start gap-3"><span class="material-symbols-outlined text-outline shrink-0" style="font-size:18px;">link</span><div><p class="text-xs text-on-surface-variant">Source URL</p><a href="${d.source_url}" target="_blank" rel="noopener" class="font-medium text-secondary text-sm hover:underline break-all">${d.source_url}</a></div></div>` : '',
+  ].filter(Boolean);
+  document.getElementById('ds-source-block').innerHTML = sourceRows.length
+    ? sourceRows.join('')
+    : '<p class="text-sm text-on-surface-variant">No source information provided.</p>';
+
+  // ── API URL ───────────────────────────────────────────────────────────────
+  document.getElementById('api-url').textContent = `${location.origin}/api/datasets/${d.id}`;
+
+  // ── Download card ─────────────────────────────────────────────────────────
+  renderDownload(d);
+
+  // ── Details sidebar ───────────────────────────────────────────────────────
+  const details = [
+    ['Category',  d.category],
+    ['Format',    formats.join(', ')],
+    ['License',   d.license],
+    ['Division',  d.division],
+    ['Row count', d.rows_count?.toLocaleString()],
+    ['File size', d.file_size],
+  ].filter(([, v]) => v);
+
+  document.getElementById('details-list').innerHTML = details
+    .map(([label, val]) => `
+      <div class="flex items-start justify-between gap-2">
+        <span class="text-on-surface-variant shrink-0">${label}</span>
+        <span class="font-medium text-on-surface text-right">${val}</span>
+      </div>`)
+    .join('<div class="border-t border-outline-variant/30"></div>');
+
+  // ── Back link: if referred from category, go back to that list ────────────
+  const ref = document.referrer;
+  if (ref && ref.includes('/datasets')) {
+    const backLink = document.getElementById('back-link');
+    backLink.href = ref;
+  }
+
+  // Show
+  document.getElementById('skeleton-view').classList.add('hidden');
+  document.getElementById('dataset-view').classList.remove('hidden');
+}
+
+// ── Download section ──────────────────────────────────────────────────────────
+function renderDownload(d) {
+  const section = document.getElementById('download-section');
+  const hint    = document.getElementById('signin-hint');
+  const hasFile = !!(d.file_url || d.source_url);
+
+  if (!hasFile) {
+    section.innerHTML = `<p class="text-sm text-on-surface-variant text-center py-2">No file available yet.</p>`;
+    return;
+  }
+
+  const label = d.file_url ? 'Download file' : 'View source';
+  const icon  = d.file_url ? 'download' : 'open_in_new';
+
+  if (user) {
+    section.innerHTML = `
+      <button id="download-btn" onclick="doDownload('${d.id}', ${!!d.file_url})"
+        class="w-full flex items-center justify-center gap-2 bg-secondary text-on-secondary py-3.5 rounded-xl font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95">
+        <span class="material-symbols-outlined" style="font-size:20px;">${icon}</span>${label}
+      </button>
+      <p class="text-xs text-on-surface-variant text-center mt-3">
+        ${d.file_url ? 'Hosted on OpenDataBD · ' : ''}${d.license ?? 'Open license'}
+      </p>`;
+  } else {
+    section.innerHTML = `
+      <button onclick="openAuthModal()"
+        class="w-full flex items-center justify-center gap-2 bg-surface-container text-on-surface-variant py-3.5 rounded-xl font-semibold hover:bg-surface-container-high transition-colors duration-200 border border-outline-variant/50">
+        <span class="material-symbols-outlined" style="font-size:20px;">lock</span>Sign in to ${label.toLowerCase()}
+      </button>`;
+    hint.classList.remove('hidden');
+  }
+}
+
+// ── Download handler ──────────────────────────────────────────────────────────
+window.doDownload = async function(id, isHosted) {
+  const btn = document.getElementById('download-btn');
+  if (btn) { btn.disabled = true; btn.innerHTML = `<span class="material-symbols-outlined animate-spin" style="font-size:20px;">progress_activity</span>Preparing…`; }
+
+  const res = await fetch(`/api/download/${id}`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+
+  if (res.status === 401) { openAuthModal(); return; }
+  if (!res.ok) {
+    if (btn) { btn.disabled = false; btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:20px;">download</span>Try again`; }
+    return;
+  }
+
+  const { url, filename } = await res.json();
+  if (!url) return;
+
+  if (isHosted) {
+    try {
+      const blob = await fetch(url).then(r => r.blob());
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl; a.download = filename;
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+    } catch { window.open(url, '_blank'); }
+  } else {
+    window.open(url, '_blank');
+  }
+
+  if (btn) { btn.disabled = false; btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:20px;">check_circle</span>Downloaded`; }
+};
+
+function showError() {
+  document.getElementById('skeleton-view').classList.add('hidden');
+  document.getElementById('error-view').classList.remove('hidden');
+}
+
+// ── Auth modal ────────────────────────────────────────────────────────────────
+const modal = document.getElementById('auth-modal');
+const msgEl = document.getElementById('auth-message');
+window.openAuthModal  = () => modal.classList.remove('hidden');
+window.closeAuthModal = () => modal.classList.add('hidden');
+window.handleSignOut  = () => signOut();
+document.getElementById('auth-modal-close').onclick = closeAuthModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeAuthModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuthModal(); });
+
+document.getElementById('signin-form').onsubmit = async e => {
+  e.preventDefault();
+  const { error } = await signIn(
+    document.getElementById('signin-email').value,
+    document.getElementById('signin-password').value
+  );
+  if (error) {
+    msgEl.textContent = error.message;
+    msgEl.className = 'text-sm px-4 py-3 rounded-xl mb-5 bg-error-container text-on-error-container';
+    msgEl.classList.remove('hidden');
+  } else { closeAuthModal(); location.reload(); }
+};
+</script>
+</body>
+</html>

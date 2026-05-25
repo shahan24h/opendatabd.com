@@ -290,7 +290,7 @@ function datasetCard(d) {
         <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant group-hover:bg-secondary-fixed group-hover:text-secondary transition-colors duration-200">${d.category ?? '—'}</span>
         ${fmtLabel ? `<span class="font-mono text-xs font-bold px-2 py-0.5 rounded ${fmtCls} tracking-wide">${fmtLabel}</span>` : ''}
       </div>
-      <h4 class="font-semibold text-on-surface mb-2 leading-snug">${d.title}</h4>
+      <a href="/dataset-view?id=${d.id}" class="font-semibold text-on-surface mb-2 leading-snug hover:text-secondary transition-colors duration-200 block">${d.title}</a>
       <p class="text-sm text-on-surface-variant mb-4 flex-1 line-clamp-2">${d.description ?? ''}</p>
       <div class="flex items-center gap-3 text-xs text-on-surface-variant">
         <span class="flex items-center gap-1">
