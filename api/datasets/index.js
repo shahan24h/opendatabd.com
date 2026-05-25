@@ -79,7 +79,7 @@ export default async function handler(req, res) {
     const name = user.user_metadata?.full_name || user.email.split('@')[0];
     resend.emails
       .send({
-        from,
+        from:    FROM,
         to:      user.email,
         subject: `Dataset received: "${title}"`,
         html:    datasetSubmittedEmail({ name, datasetTitle: title }),

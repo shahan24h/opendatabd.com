@@ -452,17 +452,25 @@ async function uploadFile(file) {
   setProgress(10, 'Uploading…');
 
   // 2. Upload directly to R2 via XHR (supports progress events)
-  await new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.upload.onprogress = e => {
-      if (e.lengthComputable) setProgress(10 + (e.loaded / e.total) * 85, 'Uploading…');
-    };
-    xhr.onload = () => xhr.status < 300 ? resolve() : reject(new Error(`Upload error ${xhr.status}`));
-    xhr.onerror = () => reject(new Error('Network error during upload'));
-    xhr.open('PUT', uploadUrl);
-    xhr.setRequestHeader('Content-Type', file.type);
-    xhr.send(file);
-  });
+  try {
+    await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.upload.onprogress = e => {
+        if (e.lengthComputable) setProgress(10 + (e.loaded / e.total) * 85, 'Uploading…');
+      };
+      xhr.onload = () => xhr.status < 300 ? resolve() : reject(new Error(`Upload failed (${xhr.status})`));
+      xhr.onerror = () => reject(new Error('Upload blocked — CORS not configured on storage bucket.'));
+      xhr.ontimeout = () => reject(new Error('Upload timed out. Try again.'));
+      xhr.timeout = 120000; // 2 min timeout
+      xhr.open('PUT', uploadUrl);
+      xhr.setRequestHeader('Content-Type', file.type);
+      xhr.send(file);
+    });
+  } catch (err) {
+    document.getElementById('upload-progress').classList.add('hidden');
+    showFormError(err.message ?? 'File upload failed. Try again.');
+    return;
+  }
 
   setProgress(100, 'Complete');
   uploadedFileUrl = publicUrl;
@@ -517,10 +525,14 @@ document.getElementById('submit-form').onsubmit = async e => {
   setSubmitting(false);
 
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    const msg = typeof err.error === 'string'
-      ? err.error
-      : err.error?.message ?? 'Submission failed. Try again.';
+    const text = await res.text().catch(() => '');
+    let msg = 'Submission failed. Try again.';
+    try {
+      const err = JSON.parse(text);
+      msg = typeof err.error === 'string'
+        ? err.error
+        : err.error?.message ?? err.message ?? text ?? msg;
+    } catch { msg = text || msg; }
     return showFormError(msg);
   }
 
