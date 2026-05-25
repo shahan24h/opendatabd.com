@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Datasets — OpenDataBD</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "background":"#f7f9fb","on-surface":"#191c1e","on-secondary":"#ffffff",
+        "secondary-container":"#e21e49","secondary":"#ba0035",
+        "surface-container-lowest":"#ffffff","surface-container-low":"#f2f4f6",
+        "surface-container":"#eceef0","surface-container-high":"#e6e8ea",
+        "on-surface-variant":"#45464d","outline-variant":"#c6c6cd","outline":"#76777d",
+        "secondary-fixed":"#ffdada","secondary-fixed-dim":"#ffb3b6",
+        "tertiary-fixed":"#89f5e7","on-tertiary-fixed-variant":"#005049",
+        "primary-fixed":"#dae2fd","on-primary-fixed-variant":"#3f465c",
+        "primary-container":"#131b2e","on-primary-container":"#7c839b",
+        "error-container":"#ffdad6","on-error-container":"#93000a",
+        "inverse-surface":"#2d3133","inverse-on-surface":"#eff1f3",
+      },
+      spacing: {
+        "margin-desktop":"64px","unit-lg":"32px","container-max":"1280px",
+        "unit-xs":"4px","unit-xl":"64px","gutter":"24px","unit-sm":"8px","unit-md":"16px"
+      },
+      fontFamily: {
+        "label-caps":["JetBrains Mono"],"body-md":["Inter"],
+        "headline-lg":["Hanken Grotesk"],"headline-md":["Hanken Grotesk"]
+      },
+      fontSize: {
+        "label-caps":["12px",{lineHeight:"1",letterSpacing:"0.1em",fontWeight:"600"}],
+        "body-md":["16px",{lineHeight:"1.5",fontWeight:"400"}],
+        "headline-lg":["32px",{lineHeight:"1.2",letterSpacing:"-0.01em",fontWeight:"700"}],
+        "headline-md":["24px",{lineHeight:"1.3",fontWeight:"600"}]
+      }
+    }
+  }
+}
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+  .pill-active { background:#ba0035; color:#fff; border-color:#ba0035; }
+  .skeleton { background:linear-gradient(90deg,#eceef0 25%,#e0e3e5 50%,#eceef0 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; }
+  @keyframes shimmer { 0%{background-position:200% 0}100%{background-position:-200% 0} }
+</style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen">
+
+<!-- Nav -->
+<nav class="w-full sticky top-0 z-50 bg-surface-container-lowest border-b border-outline-variant/30 shadow-sm">
+  <div class="max-w-container-max mx-auto px-margin-desktop flex items-center justify-between h-20">
+    <div class="flex items-center gap-gutter">
+      <a href="/" class="font-bold text-base bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg hover:bg-secondary-container transition-colors duration-200 active:scale-95 shadow-sm">OpenDataBD</a>
+      <div class="hidden md:flex items-center gap-1 ml-unit-lg">
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/datasets">Datasets</a>
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/api-docs">API Docs</a>
+        <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/submit">Submit</a>
+      </div>
+    </div>
+    <div class="flex items-center gap-unit-md">
+      <button id="auth-signin-btn" onclick="openAuthModal()" class="bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg text-sm font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95">Sign In</button>
+      <div id="auth-user-menu" class="hidden items-center gap-2">
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container text-sm font-medium text-on-surface">
+          <span id="auth-user-avatar" class="w-7 h-7 bg-secondary text-on-secondary rounded-full flex items-center justify-center text-xs font-bold shrink-0">U</span>
+          <span id="auth-user-name" class="max-w-[120px] truncate">User</span>
+        </div>
+        <button onclick="handleSignOut()" class="text-sm text-on-surface-variant px-3 py-1.5 rounded-lg hover:bg-surface-container transition-colors duration-200">Sign Out</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Page header -->
+<div class="bg-surface-container-lowest border-b border-outline-variant/30">
+  <div class="max-w-container-max mx-auto px-margin-desktop py-10">
+    <p class="font-label-caps text-label-caps text-secondary tracking-widest mb-2">CATALOG</p>
+    <h1 class="font-headline-lg text-headline-lg mb-6">All Datasets</h1>
+
+    <!-- Search -->
+    <div class="flex gap-3 max-w-2xl">
+      <div class="flex-1 flex items-center bg-surface-container-low border border-outline-variant rounded-xl px-4 gap-2 focus-within:ring-2 focus-within:ring-secondary/40 focus-within:border-secondary transition-all">
+        <span class="material-symbols-outlined text-outline" style="font-size:20px;">search</span>
+        <input id="search-input" type="text" placeholder="Search datasets…"
+          class="flex-1 bg-transparent border-none focus:ring-0 py-3 text-sm text-on-surface placeholder:text-outline" />
+      </div>
+      <button id="search-btn" class="bg-secondary text-on-secondary px-6 py-3 rounded-xl text-sm font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95">Search</button>
+    </div>
+  </div>
+</div>
+
+<!-- Category filter pills -->
+<div class="bg-surface-container-lowest border-b border-outline-variant/30 sticky top-20 z-40">
+  <div class="max-w-container-max mx-auto px-margin-desktop py-3 flex gap-2 overflow-x-auto scrollbar-none">
+    <button data-cat="" class="cat-pill shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border border-outline-variant text-on-surface-variant hover:border-secondary/50 transition-colors duration-200 pill-active">All</button>
+    <button data-cat="Agriculture"       class="cat-pill shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border border-outline-variant text-on-surface-variant hover:border-secondary/50 transition-colors duration-200">Agriculture</button>
+    <button data-cat="Climate & Weather" class="cat-pill shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border border-outline-variant text-on-surface-variant hover:border-secondary/50 transition-colors duration-200">Climate</button>
+    <button data-cat="Demographics"      class="cat-pill shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border border-outline-variant text-on-surface-variant hover:border-secondary/50 transition-colors duration-200">Demographics</button>
+    <button data-cat="Economy & Finance" class="cat-pill shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border border-outline-variant text-on-surface-variant hover:border-secondary/50 transition-colors duration-200">Economy</button>
+    <button data-cat="Education"         class="cat-pill shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border border-outline-variant text-on-surface-variant hover:border-secondary/50 transition-colors duration-200">Education</button>
+    <button data-cat="Energy"            class="cat-pill shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border border-outline-variant text-on-surface-variant hover:border-secondary/50 transition-colors duration-200">Energy</button>
+    <button data-cat="Environment"       class="cat-pill shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border border-outline-variant text-on-surface-variant hover:border-secondary/50 transition-colors duration-200">Environment</button>
+    <button data-cat="Governance"        class="cat-pill shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border border-outline-variant text-on-surface-variant hover:border-secondary/50 transition-colors duration-200">Governance</button>
+    <button data-cat="Health"            class="cat-pill shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border border-outline-variant text-on-surface-variant hover:border-secondary/50 transition-colors duration-200">Health</button>
+    <button data-cat="Infrastructure"    class="cat-pill shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border border-outline-variant text-on-surface-variant hover:border-secondary/50 transition-colors duration-200">Infrastructure</button>
+  </div>
+</div>
+
+<!-- Main content -->
+<main class="max-w-container-max mx-auto px-margin-desktop py-8">
+
+  <!-- Result count + sort -->
+  <div class="flex items-center justify-between mb-6">
+    <p id="result-count" class="text-sm text-on-surface-variant">Loading…</p>
+    <select id="sort-select" class="text-sm border border-outline-variant bg-surface-container-lowest rounded-lg px-3 py-2 text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/40">
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="downloads">Most downloaded</option>
+    </select>
+  </div>
+
+  <!-- Dataset grid -->
+  <div id="dataset-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+    <div class="skeleton h-52 rounded-xl"></div>
+    <div class="skeleton h-52 rounded-xl"></div>
+    <div class="skeleton h-52 rounded-xl"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty-state" class="hidden text-center py-20">
+    <span class="material-symbols-outlined text-5xl text-outline mb-3 block">search_off</span>
+    <p class="font-semibold text-on-surface mb-1">No datasets found</p>
+    <p class="text-sm text-on-surface-variant mb-6">Try a different search or category.</p>
+    <a href="/submit" class="bg-secondary text-on-secondary px-6 py-3 rounded-xl text-sm font-semibold hover:bg-secondary-container transition-colors">Submit the first dataset</a>
+  </div>
+
+  <!-- Pagination -->
+  <div id="pagination" class="hidden flex items-center justify-center gap-3 mt-10">
+    <button id="prev-btn" class="flex items-center gap-1 px-4 py-2 rounded-lg border border-outline-variant text-sm font-semibold text-on-surface-variant hover:bg-surface-container disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+      <span class="material-symbols-outlined" style="font-size:18px;">chevron_left</span>Previous
+    </button>
+    <span id="page-info" class="text-sm text-on-surface-variant"></span>
+    <button id="next-btn" class="flex items-center gap-1 px-4 py-2 rounded-lg border border-outline-variant text-sm font-semibold text-on-surface-variant hover:bg-surface-container disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+      Next<span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
+    </button>
+  </div>
+
+</main>
+
+<!-- Auth Modal -->
+<div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden" role="dialog" aria-modal="true">
+  <div class="bg-surface-container-lowest w-full max-w-md rounded-2xl shadow-2xl border border-outline-variant/30 overflow-hidden">
+    <div class="px-8 pt-8 pb-0">
+      <div class="flex items-center justify-between mb-6">
+        <span class="font-bold text-sm bg-secondary text-on-secondary px-3 py-1 rounded-lg">OpenDataBD</span>
+        <button id="auth-modal-close" class="text-on-surface-variant hover:text-on-surface p-1.5 rounded-full hover:bg-surface-container transition-colors">
+          <span class="material-symbols-outlined" style="font-size:20px;">close</span>
+        </button>
+      </div>
+      <div id="auth-message" class="hidden text-sm px-4 py-3 rounded-xl mb-5"></div>
+      <p class="text-sm text-on-surface-variant mb-5">Sign in to download datasets and contribute to the catalog.</p>
+      <form id="signin-form" class="space-y-4" novalidate>
+        <input id="signin-email" type="email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors"/>
+        <input id="signin-password" type="password" placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors"/>
+        <button type="submit" class="w-full bg-secondary text-on-secondary py-3 rounded-xl font-semibold text-sm hover:bg-secondary-container transition-colors active:scale-95">Sign In</button>
+      </form>
+      <p class="text-xs text-on-surface-variant text-center mt-5 mb-8">
+        No account? <a href="/submit" class="text-secondary hover:underline">Create one on the submit page</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initAuth, signIn, signOut, getUser, getToken } from './js/auth.js';
+
+// ── State ─────────────────────────────────────────────────────────────────────
+const PAGE_SIZE = 12;
+let currentPage = 1;
+let currentCat  = '';
+let currentQ    = '';
+let currentSort = 'newest';
+let totalCount  = 0;
+
+const FMT_COLORS = {
+  CSV:'bg-tertiary-fixed text-on-tertiary-fixed-variant',
+  JSON:'bg-primary-fixed text-on-primary-fixed-variant',
+  API:'bg-secondary-fixed text-on-secondary-fixed-variant',
+  XLS:'bg-surface-container text-on-surface-variant',
+  XLSX:'bg-surface-container text-on-surface-variant',
+  PDF:'bg-error-container text-on-error-container',
+  GEO:'bg-surface-container text-on-surface-variant',
+  XML:'bg-surface-container text-on-surface-variant',
+};
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+await initAuth();
+
+// Read URL params
+const params = new URLSearchParams(location.search);
+currentCat = params.get('category') ?? '';
+currentQ   = params.get('q') ?? '';
+
+if (currentQ) document.getElementById('search-input').value = currentQ;
+
+// Highlight active category pill
+document.querySelectorAll('.cat-pill').forEach(pill => {
+  const matches = pill.dataset.cat === currentCat;
+  pill.classList.toggle('pill-active', matches);
+  pill.classList.toggle('text-on-surface-variant', !matches);
+  if (matches) pill.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'center' });
+});
+
+await loadDatasets();
+
+// ── API ───────────────────────────────────────────────────────────────────────
+async function loadDatasets() {
+  showSkeletons();
+  const qs = new URLSearchParams({
+    limit: PAGE_SIZE,
+    page:  currentPage,
+    ...(currentCat  && { category: currentCat }),
+    ...(currentQ    && { q: currentQ }),
+  }).toString();
+
+  const res  = await fetch(`/api/datasets?${qs}`);
+  const { datasets, total } = await res.json();
+  totalCount = total ?? 0;
+  renderDatasets(datasets ?? []);
+  renderPagination();
+
+  // Update URL without reload
+  const newParams = new URLSearchParams();
+  if (currentCat) newParams.set('category', currentCat);
+  if (currentQ)   newParams.set('q', currentQ);
+  history.replaceState(null, '', `${location.pathname}${newParams.toString() ? '?' + newParams : ''}`);
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function showSkeletons() {
+  document.getElementById('dataset-grid').innerHTML =
+    `<div class="skeleton h-52 rounded-xl"></div>`.repeat(6);
+  document.getElementById('empty-state').classList.add('hidden');
+  document.getElementById('pagination').classList.add('hidden');
+  document.getElementById('result-count').textContent = 'Loading…';
+}
+
+function renderDatasets(datasets) {
+  const grid  = document.getElementById('dataset-grid');
+  const empty = document.getElementById('empty-state');
+  const count = document.getElementById('result-count');
+
+  count.textContent = totalCount === 1 ? '1 dataset' : `${totalCount} datasets`;
+
+  if (!datasets.length) {
+    grid.innerHTML = ''; empty.classList.remove('hidden'); return;
+  }
+  empty.classList.add('hidden');
+  grid.innerHTML = datasets.map(datasetCard).join('');
+}
+
+function datasetCard(d) {
+  const formats  = Array.isArray(d.format) ? d.format : (d.format ? [d.format] : []);
+  const fmtLabel = formats[0] ?? '';
+  const fmtCls   = FMT_COLORS[fmtLabel] ?? 'bg-surface-container text-on-surface-variant';
+  const date     = d.created_at
+    ? new Date(d.created_at).toLocaleDateString('en-GB', { month:'short', year:'numeric' }) : '';
+
+  let action = '';
+  if (d.file_url || d.source_url) {
+    const label  = d.file_url ? 'Download' : 'View Source';
+    const icon   = d.file_url ? 'download'  : 'open_in_new';
+    const btnCls = d.file_url
+      ? 'bg-secondary text-on-secondary hover:bg-secondary-container'
+      : 'border border-outline-variant text-on-surface-variant hover:bg-surface-container';
+    action = `<button onclick="handleDownload('${d.id}')"
+      class="flex items-center gap-1 ${btnCls} text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors duration-200">
+      <span class="material-symbols-outlined" style="font-size:15px;">${icon}</span>${label}
+    </button>`;
+  }
+
+  return `
+  <article class="group flex flex-col bg-surface-container-lowest border border-outline-variant/50 rounded-xl overflow-hidden hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
+    <div class="p-5 flex-1 flex flex-col">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant group-hover:bg-secondary-fixed group-hover:text-secondary transition-colors duration-200">${d.category ?? '—'}</span>
+        ${fmtLabel ? `<span class="font-mono text-xs font-bold px-2 py-0.5 rounded ${fmtCls} tracking-wide">${fmtLabel}</span>` : ''}
+      </div>
+      <h4 class="font-semibold text-on-surface mb-2 leading-snug">${d.title}</h4>
+      <p class="text-sm text-on-surface-variant mb-4 flex-1 line-clamp-2">${d.description ?? ''}</p>
+      <div class="flex items-center gap-3 text-xs text-on-surface-variant">
+        <span class="flex items-center gap-1">
+          <span class="material-symbols-outlined" style="font-size:14px;">download</span>${(d.downloads ?? 0).toLocaleString()}
+        </span>
+        ${date ? `<span>·</span><span>${date}</span>` : ''}
+      </div>
+    </div>
+    <div class="px-5 py-3 border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/60">
+      <span class="text-xs text-on-surface-variant">${d.source ?? 'OpenDataBD'}</span>
+      ${action}
+    </div>
+  </article>`;
+}
+
+function renderPagination() {
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+  const pag = document.getElementById('pagination');
+  if (totalPages <= 1) { pag.classList.add('hidden'); return; }
+  pag.classList.remove('hidden');
+  document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
+  document.getElementById('prev-btn').disabled = currentPage === 1;
+  document.getElementById('next-btn').disabled = currentPage === totalPages;
+}
+
+// ── Download (auth-gated) ─────────────────────────────────────────────────────
+window.handleDownload = async function(id) {
+  const user = getUser();
+  if (!user) { openAuthModal(); return; }
+  const res = await fetch(`/api/download/${id}`, {
+    headers: { Authorization: `Bearer ${getToken()}` },
+  });
+  if (res.status === 401) { openAuthModal(); return; }
+  if (!res.ok) return;
+  const { url, filename, isHosted } = await res.json();
+  if (!url) return;
+  if (isHosted) {
+    try {
+      const blob = await fetch(url).then(r => r.blob());
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl; a.download = filename;
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+    } catch { window.open(url, '_blank'); }
+  } else {
+    window.open(url, '_blank');
+  }
+};
+
+// ── Event listeners ───────────────────────────────────────────────────────────
+document.querySelectorAll('.cat-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    currentCat = pill.dataset.cat;
+    currentPage = 1;
+    document.querySelectorAll('.cat-pill').forEach(p => {
+      p.classList.toggle('pill-active', p === pill);
+      p.classList.toggle('text-on-surface-variant', p !== pill);
+    });
+    loadDatasets();
+  });
+});
+
+document.getElementById('search-btn').addEventListener('click', () => {
+  currentQ = document.getElementById('search-input').value.trim();
+  currentPage = 1; loadDatasets();
+});
+document.getElementById('search-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { currentQ = e.target.value.trim(); currentPage = 1; loadDatasets(); }
+});
+document.getElementById('sort-select').addEventListener('change', e => {
+  currentSort = e.target.value; currentPage = 1; loadDatasets();
+});
+document.getElementById('prev-btn').addEventListener('click', () => { currentPage--; loadDatasets(); });
+document.getElementById('next-btn').addEventListener('click', () => { currentPage++; loadDatasets(); });
+
+// ── Auth modal ────────────────────────────────────────────────────────────────
+const modal = document.getElementById('auth-modal');
+const msgEl = document.getElementById('auth-message');
+window.openAuthModal  = () => modal.classList.remove('hidden');
+window.closeAuthModal = () => modal.classList.add('hidden');
+window.handleSignOut  = () => signOut();
+document.getElementById('auth-modal-close').onclick = closeAuthModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeAuthModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuthModal(); });
+
+document.getElementById('signin-form').onsubmit = async e => {
+  e.preventDefault();
+  const { error } = await signIn(
+    document.getElementById('signin-email').value,
+    document.getElementById('signin-password').value
+  );
+  if (error) {
+    msgEl.textContent = error.message;
+    msgEl.className = 'text-sm px-4 py-3 rounded-xl mb-5 bg-error-container text-on-error-container';
+    msgEl.classList.remove('hidden');
+  } else { closeAuthModal(); }
+};
+</script>
+</body>
+</html>
