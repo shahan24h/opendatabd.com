@@ -143,6 +143,45 @@ tailwind.config = {
     animation: heroFloat 4s ease-in-out 1.4s infinite;
   }
 
+  /* ── Search bar animation ───────────────────────────────────────────────── */
+  /* Collapsed: wrapper is invisible — only the Search button shows */
+  #hero-search-wrapper {
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0)   !important;
+    backdrop-filter: none                 !important;
+    -webkit-backdrop-filter: none         !important;
+    border-color: rgba(255, 255, 255, 0)  !important;
+    box-shadow: none                      !important;
+    transition: max-width     0.52s cubic-bezier(0.16, 1, 0.3, 1),
+                background    0.32s ease  0.06s,
+                border-color  0.32s ease  0.06s,
+                box-shadow    0.32s ease  0.06s,
+                backdrop-filter 0.32s ease 0.06s;
+  }
+  /* Expanded: glass bar materialises */
+  #hero-search-wrapper.search-open {
+    background: rgba(255, 255, 255, 0.72) !important;
+    backdrop-filter: blur(14px)           !important;
+    -webkit-backdrop-filter: blur(14px)   !important;
+    border-color: rgba(255, 255, 255, 0.3)!important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.22) !important;
+  }
+  /* Input area fades in after bar has expanded */
+  #search-input-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.24s ease 0.3s;
+  }
+  #hero-search-wrapper.search-open #search-input-area {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #hero-search-input { min-width: 0; }
+
   @media (prefers-reduced-motion: reduce) {
     .animate-fade-up, .reveal-card, .transition-all,
     .hero-float-1, .hero-float-2 {
@@ -150,6 +189,9 @@ tailwind.config = {
       transition: none !important;
       opacity: 1 !important;
       transform: none !important;
+    }
+    #search-input-area {
+      transition: none !important;
     }
   }
 </style>
@@ -206,12 +248,14 @@ tailwind.config = {
         </p>
       </div>
       <!-- Search -->
-      <div id="hero-search-wrapper" class="opacity-0 animate-fade-up animate-delay-300 w-full max-w-2xl glass-search p-1.5 rounded-full border border-white/30 shadow-xl flex items-center group focus-within:ring-2 focus-within:ring-secondary/50 transition-shadow duration-200">
-        <div class="pl-4 pr-2 text-outline group-focus-within:text-secondary transition-colors duration-200">
-          <span class="material-symbols-outlined">search</span>
+      <div id="hero-search-wrapper" class="opacity-0 animate-fade-up animate-delay-300 w-full glass-search p-1.5 rounded-full border border-white/30 shadow-xl flex items-center group focus-within:ring-2 focus-within:ring-secondary/50 transition-shadow duration-200">
+        <div id="search-input-area">
+          <div class="pl-4 pr-2 text-outline group-focus-within:text-secondary transition-colors duration-200">
+            <span class="material-symbols-outlined">search</span>
+          </div>
+          <input id="hero-search-input" class="flex-grow bg-transparent border-none focus:ring-0 font-body-md text-on-surface py-unit-sm pr-2" placeholder="Search datasets, news, research…" type="text" autocomplete="off">
         </div>
-        <input id="hero-search-input" class="flex-grow bg-transparent border-none focus:ring-0 font-body-md text-on-surface py-unit-sm pr-2" placeholder="Search datasets, news, research…" type="text" autocomplete="off">
-        <button id="hero-search-btn" class="bg-secondary text-on-secondary px-6 py-unit-sm rounded-full font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95 shadow-md shrink-0">Search</button>
+        <button id="hero-search-btn" class="ml-auto bg-secondary text-on-secondary px-6 py-unit-sm rounded-full font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95 shadow-md shrink-0">Search</button>
       </div>
     </div>
   </div>
@@ -975,16 +1019,42 @@ initAuth().catch(err => console.error('[auth] init failed:', err));
   let debounceTimer = null;
   let activeIndex   = -1;
   let allLinks      = [];
+  let searchOpen    = false;
 
-  const input    = document.getElementById('hero-search-input');
-  const btn      = document.getElementById('hero-search-btn');
-  const dropdown = document.getElementById('search-dropdown');
-  if (!input || !dropdown) return;
+  const input      = document.getElementById('hero-search-input');
+  const btn        = document.getElementById('hero-search-btn');
+  const dropdown   = document.getElementById('search-dropdown');
+  const inputArea  = document.getElementById('search-input-area');
+  const wrapper    = document.getElementById('hero-search-wrapper');
+  if (!input || !dropdown || !inputArea || !wrapper) return;
+
+  // Collapsed width = just the button (measured after first paint)
+  let collapsedW = '144px';
+  requestAnimationFrame(() => {
+    collapsedW = (btn.offsetWidth + 12) + 'px'; // 12 = wrapper p-1.5 both sides
+    wrapper.style.maxWidth = collapsedW;
+  });
+
+  function openSearch() {
+    if (searchOpen) return;
+    searchOpen = true;
+    wrapper.classList.add('search-open');
+    wrapper.style.maxWidth = '42rem';
+    setTimeout(() => input.focus({ preventScroll: true }), 100);
+  }
+
+  function collapseSearch() {
+    if (!searchOpen) return;
+    searchOpen = false;
+    wrapper.classList.remove('search-open');
+    wrapper.style.maxWidth = collapsedW;
+    closeDropdown();
+    input.value = '';
+    input.blur();
+  }
 
   // ── Positioning ───────────────────────────────────────────────────────────────
   function positionDropdown() {
-    const wrapper = document.getElementById('hero-search-wrapper');
-    if (!wrapper) return;
     const r = wrapper.getBoundingClientRect();
     dropdown.style.left  = r.left   + 'px';
     dropdown.style.top   = (r.bottom + 8) + 'px';
@@ -1127,8 +1197,13 @@ initAuth().catch(err => console.error('[auth] init failed:', err));
   });
 
   btn.addEventListener('click', () => {
-    const q = input.value.trim();
-    if (q) window.location.href = `/datasets?q=${encodeURIComponent(q)}`;
+    if (!searchOpen) {
+      openSearch();
+    } else {
+      const q = input.value.trim();
+      if (q) window.location.href = `/datasets?q=${encodeURIComponent(q)}`;
+      else input.focus();
+    }
   });
 
   input.addEventListener('keydown', e => {
@@ -1150,17 +1225,18 @@ initAuth().catch(err => console.error('[auth] init failed:', err));
       }
       return;
     } else if (e.key === 'Escape') {
-      closeDropdown(); input.blur(); return;
+      collapseSearch(); return;
     }
 
     items.forEach((el, i) => el.classList.toggle('bg-surface-container-low', i === activeIndex));
     if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: 'nearest' });
   });
 
-  // Close on outside click
+  // Click outside → collapse search entirely
   document.addEventListener('click', e => {
-    const wrapper = document.getElementById('hero-search-wrapper');
-    if (!dropdown.contains(e.target) && !wrapper?.contains(e.target)) closeDropdown();
+    if (!dropdown.contains(e.target) && !wrapper.contains(e.target)) {
+      collapseSearch();
+    }
   });
 
   // Reposition on scroll/resize
@@ -1171,11 +1247,12 @@ initAuth().catch(err => console.error('[auth] init failed:', err));
     if (!dropdown.classList.contains('hidden')) positionDropdown();
   }, { passive: true });
 
-  // Nav search icon → scroll to & focus hero search
+  // Nav search icon → scroll to hero search and open it
   document.querySelector('nav button[aria-label="Search"]')
     ?.addEventListener('click', () => {
-      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      setTimeout(() => input.focus(), 380);
+      const wrapper = document.getElementById('hero-search-wrapper');
+      wrapper?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => openSearch(), 380);
     });
 })();
 </script>
