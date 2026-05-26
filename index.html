@@ -206,16 +206,19 @@ tailwind.config = {
         </p>
       </div>
       <!-- Search -->
-      <div class="opacity-0 animate-fade-up animate-delay-300 w-full max-w-2xl glass-search p-1.5 rounded-full border border-white/30 shadow-xl flex items-center group focus-within:ring-2 focus-within:ring-secondary/50 transition-shadow duration-200">
+      <div id="hero-search-wrapper" class="opacity-0 animate-fade-up animate-delay-300 w-full max-w-2xl glass-search p-1.5 rounded-full border border-white/30 shadow-xl flex items-center group focus-within:ring-2 focus-within:ring-secondary/50 transition-shadow duration-200">
         <div class="pl-4 pr-2 text-outline group-focus-within:text-secondary transition-colors duration-200">
           <span class="material-symbols-outlined">search</span>
         </div>
-        <input class="flex-grow bg-transparent border-none focus:ring-0 font-body-md text-on-surface py-unit-sm pr-2" placeholder="Search datasets (e.g. Dhaka rainfall, literacy rate…)" type="text">
-        <button class="bg-secondary text-on-secondary px-6 py-unit-sm rounded-full font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95 shadow-md shrink-0">Search</button>
+        <input id="hero-search-input" class="flex-grow bg-transparent border-none focus:ring-0 font-body-md text-on-surface py-unit-sm pr-2" placeholder="Search datasets, news, research…" type="text" autocomplete="off">
+        <button id="hero-search-btn" class="bg-secondary text-on-secondary px-6 py-unit-sm rounded-full font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95 shadow-md shrink-0">Search</button>
       </div>
     </div>
   </div>
 </header>
+
+<!-- Search dropdown — position: fixed via JS so it escapes the header's overflow:hidden -->
+<div id="search-dropdown" class="hidden fixed z-50 bg-surface-container-lowest border border-outline-variant/50 rounded-2xl shadow-2xl overflow-y-auto" style="max-height:460px;"></div>
 
 <!-- Stats Bar -->
 <div class="bg-surface-container-lowest border-b border-outline-variant/40">
@@ -931,6 +934,250 @@ document.getElementById('reset-form').onsubmit = async e => {
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
 initAuth().catch(err => console.error('[auth] init failed:', err));
+</script>
+
+<!-- ── Site-wide search ───────────────────────────────────────────────────── -->
+<script>
+(function () {
+  // Static index of news articles, research case studies, and pages
+  const SITE_CONTENT = [
+    // News articles (from news.html)
+    { type:'news', title:'OpenDataBD Launches Version 2.0 with Real-Time API Access', excerpt:'Live dataset streaming, enhanced search, bulk export, and redesigned developer API with rate-limit tiers.', url:'/news', tag:'Announcement', date:'May 20, 2025' },
+    { type:'news', title:'District-Level Flood Risk Data Now Available for All 64 Districts', excerpt:'Bangladesh Meteorological Department contributed five-year historical flood inundation records across all districts.', url:'/news', tag:'New Dataset', date:'May 15, 2025' },
+    { type:'news', title:'BRAC Study Uses OpenDataBD to Map Education Gaps in Char Areas', excerpt:'New BRAC research paper identifies enrollment disparities in riverine char islands.', url:'/news', tag:'Research', date:'May 8, 2025' },
+    { type:'news', title:'Open Data Day Dhaka 2025 — Recap & Resources', excerpt:'Over 200 developers, researchers, and policy makers gathered at BRAC University for talks, workshops, and a live data hackathon.', url:'/news', tag:'Event', date:'Apr 28, 2025' },
+    { type:'news', title:'DGHS Releases Upazila-Level Health Facility Census 2024', excerpt:'Comprehensive census of all registered health facilities across 492 upazilas, published by DGHS.', url:'/news', tag:'New Dataset', date:'Apr 18, 2025' },
+    { type:'news', title:'OpenDataBD API Passes 1 Million Requests Milestone', excerpt:'Our public API has now served over one million requests from apps and research pipelines across 34 countries.', url:'/news', tag:'Announcement', date:'Apr 5, 2025' },
+    { type:'news', title:'New Economic Dashboard Reveals Regional GDP Disparities', excerpt:'A BUET team used OpenDataBD economy datasets to build an interactive regional income inequality visualisation.', url:'/news', tag:'Research', date:'Mar 22, 2025' },
+    // Research case studies (from research.html)
+    { type:'research', title:'Flood Early-Warning Model for Sylhet Division', excerpt:'BUET engineers combined OpenDataBD rainfall and river-level data to train a 72-hour flood prediction model used by BWDB.', url:'/research', tag:'Climate' },
+    { type:'research', title:'Identifying Learning Deserts in Char Island Communities', excerpt:'BRAC IED used upazila-level school enrollment datasets to identify 37 learning deserts, informing placement of 12 new satellite schools.', url:'/research', tag:'Education' },
+    { type:'research', title:'Visualising Regional Income Inequality for Public Accountability', excerpt:'The Daily Star built an interactive inequality map from OpenDataBD GDP and poverty datasets, cited in a parliamentary committee hearing.', url:'/research', tag:'Economy' },
+    // Site pages
+    { type:'page', title:'Browse Datasets', excerpt:'Explore all public datasets by category, format, and region.', url:'/datasets', tag:'Page' },
+    { type:'page', title:'Submit a Dataset', excerpt:'Contribute to the national data ecosystem with community research and statistics.', url:'/submit', tag:'Page' },
+    { type:'page', title:'API Documentation', excerpt:'REST API reference for programmatic access to all datasets.', url:'/api-docs', tag:'Page' },
+    { type:'page', title:'About OpenDataBD', excerpt:'Our mission, team, and partners building Bangladesh\'s open data platform.', url:'/about', tag:'Page' },
+    { type:'page', title:'Research & Impact', excerpt:'See how OpenDataBD data drives real-world change across health, education, and climate.', url:'/research', tag:'Page' },
+    { type:'page', title:'News & Announcements', excerpt:'Platform updates, new dataset releases, and research highlights from Bangladesh.', url:'/news', tag:'Page' },
+  ];
+
+  function esc(s) {
+    return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function matches(item, q) {
+    const tokens = q.toLowerCase().split(/\s+/).filter(Boolean);
+    const hay = (item.title + ' ' + item.excerpt + ' ' + (item.tag ?? '')).toLowerCase();
+    return tokens.every(t => hay.includes(t));
+  }
+
+  let debounceTimer = null;
+  let activeIndex   = -1;
+  let allLinks      = [];
+
+  const input    = document.getElementById('hero-search-input');
+  const btn      = document.getElementById('hero-search-btn');
+  const dropdown = document.getElementById('search-dropdown');
+  if (!input || !dropdown) return;
+
+  // ── Positioning ───────────────────────────────────────────────────────────────
+  function positionDropdown() {
+    const wrapper = document.getElementById('hero-search-wrapper');
+    if (!wrapper) return;
+    const r = wrapper.getBoundingClientRect();
+    dropdown.style.left  = r.left   + 'px';
+    dropdown.style.top   = (r.bottom + 8) + 'px';
+    dropdown.style.width = r.width  + 'px';
+  }
+  function openDropdown()  { positionDropdown(); dropdown.classList.remove('hidden'); }
+  function closeDropdown() { dropdown.classList.add('hidden'); activeIndex = -1; }
+
+  // ── Rendering helpers ─────────────────────────────────────────────────────────
+  function sectionHead(label, allUrl) {
+    return `<div class="flex items-center justify-between px-2 mt-3 mb-1.5">
+      <span class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase">${label}</span>
+      <a href="${allUrl}" class="text-[11px] text-secondary font-semibold hover:underline underline-offset-2">See all →</a>
+    </div>`;
+  }
+
+  function resultRow(icon, href, title, sub, idx) {
+    return `<a data-idx="${idx}" href="${href}"
+      class="search-result flex items-start gap-3 px-2 py-2 rounded-xl hover:bg-surface-container-low transition-colors duration-150 group">
+      <span class="material-symbols-outlined text-outline mt-0.5 shrink-0" style="font-size:18px;">${icon}</span>
+      <div class="min-w-0">
+        <p class="text-sm font-semibold text-on-surface group-hover:text-secondary transition-colors line-clamp-1">${title}</p>
+        <p class="text-xs text-on-surface-variant truncate">${sub}</p>
+      </div>
+    </a>`;
+  }
+
+  function renderDropdown(datasets, news, research, pages, loadingDatasets) {
+    allLinks = [];
+    const q  = input.value.trim();
+    const sections = [];
+
+    // Datasets
+    let dsHtml = sectionHead('Datasets', `/datasets?q=${encodeURIComponent(q)}`);
+    if (loadingDatasets) {
+      dsHtml += `<div class="px-2 py-2.5 text-sm text-on-surface-variant flex items-center gap-2">
+        <span class="inline-block w-3 h-3 border-2 border-secondary border-t-transparent rounded-full animate-spin"></span>Searching…</div>`;
+    } else if (!datasets.length) {
+      dsHtml += `<p class="px-2 py-2 text-sm text-on-surface-variant">No datasets found</p>`;
+    } else {
+      datasets.forEach(d => {
+        const idx = allLinks.length;
+        const href = `/dataset-view?id=${esc(d.id)}`;
+        allLinks.push(href);
+        const cat = esc(d.category ?? '—');
+        const fmt = esc(Array.isArray(d.format) ? d.format[0] : (d.format ?? ''));
+        dsHtml += resultRow('dataset', href, esc(d.title), cat + (fmt ? ' · ' + fmt : ''), idx);
+      });
+    }
+    sections.push(dsHtml);
+
+    // News
+    if (news.length) {
+      let h = sectionHead('News', '/news');
+      news.forEach(item => {
+        const idx = allLinks.length;
+        allLinks.push(item.url);
+        h += resultRow('newspaper', item.url, esc(item.title), esc(item.tag) + (item.date ? ' · ' + item.date : ''), idx);
+      });
+      sections.push(h);
+    }
+
+    // Research
+    if (research.length) {
+      let h = sectionHead('Research', '/research');
+      research.forEach(item => {
+        const idx = allLinks.length;
+        allLinks.push(item.url);
+        h += resultRow('biotech', item.url, esc(item.title), esc(item.tag), idx);
+      });
+      sections.push(h);
+    }
+
+    // Pages
+    if (pages.length) {
+      let h = `<div class="flex items-center px-2 mt-3 mb-1.5">
+        <span class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase">Pages</span>
+      </div>`;
+      pages.forEach(item => {
+        const idx = allLinks.length;
+        allLinks.push(item.url);
+        h += resultRow('link', item.url, esc(item.title), esc(item.excerpt), idx);
+      });
+      sections.push(h);
+    }
+
+    if (!loadingDatasets && !allLinks.length) {
+      dropdown.innerHTML = `<div class="p-6 text-center">
+        <span class="material-symbols-outlined text-3xl text-outline mb-2 block">search_off</span>
+        <p class="text-sm font-semibold text-on-surface mb-1">No results for "${esc(q)}"</p>
+        <p class="text-xs text-on-surface-variant">Try different keywords or
+          <a href="/datasets" class="text-secondary hover:underline">browse all datasets</a></p>
+      </div>`;
+      return;
+    }
+
+    dropdown.innerHTML =
+      sections.map((s, i) =>
+        `<div class="px-3 pb-2${i > 0 ? ' border-t border-outline-variant/20' : ''}">${s}</div>`
+      ).join('') +
+      `<div class="border-t border-outline-variant/20 mx-3"></div>
+      <div class="px-5 py-3">
+        <a href="/datasets?q=${encodeURIComponent(q)}"
+          class="text-sm text-secondary font-semibold hover:underline flex items-center gap-1">
+          <span class="material-symbols-outlined" style="font-size:16px;">search</span>
+          Search all datasets for "${esc(q)}"
+        </a>
+      </div>`;
+  }
+
+  // ── Main search function ──────────────────────────────────────────────────────
+  async function doSearch(q) {
+    if (q.length < 2) { closeDropdown(); return; }
+
+    const staticMatches = SITE_CONTENT.filter(item => matches(item, q));
+    const newsMatches     = staticMatches.filter(i => i.type === 'news').slice(0, 3);
+    const researchMatches = staticMatches.filter(i => i.type === 'research').slice(0, 3);
+    const pageMatches     = staticMatches.filter(i => i.type === 'page').slice(0, 2);
+
+    // Show static results immediately, datasets loading
+    renderDropdown([], newsMatches, researchMatches, pageMatches, true);
+    openDropdown();
+
+    try {
+      const res = await fetch(`/api/datasets?q=${encodeURIComponent(q)}&limit=4`);
+      const { datasets } = res.ok ? await res.json() : { datasets: [] };
+      renderDropdown(datasets ?? [], newsMatches, researchMatches, pageMatches, false);
+    } catch {
+      renderDropdown([], newsMatches, researchMatches, pageMatches, false);
+    }
+  }
+
+  // ── Event listeners ───────────────────────────────────────────────────────────
+  input.addEventListener('input', () => {
+    activeIndex = -1;
+    const q = input.value.trim();
+    clearTimeout(debounceTimer);
+    if (q.length < 2) { closeDropdown(); return; }
+    debounceTimer = setTimeout(() => doSearch(q), 280);
+  });
+
+  btn.addEventListener('click', () => {
+    const q = input.value.trim();
+    if (q) window.location.href = `/datasets?q=${encodeURIComponent(q)}`;
+  });
+
+  input.addEventListener('keydown', e => {
+    if (!['ArrowDown','ArrowUp','Enter','Escape'].includes(e.key)) return;
+    const items = [...dropdown.querySelectorAll('.search-result')];
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIndex = Math.min(activeIndex + 1, items.length - 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIndex = Math.max(activeIndex - 1, 0);
+    } else if (e.key === 'Enter') {
+      if (activeIndex >= 0 && allLinks[activeIndex]) {
+        window.location.href = allLinks[activeIndex];
+      } else {
+        const q = input.value.trim();
+        if (q) window.location.href = `/datasets?q=${encodeURIComponent(q)}`;
+      }
+      return;
+    } else if (e.key === 'Escape') {
+      closeDropdown(); input.blur(); return;
+    }
+
+    items.forEach((el, i) => el.classList.toggle('bg-surface-container-low', i === activeIndex));
+    if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: 'nearest' });
+  });
+
+  // Close on outside click
+  document.addEventListener('click', e => {
+    const wrapper = document.getElementById('hero-search-wrapper');
+    if (!dropdown.contains(e.target) && !wrapper?.contains(e.target)) closeDropdown();
+  });
+
+  // Reposition on scroll/resize
+  window.addEventListener('scroll', () => {
+    if (!dropdown.classList.contains('hidden')) positionDropdown();
+  }, { passive: true });
+  window.addEventListener('resize', () => {
+    if (!dropdown.classList.contains('hidden')) positionDropdown();
+  }, { passive: true });
+
+  // Nav search icon → scroll to & focus hero search
+  document.querySelector('nav button[aria-label="Search"]')
+    ?.addEventListener('click', () => {
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => input.focus(), 380);
+    });
+})();
 </script>
 
 </body>

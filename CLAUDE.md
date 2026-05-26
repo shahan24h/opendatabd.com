@@ -2,21 +2,26 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Repo layout
+
+This repo has two parts — work only in `opendatabd.com/`:
+
+- `opendatabd.com/` — the live Vercel-deployed portal (active)
+- `server.js` (root) — legacy Express upload prototype, no longer used
+
 ## Development
 
 ```bash
-# Install deps (once)
-npm install
-
-# Local dev server — runs API routes + static files together
-npx vercel dev          # http://localhost:3000
+# From opendatabd.com/
+npm install          # once
+npx vercel dev       # http://localhost:3000
 ```
 
-There is no build step, test suite, or linter. The frontend is plain HTML served as static files by Vercel.
+No build step, test suite, or linter. The frontend is plain HTML served as static files by Vercel.
 
 ## Environment
 
-Copy `.env.example` → `.env` and fill in all six variables before running locally:
+Copy `.env.example` → `.env` before running locally. All six vars are required:
 
 ```
 SUPABASE_URL
@@ -44,19 +49,40 @@ APP_URL
 
 **Routing:** `vercel.json` sets `cleanUrls: true` so `about.html` is served at `/about`. No routing config needed when adding new `.html` pages.
 
+**Email templates:** All HTML email templates are inline functions in `lib/resend.js` — no separate template files.
+
+## API endpoints
+
+| Method | Endpoint | Auth | Notes |
+|---|---|---|---|
+| GET | `/api/config` | — | Returns public anon key for browser |
+| GET | `/api/stats` | — | Dataset + download counts |
+| GET | `/api/datasets` | — | List active datasets; supports `q`, `category`, `page`, `limit` |
+| GET | `/api/datasets/:id` | — | Single dataset + increments view count |
+| POST | `/api/datasets` | ✓ | Submit; status starts as `pending` |
+| DELETE | `/api/datasets/:id` | ✓ | Delete own dataset |
+| POST | `/api/auth/signup-complete` | ✓ | Sends welcome email |
+| POST | `/api/auth/reset-password` | — | Triggers password reset email |
+| POST | `/api/upload` | ✓ | Upload file to S3, returns URL |
+| POST | `/api/download` | — | Logs a download event |
+| POST | `/api/admin/approve/:id` | ✓ admin | Sets status → `active` |
+| POST | `/api/admin/reject/:id` | ✓ admin | Sets status → `rejected` |
+
 ## Pages
 
 | File | Route | Purpose |
 |---|---|---|
 | `index.html` | `/` | Main portal — hero, categories, featured datasets |
 | `about.html` | `/about` | Mission, team, partners |
-| `news.html` | `/news` | Filterable news/announcements grid |
-| `impact.html` | `/impact` | Stats, case studies, SDG alignment |
-| `api-docs.html` | `/api-docs` | REST API reference |
-| `submit.html` | `/submit` | Dataset submission form |
 | `datasets.html` | `/datasets` | Browse/search catalog |
 | `dataset-view.html` | `/dataset-view` | Single dataset detail |
-| `admin.html` | `/admin` | Dataset moderation (role-gated) |
+| `submit.html` | `/submit` | Dataset submission form (auth required) |
+| `admin.html` | `/admin` | Dataset moderation (role-gated to admin) |
+| `api-docs.html` | `/api-docs` | REST API reference |
+| `news.html` | `/news` | Filterable news/announcements grid |
+| `impact.html` | `/impact` | Stats, case studies, SDG alignment |
+| `research.html` | `/research` | Research hub with embedded surveys |
+| `dark.html` | `/dark` | Dark-theme lifecycle portal variant |
 
 ## Design system
 
@@ -64,7 +90,7 @@ Tailwind config is inlined in each HTML file's `<script id="tailwind-config">` b
 
 - **Colors:** `secondary` (`#ba0035`) is the primary action colour. `primary-container` (`#131b2e`) is the dark navy used for hero/CTA backgrounds.
 - **Spacing:** `margin-mobile` (20px) / `margin-desktop` (64px) for horizontal page padding — always use `px-margin-mobile md:px-margin-desktop` together, never one alone.
-- **Typography:** `font-display-lg` / `text-display-lg` (48px) for hero headings — scale down on mobile with `text-[1.75rem] sm:text-[2.25rem] md:text-display-lg`.
+- **Typography:** `font-display-lg` / `text-display-lg` (48px) for hero headings — scale down on mobile with `text-[1.75rem] sm:text-[2.25rem] md:text-display-lg`. Fonts: `Hanken Grotesk` (display), `Inter` (body), `JetBrains Mono` (code).
 - **Animations:** Hero texts use `heroFloat` keyframes (defined in `index.html` `<style>`). Scroll-reveal uses `.reveal` + IntersectionObserver pattern.
 
 When adding a new page, copy the Tailwind config block and nav from an existing page (e.g. `about.html`) — the condensed single-line colour map there is the canonical version.
