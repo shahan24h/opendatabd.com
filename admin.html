@@ -211,6 +211,15 @@ async function updateStatus(id, status) {
   renderList();
 }
 
+// ── XSS helpers ──────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function safeUrl(url) {
+  try { const u = new URL(url); return (u.protocol === 'https:' || u.protocol === 'http:') ? url : '#'; }
+  catch { return '#'; }
+}
+
 // ── Render ────────────────────────────────────────────────────────────────────
 function showSkeletons() {
   document.getElementById('dataset-list').innerHTML = `
@@ -279,22 +288,22 @@ function datasetCard(d) {
       <div class="flex-1 min-w-0">
         <!-- Badges row -->
         <div class="flex flex-wrap items-center gap-2 mb-2.5">
-          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${statusClass}">${statusLabel}</span>
-          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant">${d.category}</span>
-          ${formats.map(f => `<span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant">${f}</span>`).join('')}
+          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full border ${statusClass}">${esc(statusLabel)}</span>
+          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant">${esc(d.category)}</span>
+          ${formats.map(f => `<span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant">${esc(f)}</span>`).join('')}
         </div>
 
         <!-- Title -->
-        <h3 class="font-semibold text-on-surface text-base leading-snug mb-1">${d.title}</h3>
+        <h3 class="font-semibold text-on-surface text-base leading-snug mb-1">${esc(d.title)}</h3>
 
         <!-- Description -->
-        ${d.description ? `<p class="text-sm text-on-surface-variant mb-2 line-clamp-2">${d.description}</p>` : ''}
+        ${d.description ? `<p class="text-sm text-on-surface-variant mb-2 line-clamp-2">${esc(d.description)}</p>` : ''}
 
         <!-- Meta row -->
         <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-on-surface-variant">
-          ${d.source_url ? `<a href="${d.source_url}" target="_blank" rel="noopener" class="flex items-center gap-1 hover:text-secondary transition-colors"><span class="material-symbols-outlined" style="font-size:14px;">link</span>${d.source ?? d.source_url}</a>` : d.source ? `<span>${d.source}</span>` : ''}
-          <span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:14px;">person</span>${submitter}</span>
-          <span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:14px;">calendar_today</span>${submittedAt}</span>
+          ${d.source_url ? `<a href="${esc(safeUrl(d.source_url))}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 hover:text-secondary transition-colors"><span class="material-symbols-outlined" style="font-size:14px;">link</span>${esc(d.source ?? d.source_url)}</a>` : d.source ? `<span>${esc(d.source)}</span>` : ''}
+          <span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:14px;">person</span>${esc(submitter)}</span>
+          <span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:14px;">calendar_today</span>${esc(submittedAt)}</span>
         </div>
       </div>
 

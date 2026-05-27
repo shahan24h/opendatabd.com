@@ -222,6 +222,14 @@ const FMT_COLORS = {
   XML:'bg-surface-container text-on-surface-variant',
 };
 
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function safeUrl(url) {
+  try { const u = new URL(url); return (u.protocol === 'https:' || u.protocol === 'http:') ? url : '#'; }
+  catch { return '#'; }
+}
+
 // ── Boot ──────────────────────────────────────────────────────────────────────
 await initAuth();
 const user = getUser();
@@ -244,9 +252,9 @@ function renderDataset(d) {
   const formats = Array.isArray(d.format) ? d.format : (d.format ? [d.format] : []);
   const badgeRow = document.getElementById('badge-row');
   badgeRow.innerHTML = `
-    <span class="font-label-caps text-label-caps text-secondary tracking-widest bg-secondary-fixed px-3 py-1 rounded-full">${d.category ?? '—'}</span>
-    ${formats.map(f => `<span class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg border ${FMT_COLORS[f] ?? 'bg-surface-container text-on-surface-variant'}">${f}</span>`).join('')}
-    ${d.division && d.division !== 'nationwide' ? `<span class="text-xs font-medium px-3 py-1 rounded-full bg-surface-container text-on-surface-variant">${d.division}</span>` : ''}
+    <span class="font-label-caps text-label-caps text-secondary tracking-widest bg-secondary-fixed px-3 py-1 rounded-full">${esc(d.category ?? '—')}</span>
+    ${formats.map(f => `<span class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg border ${FMT_COLORS[f] ?? 'bg-surface-container text-on-surface-variant'}">${esc(f)}</span>`).join('')}
+    ${d.division && d.division !== 'nationwide' ? `<span class="text-xs font-medium px-3 py-1 rounded-full bg-surface-container text-on-surface-variant">${esc(d.division)}</span>` : ''}
   `;
 
   // ── Title ─────────────────────────────────────────────────────────────────
@@ -259,8 +267,8 @@ function renderDataset(d) {
   document.getElementById('meta-row').innerHTML = [
     `<span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:16px;">download</span>${(d.downloads ?? 0).toLocaleString()} downloads</span>`,
     `<span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:16px;">visibility</span>${(d.views ?? 0).toLocaleString()} views</span>`,
-    date ? `<span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:16px;">calendar_today</span>Added ${date}</span>` : '',
-    d.license ? `<span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:16px;">gavel</span>${d.license}</span>` : '',
+    date ? `<span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:16px;">calendar_today</span>Added ${esc(date)}</span>` : '',
+    d.license ? `<span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:16px;">gavel</span>${esc(d.license)}</span>` : '',
   ].filter(Boolean).join('');
 
   // ── Description ───────────────────────────────────────────────────────────
@@ -270,14 +278,14 @@ function renderDataset(d) {
   if (d.tags?.length) {
     document.getElementById('tags-section').classList.remove('hidden');
     document.getElementById('ds-tags').innerHTML = d.tags
-      .map(t => `<span class="px-3 py-1 bg-surface-container text-on-surface-variant text-xs font-medium rounded-full">${t}</span>`)
+      .map(t => `<span class="px-3 py-1 bg-surface-container text-on-surface-variant text-xs font-medium rounded-full">${esc(t)}</span>`)
       .join('');
   }
 
   // ── Source block ──────────────────────────────────────────────────────────
   const sourceRows = [
-    d.source       ? `<div class="flex items-start gap-3"><span class="material-symbols-outlined text-outline shrink-0" style="font-size:18px;">business</span><div><p class="text-xs text-on-surface-variant">Organization</p><p class="font-medium text-on-surface text-sm">${d.source}</p></div></div>` : '',
-    d.source_url   ? `<div class="flex items-start gap-3"><span class="material-symbols-outlined text-outline shrink-0" style="font-size:18px;">link</span><div><p class="text-xs text-on-surface-variant">Source URL</p><a href="${d.source_url}" target="_blank" rel="noopener" class="font-medium text-secondary text-sm hover:underline break-all">${d.source_url}</a></div></div>` : '',
+    d.source       ? `<div class="flex items-start gap-3"><span class="material-symbols-outlined text-outline shrink-0" style="font-size:18px;">business</span><div><p class="text-xs text-on-surface-variant">Organization</p><p class="font-medium text-on-surface text-sm">${esc(d.source)}</p></div></div>` : '',
+    d.source_url   ? `<div class="flex items-start gap-3"><span class="material-symbols-outlined text-outline shrink-0" style="font-size:18px;">link</span><div><p class="text-xs text-on-surface-variant">Source URL</p><a href="${esc(safeUrl(d.source_url))}" target="_blank" rel="noopener noreferrer" class="font-medium text-secondary text-sm hover:underline break-all">${esc(d.source_url)}</a></div></div>` : '',
   ].filter(Boolean);
   document.getElementById('ds-source-block').innerHTML = sourceRows.length
     ? sourceRows.join('')
@@ -302,8 +310,8 @@ function renderDataset(d) {
   document.getElementById('details-list').innerHTML = details
     .map(([label, val]) => `
       <div class="flex items-start justify-between gap-2">
-        <span class="text-on-surface-variant shrink-0">${label}</span>
-        <span class="font-medium text-on-surface text-right">${val}</span>
+        <span class="text-on-surface-variant shrink-0">${esc(label)}</span>
+        <span class="font-medium text-on-surface text-right">${esc(val)}</span>
       </div>`)
     .join('<div class="border-t border-outline-variant/30"></div>');
 

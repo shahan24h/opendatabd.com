@@ -74,9 +74,10 @@ export default async function handler(req, res) {
     const ext     = ALLOWED[contentType];
     const key     = `datasets/${randomUUID()}.${ext}`;
     const command = new PutObjectCommand({
-      Bucket:      process.env.R2_BUCKET,
-      Key:         key,
-      ContentType: contentType,
+      Bucket:         process.env.R2_BUCKET,
+      Key:            key,
+      ContentType:    contentType,
+      ContentLength:  Number(size),   // enforces the declared size on the presigned PUT
     });
 
     const uploadUrl = await getSignedUrl(r2, command, { expiresIn: 300 });

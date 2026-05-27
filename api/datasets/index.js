@@ -53,7 +53,15 @@ export default async function handler(req, res) {
     if (!title?.trim())    return res.status(400).json({ error: 'Title is required.' });
     if (!category?.trim()) return res.status(400).json({ error: 'Category is required.' });
 
+    // Validate URL fields — only http/https allowed (blocks javascript: and data: URIs)
+    const validateUrl = (val) => {
+      if (!val?.trim()) return true;
+      try { const u = new URL(val.trim()); return u.protocol === 'http:' || u.protocol === 'https:'; }
+      catch { return false; }
+    };
     const { file_url } = req.body ?? {};
+    if (!validateUrl(source_url)) return res.status(400).json({ error: 'source_url must be a valid http/https URL.' });
+    if (!validateUrl(file_url))   return res.status(400).json({ error: 'file_url must be a valid http/https URL.' });
 
     const { data, error } = await supabaseAdmin
       .from('datasets')

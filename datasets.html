@@ -240,6 +240,11 @@ async function loadDatasets() {
   history.replaceState(null, '', `${location.pathname}${newParams.toString() ? '?' + newParams : ''}`);
 }
 
+// ── XSS helpers ──────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 // ── Render ────────────────────────────────────────────────────────────────────
 function showSkeletons() {
   document.getElementById('dataset-grid').innerHTML =
@@ -287,20 +292,20 @@ function datasetCard(d) {
   <article class="group flex flex-col bg-surface-container-lowest border border-outline-variant/50 rounded-xl overflow-hidden hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-md transition-all duration-200">
     <div class="p-5 flex-1 flex flex-col">
       <div class="flex items-center justify-between mb-3">
-        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant group-hover:bg-secondary-fixed group-hover:text-secondary transition-colors duration-200">${d.category ?? '—'}</span>
-        ${fmtLabel ? `<span class="font-mono text-xs font-bold px-2 py-0.5 rounded ${fmtCls} tracking-wide">${fmtLabel}</span>` : ''}
+        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant group-hover:bg-secondary-fixed group-hover:text-secondary transition-colors duration-200">${esc(d.category ?? '—')}</span>
+        ${fmtLabel ? `<span class="font-mono text-xs font-bold px-2 py-0.5 rounded ${fmtCls} tracking-wide">${esc(fmtLabel)}</span>` : ''}
       </div>
-      <a href="/dataset-view?id=${d.id}" class="font-semibold text-on-surface mb-2 leading-snug hover:text-secondary transition-colors duration-200 block">${d.title}</a>
-      <p class="text-sm text-on-surface-variant mb-4 flex-1 line-clamp-2">${d.description ?? ''}</p>
+      <a href="/dataset-view?id=${esc(d.id)}" class="font-semibold text-on-surface mb-2 leading-snug hover:text-secondary transition-colors duration-200 block">${esc(d.title)}</a>
+      <p class="text-sm text-on-surface-variant mb-4 flex-1 line-clamp-2">${esc(d.description ?? '')}</p>
       <div class="flex items-center gap-3 text-xs text-on-surface-variant">
         <span class="flex items-center gap-1">
           <span class="material-symbols-outlined" style="font-size:14px;">download</span>${(d.downloads ?? 0).toLocaleString()}
         </span>
-        ${date ? `<span>·</span><span>${date}</span>` : ''}
+        ${date ? `<span>·</span><span>${esc(date)}</span>` : ''}
       </div>
     </div>
     <div class="px-5 py-3 border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/60">
-      <span class="text-xs text-on-surface-variant">${d.source ?? 'OpenDataBD'}</span>
+      <span class="text-xs text-on-surface-variant">${esc(d.source ?? 'OpenDataBD')}</span>
       ${action}
     </div>
   </article>`;
