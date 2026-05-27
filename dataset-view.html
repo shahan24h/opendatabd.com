@@ -212,14 +212,28 @@ tailwind.config = {
 import { initAuth, signIn, signOut, getUser, getToken } from './js/auth.js';
 
 const FMT_COLORS = {
-  CSV:'bg-tertiary-fixed text-on-tertiary-fixed-variant',
-  JSON:'bg-primary-fixed text-on-primary-fixed-variant',
-  API:'bg-secondary-fixed text-on-secondary-fixed-variant',
-  XLS:'bg-surface-container text-on-surface-variant',
+  // Tabular
+  CSV: 'bg-tertiary-fixed text-on-tertiary-fixed-variant',
+  TSV: 'bg-tertiary-fixed text-on-tertiary-fixed-variant',
+  XLS: 'bg-surface-container text-on-surface-variant',
   XLSX:'bg-surface-container text-on-surface-variant',
-  PDF:'bg-error-container text-on-error-container',
-  GEO:'bg-surface-container-high text-on-surface-variant',
-  XML:'bg-surface-container text-on-surface-variant',
+  ODS: 'bg-surface-container text-on-surface-variant',
+  JSON:'bg-primary-fixed text-on-primary-fixed-variant',
+  // Statistical
+  DTA: 'bg-primary-fixed text-on-primary-fixed-variant',
+  SAV: 'bg-primary-fixed text-on-primary-fixed-variant',
+  RDS: 'bg-primary-fixed text-on-primary-fixed-variant',
+  // Documents
+  PDF: 'bg-error-container text-on-error-container',
+  DOCX:'bg-surface-container-high text-on-surface-variant',
+  DOC: 'bg-surface-container-high text-on-surface-variant',
+  ODT: 'bg-surface-container-high text-on-surface-variant',
+  TXT: 'bg-surface-container text-on-surface-variant',
+  // Geospatial & other
+  GEO: 'bg-surface-container-high text-on-surface-variant',
+  XML: 'bg-surface-container text-on-surface-variant',
+  ZIP: 'bg-surface-container text-on-surface-variant',
+  API: 'bg-secondary-fixed text-on-secondary-fixed-variant',
 };
 
 function esc(s) {

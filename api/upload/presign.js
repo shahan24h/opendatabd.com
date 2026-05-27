@@ -8,26 +8,59 @@ import { randomUUID }                from 'crypto';
 
 // Allowed MIME types → file extension
 const ALLOWED = {
-  'text/csv':                                                             'csv',
-  'application/json':                                                     'json',
-  'application/vnd.ms-excel':                                             'xls',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':   'xlsx',
-  'application/pdf':                                                      'pdf',
-  'application/geo+json':                                                 'geojson',
-  'application/xml':                                                      'xml',
-  'text/xml':                                                             'xml',
-  'text/plain':                                                           'txt',
-  // Some browsers/OS report generic binary type for Office files
-  'application/octet-stream':                                             null,
+  // Tabular / structured data
+  'text/csv':                                                                       'csv',
+  'text/tab-separated-values':                                                      'tsv',
+  'application/json':                                                               'json',
+  'application/geo+json':                                                           'geojson',
+  'application/xml':                                                                'xml',
+  'text/xml':                                                                       'xml',
+  'text/plain':                                                                     'txt',
+  // Spreadsheets
+  'application/vnd.ms-excel':                                                       'xls',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':             'xlsx',
+  'application/vnd.oasis.opendocument.spreadsheet':                                'ods',
+  // Documents
+  'application/pdf':                                                                'pdf',
+  'application/msword':                                                             'doc',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document':       'docx',
+  'application/vnd.oasis.opendocument.text':                                       'odt',
+  // Statistical packages
+  'application/x-stata-dta':                                                       'dta',
+  'application/x-spss-sav':                                                        'sav',
+  'application/x-r-data':                                                          'rds',
+  // Archives (e.g. shapefiles, multi-file datasets)
+  'application/zip':                                                                'zip',
+  'application/x-zip-compressed':                                                  'zip',
+  // Generic binary — resolved via extension fallback below
+  'application/octet-stream':                                                       null,
 };
 
 // Extension fallback when browser sends application/octet-stream
 const EXT_MAP = {
-  csv: 'text/csv', json: 'application/json',
-  xls: 'application/vnd.ms-excel',
-  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  pdf: 'application/pdf', geojson: 'application/geo+json',
-  xml: 'application/xml', txt: 'text/plain',
+  // Tabular
+  csv:     'text/csv',
+  tsv:     'text/tab-separated-values',
+  json:    'application/json',
+  geojson: 'application/geo+json',
+  xml:     'application/xml',
+  txt:     'text/plain',
+  // Spreadsheets
+  xls:     'application/vnd.ms-excel',
+  xlsx:    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  ods:     'application/vnd.oasis.opendocument.spreadsheet',
+  // Documents
+  pdf:     'application/pdf',
+  doc:     'application/msword',
+  docx:    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  odt:     'application/vnd.oasis.opendocument.text',
+  // Statistical
+  dta:     'application/x-stata-dta',
+  sav:     'application/x-spss-sav',
+  rds:     'application/x-r-data',
+  rdata:   'application/x-r-data',
+  // Archives
+  zip:     'application/zip',
 };
 
 const MAX_BYTES = 50 * 1024 * 1024; // 50 MB
@@ -48,7 +81,7 @@ export default async function handler(req, res) {
 
   if (!contentType || !ALLOWED[contentType]) {
     return res.status(400).json({
-      error: 'File type not supported. Allowed: CSV, JSON, XLS, XLSX, PDF, GeoJSON, XML',
+      error: 'File type not supported. Allowed: CSV, TSV, JSON, XLS, XLSX, ODS, PDF, DOC, DOCX, ODT, GeoJSON, XML, TXT, DTA, SAV, RDS, ZIP',
     });
   }
   if (!size || Number(size) > MAX_BYTES) {

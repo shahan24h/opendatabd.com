@@ -160,13 +160,32 @@ tailwind.config = {
           <label class="text-sm font-medium text-on-surface-variant block mb-1.5">Format <span class="text-secondary">*</span></label>
           <select id="f-format" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-colors">
             <option value="">— select —</option>
-            <option value="CSV">CSV</option>
-            <option value="JSON">JSON</option>
-            <option value="XLS">XLS / Excel</option>
-            <option value="API">API / Live Feed</option>
-            <option value="GEO">GeoJSON / Shapefile</option>
-            <option value="PDF">PDF</option>
-            <option value="XML">XML</option>
+            <optgroup label="Tabular">
+              <option value="CSV">CSV</option>
+              <option value="TSV">TSV</option>
+              <option value="XLS">XLS / Excel</option>
+              <option value="XLSX">XLSX / Excel</option>
+              <option value="ODS">ODS / OpenDocument</option>
+              <option value="JSON">JSON</option>
+            </optgroup>
+            <optgroup label="Statistical">
+              <option value="DTA">DTA / Stata</option>
+              <option value="SAV">SAV / SPSS</option>
+              <option value="RDS">RDS / R Data</option>
+            </optgroup>
+            <optgroup label="Document">
+              <option value="PDF">PDF</option>
+              <option value="DOCX">DOCX / Word</option>
+              <option value="DOC">DOC / Word (legacy)</option>
+              <option value="ODT">ODT / OpenDocument</option>
+              <option value="TXT">TXT / Plain Text</option>
+            </optgroup>
+            <optgroup label="Geospatial &amp; Other">
+              <option value="GEO">GeoJSON / Shapefile</option>
+              <option value="XML">XML</option>
+              <option value="ZIP">ZIP Archive</option>
+              <option value="API">API / Live Feed</option>
+            </optgroup>
           </select>
         </div>
 
@@ -234,9 +253,10 @@ tailwind.config = {
         ondrop="handleDrop(event)">
         <span class="material-symbols-outlined text-4xl text-outline mb-3 block" style="font-variation-settings:'FILL' 0;">upload_file</span>
         <p class="font-medium text-on-surface text-sm mb-1">Drop your file here or <span class="text-secondary">browse</span></p>
-        <p class="text-xs text-on-surface-variant">CSV · JSON · XLS · XLSX · PDF · GeoJSON · XML · Max 50 MB</p>
+        <p class="text-xs text-on-surface-variant">CSV · TSV · JSON · XLS · XLSX · ODS · PDF · DOC · DOCX · ODT · GeoJSON · XML · TXT · DTA · SAV · RDS · ZIP · Max 50 MB</p>
         <input id="file-input" type="file" class="hidden"
-          accept=".csv,.json,.xls,.xlsx,.pdf,.geojson,.xml,.txt" onchange="handleFileSelect(event)" />
+          accept=".csv,.tsv,.json,.xls,.xlsx,.ods,.pdf,.doc,.docx,.odt,.geojson,.xml,.txt,.dta,.sav,.rds,.rdata,.zip"
+          onchange="handleFileSelect(event)" />
       </div>
 
       <!-- File selected info -->
