@@ -62,7 +62,7 @@ APP_URL
 | POST | `/api/datasets` | ✓ | Submit; status starts as `pending` |
 | DELETE | `/api/datasets/:id` | ✓ | Delete own dataset |
 | POST | `/api/auth/signup-complete` | ✓ | Sends welcome email |
-| POST | `/api/auth/reset-password` | — | Triggers password reset email |
+| POST | `/api/auth/reset-password` | — | Generates Supabase recovery link, sends via Resend |
 | POST | `/api/upload` | ✓ | Upload file to S3, returns URL |
 | POST | `/api/download` | — | Logs a download event |
 | POST | `/api/admin/approve/:id` | ✓ admin | Sets status → `active` |
@@ -83,6 +83,7 @@ APP_URL
 | `impact.html` | `/impact` | Stats, case studies, SDG alignment |
 | `research.html` | `/research` | Research hub with embedded surveys |
 | `dark.html` | `/dark` | Dark-theme lifecycle portal variant |
+| `reset-password.html` | `/reset-password` | Password reset landing page (reads Supabase recovery token from URL hash) |
 
 ## Design system
 
@@ -103,3 +104,9 @@ Two tables in `supabase/migrations/001_initial.sql`:
 - `datasets` — core table. Key columns: `status` (`pending`/`active`/`rejected`), `submitted_by` (UUID FK to auth.users), `format` (text array), `file_url` (hosted file) vs `source_url` (external link).
 
 RLS is enabled on both tables. The service role key in `lib/supabase.js` bypasses RLS intentionally for server-side operations.
+
+## Known gotchas
+
+**Password reset — never use `supabaseAdmin.auth.resetPasswordForEmail`**: The service-role client routes through Supabase's own email system which has a 4 emails/hour free-tier limit and returns `"Error sending recovery email"` when it fails. Instead use `supabaseAdmin.auth.admin.generateLink({ type: 'recovery', email })` to get the reset URL, then send it via Resend (see `api/auth/reset-password.js`).
+
+**Admin role assignment**: There is no UI for granting `role: 'admin'`. Do it directly in the Supabase dashboard: `profiles` table → set `role = 'admin'` for the target user row.
