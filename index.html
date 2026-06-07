@@ -55,11 +55,15 @@
     position: fixed;
     inset: 0;
     z-index: -2;
-    background:
-      radial-gradient(120% 90% at 50% -10%, rgba(218,41,28,0.10), transparent 55%),
-      radial-gradient(90% 80% at 110% 0%, rgba(218,41,28,0.08), transparent 50%),
-      radial-gradient(90% 90% at -10% 100%, rgba(0,103,71,0.14), transparent 55%),
-      #0b100f;
+    background-image:
+      radial-gradient(120% 90% at 50% -10%, rgba(218,41,28,0.18), transparent 55%),
+      radial-gradient(90% 80% at 110% 0%, rgba(218,41,28,0.12), transparent 50%),
+      radial-gradient(90% 90% at -10% 100%, rgba(0,103,71,0.20), transparent 55%),
+      linear-gradient(to bottom, rgba(11,16,15,0.72) 0%, rgba(11,16,15,0.88) 100%),
+      url('https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/bakground.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
   .grid-veil {
     position: fixed;
@@ -210,17 +214,17 @@
   <div class="flex items-center gap-4 md:gap-12">
     <a class="px-4 md:px-5 py-2.5 bg-brand-red text-white font-black text-lg md:text-xl tracking-tight hover:bg-brand-red-hover transition-colors rounded-[3px]" href="#top">OpenDataBD</a>
     <div class="hidden lg:flex items-center gap-8">
-      <a class="text-on-surface/80 hover:text-white transition-colors font-semibold text-sm" href="#datasets">Datasets</a>
-      <a class="text-on-surface/80 hover:text-white transition-colors font-semibold text-sm" href="#api">API Docs</a>
-      <a class="text-on-surface/80 hover:text-white transition-colors font-semibold text-sm" href="#about">About</a>
-      <a class="text-on-surface/80 hover:text-white transition-colors font-semibold text-sm" href="#research">Research</a>
+      <a class="text-on-surface/80 hover:text-white transition-colors font-semibold text-sm" href="datasets.html">Datasets</a>
+      <a class="text-on-surface/80 hover:text-white transition-colors font-semibold text-sm" href="api-docs.html">API Docs</a>
+      <a class="text-on-surface/80 hover:text-white transition-colors font-semibold text-sm" href="about.html">About</a>
+      <a class="text-on-surface/80 hover:text-white transition-colors font-semibold text-sm" href="research.html">Research</a>
     </div>
   </div>
   <div class="flex items-center gap-2 md:gap-5">
     <button class="text-on-surface/80 hover:text-white transition-colors p-2" aria-label="Search">
       <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
     </button>
-    <button class="hidden sm:block px-6 py-2.5 bg-white text-surface font-bold rounded-[4px] text-xs uppercase tracking-[0.12em] shadow-[0_2px_0_0_#b9c2bd] hover:translate-y-[1px] hover:shadow-[0_1px_0_0_#b9c2bd] active:translate-y-[2px] active:shadow-none transition-all">Sign in</button>
+    <button id="auth-signin-btn" onclick="openAuthModal()" class="hidden sm:block px-6 py-2.5 bg-white text-surface font-bold rounded-[4px] text-xs uppercase tracking-[0.12em] shadow-[0_2px_0_0_#b9c2bd] hover:translate-y-[1px] hover:shadow-[0_1px_0_0_#b9c2bd] active:translate-y-[2px] active:shadow-none transition-all">Sign in</button><div id="auth-user-menu" class="hidden sm:flex items-center gap-2"><span id="auth-user-avatar" class="w-8 h-8 bg-brand-red text-white rounded-full flex items-center justify-center text-xs font-black">U</span><span id="auth-user-name" class="text-on-surface text-sm font-semibold max-w-[100px] truncate"></span><button onclick="handleSignOut()" class="text-on-surface/60 hover:text-white text-xs px-3 py-1.5 border border-white/20 rounded-[4px] transition-colors">Sign out</button></div>
     <button class="lg:hidden text-white p-2" id="mobile-menu-trigger" aria-label="Menu">
       <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
     </button>
@@ -232,11 +236,11 @@
   <button class="absolute top-7 right-7 text-white p-2" id="mobile-menu-close" aria-label="Close">
     <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg>
   </button>
-  <a class="text-white text-2xl font-black" href="#datasets">Datasets</a>
-  <a class="text-white text-2xl font-black" href="#api">API Docs</a>
-  <a class="text-white text-2xl font-black" href="#about">About</a>
-  <a class="text-white text-2xl font-black" href="#research">Research</a>
-  <button class="mt-6 px-10 py-4 bg-white text-surface font-bold rounded-[4px] text-sm uppercase tracking-[0.12em]">Sign in</button>
+  <a class="text-white text-2xl font-black" href="datasets.html">Datasets</a>
+  <a class="text-white text-2xl font-black" href="api-docs.html">API Docs</a>
+  <a class="text-white text-2xl font-black" href="about.html">About</a>
+  <a class="text-white text-2xl font-black" href="research.html">Research</a>
+  <button onclick="openAuthModal()" class="mt-6 px-10 py-4 bg-white text-surface font-bold rounded-[4px] text-sm uppercase tracking-[0.12em]">Sign in</button>
 </div>
 
 <main id="top" class="relative" data-screen-label="OpenDataBD home">
@@ -244,12 +248,12 @@
   <section class="min-h-screen flex flex-col items-center justify-center px-6 text-center pt-28 pb-16">
     <div class="scene mb-12 md:mb-16" id="cube-scene">
       <div class="cube" id="cube">
-        <div class="cube-face cube-face-front"><img alt="Coastal fishing boat" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube-coastal.jpg"/></div>
-        <div class="cube-face cube-face-back"><img alt="Riverside nature" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube-riverside.jpg"/></div>
-        <div class="cube-face cube-face-right"><img alt="River landscape" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube-river.jpg"/></div>
-        <div class="cube-face cube-face-left"><img alt="Traditional life" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube-traditional.jpg"/></div>
-        <div class="cube-face cube-face-top"><img alt="Heritage monument" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube-heritage.jpg"/></div>
-        <div class="cube-face cube-face-bottom"><img alt="Open landscape" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube-landscape.jpg"/></div>
+        <div class="cube-face cube-face-front"><img alt="Coastal fishing boat" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube%20(1).jpg"/></div>
+        <div class="cube-face cube-face-back"><img alt="Riverside nature" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube%20(2).jpg"/></div>
+        <div class="cube-face cube-face-right"><img alt="River landscape" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube%20(3).jpg"/></div>
+        <div class="cube-face cube-face-left"><img alt="Traditional life" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube%20(4).jpg"/></div>
+        <div class="cube-face cube-face-top"><img alt="Heritage monument" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube%20(5).jpg"/></div>
+        <div class="cube-face cube-face-bottom"><img alt="Open landscape" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube%20(6).jpg"/></div>
       </div>
       <div class="cube-shadow"></div>
     </div>
@@ -269,8 +273,8 @@
   <!-- ACTION BAR -->
   <section class="py-12 bg-surface-low/70 backdrop-blur-md border-y border-white/10">
     <div class="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center px-4">
-      <button class="w-full sm:w-auto px-10 md:px-14 py-4 md:py-5 bg-brand-red text-white font-bold rounded-[5px] uppercase tracking-[0.14em] text-xs shadow-[0_4px_0_0_#92001c] hover:translate-y-[2px] hover:shadow-[0_2px_0_0_#92001c] active:translate-y-[4px] active:shadow-none active:bg-brand-red-deep transition-all">Browse catalog</button>
-      <button class="w-full sm:w-auto px-10 md:px-14 py-4 md:py-5 bg-transparent text-white font-bold rounded-[5px] uppercase tracking-[0.14em] text-xs border border-brand-green/70 shadow-[0_4px_0_0_#00543a] hover:translate-y-[2px] hover:shadow-[0_2px_0_0_#00543a] hover:bg-brand-green/10 active:translate-y-[4px] active:shadow-none transition-all">Submit data</button>
+      <a href="datasets.html" class="w-full sm:w-auto px-10 md:px-14 py-4 md:py-5 bg-brand-red text-white font-bold rounded-[5px] uppercase tracking-[0.14em] text-xs shadow-[0_4px_0_0_#92001c] hover:translate-y-[2px] hover:shadow-[0_2px_0_0_#92001c] active:translate-y-[4px] active:shadow-none active:bg-brand-red-deep transition-all text-center">Browse catalog</a>
+      <a href="submit.html" class="w-full sm:w-auto px-10 md:px-14 py-4 md:py-5 bg-transparent text-white font-bold rounded-[5px] uppercase tracking-[0.14em] text-xs border border-brand-green/70 shadow-[0_4px_0_0_#00543a] hover:translate-y-[2px] hover:shadow-[0_2px_0_0_#00543a] hover:bg-brand-green/10 active:translate-y-[4px] active:shadow-none transition-all text-center">Submit data</a>
     </div>
   </section>
 
@@ -283,7 +287,7 @@
           <h2 class="font-display impact-heading text-white text-[clamp(28px,4vw,40px)]">Browse by category</h2>
         </div>
         <div class="hidden md:block h-px flex-grow bg-gradient-to-r from-brand-red/30 to-transparent mx-8"></div>
-        <a class="flex gap-2 items-center text-on-surface/85 hover:text-white font-bold group text-xs uppercase tracking-[0.14em]" href="#datasets">
+        <a class="flex gap-2 items-center text-on-surface/85 hover:text-white font-bold group text-xs uppercase tracking-[0.14em]" href="datasets.html">
           View all <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
         </a>
       </div>
@@ -291,34 +295,79 @@
 
     <div class="marquee-container">
       <div class="marquee-wrapper" data-marquee-row data-dir="-1">
-        <a class="category-card" href="#datasets"><img alt="Health" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-health.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M12 8v6"/><path d="M9 11h6"/></svg><div class="font-black text-xl text-surface">Health</div></div></a>
-        <a class="category-card" href="#datasets"><img alt="Agriculture" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-agriculture.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"/><path d="M12 20c0-5 0-8-3-10"/><path d="M12 14c0-3 2-5 6-5 0 3-2 5-6 5Z"/><path d="M12 12c0-3-2-5-6-5 0 3 2 5 6 5Z"/></svg><div class="font-black text-xl text-surface">Agriculture</div></div></a>
-        <a class="category-card" href="#datasets"><img alt="Economy" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-economy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17 9 11l4 4 8-8"/><path d="M17 4h4v4"/></svg><div class="font-black text-xl text-surface">Economy</div></div></a>
-        <a class="category-card" href="#datasets"><img alt="Education" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-education.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v4c0 1.3 2.7 3 6 3s6-1.7 6-3v-4"/></svg><div class="font-black text-xl text-surface">Education</div></div></a>
-        <a class="category-card" href="#datasets"><img alt="Climate" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-climate.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M5 5l1.4 1.4"/><path d="M2 12h2"/><path d="M19 5l-1.4 1.4"/><circle cx="11" cy="9" r="3"/><path d="M7 19a4 4 0 0 1 .9-7.9 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 19H7Z"/></svg><div class="font-black text-xl text-surface">Climate</div></div></a>
+        <a class="category-card" href="datasets.html"><img alt="Health" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/healthcare.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M12 8v6"/><path d="M9 11h6"/></svg><div class="font-black text-xl text-surface">Health</div></div></a>
+        <a class="category-card" href="datasets.html"><img alt="Agriculture" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/agriculture.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"/><path d="M12 20c0-5 0-8-3-10"/><path d="M12 14c0-3 2-5 6-5 0 3-2 5-6 5Z"/><path d="M12 12c0-3-2-5-6-5 0 3 2 5 6 5Z"/></svg><div class="font-black text-xl text-surface">Agriculture</div></div></a>
+        <a class="category-card" href="datasets.html"><img alt="Economy" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/economy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17 9 11l4 4 8-8"/><path d="M17 4h4v4"/></svg><div class="font-black text-xl text-surface">Economy</div></div></a>
+        <a class="category-card" href="datasets.html"><img alt="Education" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/education.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v4c0 1.3 2.7 3 6 3s6-1.7 6-3v-4"/></svg><div class="font-black text-xl text-surface">Education</div></div></a>
+        <a class="category-card" href="datasets.html"><img alt="Climate" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/climate.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M5 5l1.4 1.4"/><path d="M2 12h2"/><path d="M19 5l-1.4 1.4"/><circle cx="11" cy="9" r="3"/><path d="M7 19a4 4 0 0 1 .9-7.9 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 19H7Z"/></svg><div class="font-black text-xl text-surface">Climate</div></div></a>
         <!-- clones for seamless loop -->
-        <a class="category-card" href="#datasets" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-health.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M12 8v6"/><path d="M9 11h6"/></svg><div class="font-black text-xl text-surface">Health</div></div></a>
-        <a class="category-card" href="#datasets" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-agriculture.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"/><path d="M12 20c0-5 0-8-3-10"/><path d="M12 14c0-3 2-5 6-5 0 3-2 5-6 5Z"/><path d="M12 12c0-3-2-5-6-5 0 3 2 5 6 5Z"/></svg><div class="font-black text-xl text-surface">Agriculture</div></div></a>
-        <a class="category-card" href="#datasets" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-economy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17 9 11l4 4 8-8"/><path d="M17 4h4v4"/></svg><div class="font-black text-xl text-surface">Economy</div></div></a>
-        <a class="category-card" href="#datasets" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-education.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v4c0 1.3 2.7 3 6 3s6-1.7 6-3v-4"/></svg><div class="font-black text-xl text-surface">Education</div></div></a>
-        <a class="category-card" href="#datasets" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-climate.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M5 5l1.4 1.4"/><path d="M2 12h2"/><path d="M19 5l-1.4 1.4"/><circle cx="11" cy="9" r="3"/><path d="M7 19a4 4 0 0 1 .9-7.9 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 19H7Z"/></svg><div class="font-black text-xl text-surface">Climate</div></div></a>
+        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/healthcare.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M12 8v6"/><path d="M9 11h6"/></svg><div class="font-black text-xl text-surface">Health</div></div></a>
+        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/agriculture.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"/><path d="M12 20c0-5 0-8-3-10"/><path d="M12 14c0-3 2-5 6-5 0 3-2 5-6 5Z"/><path d="M12 12c0-3-2-5-6-5 0 3 2 5 6 5Z"/></svg><div class="font-black text-xl text-surface">Agriculture</div></div></a>
+        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/economy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17 9 11l4 4 8-8"/><path d="M17 4h4v4"/></svg><div class="font-black text-xl text-surface">Economy</div></div></a>
+        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/education.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v4c0 1.3 2.7 3 6 3s6-1.7 6-3v-4"/></svg><div class="font-black text-xl text-surface">Education</div></div></a>
+        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/climate.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M5 5l1.4 1.4"/><path d="M2 12h2"/><path d="M19 5l-1.4 1.4"/><circle cx="11" cy="9" r="3"/><path d="M7 19a4 4 0 0 1 .9-7.9 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 19H7Z"/></svg><div class="font-black text-xl text-surface">Climate</div></div></a>
       </div>
 
       <div class="marquee-wrapper" data-marquee-row data-dir="1">
-        <a class="category-card" href="#datasets"><img alt="Governance" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-governance.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M6 10v8"/><path d="M10 10v8"/><path d="M14 10v8"/><path d="M18 10v8"/><path d="M12 3 4 8h16l-8-5Z"/></svg><div class="font-black text-xl text-surface">Governance</div></div></a>
-        <a class="category-card" href="#datasets"><img alt="Infrastructure" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-infrastructure.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V6l6-3 6 3v15"/><path d="M10 9h0"/><path d="M14 9h0"/><path d="M10 13h0"/><path d="M14 13h0"/><path d="M10 21v-4h4v4"/></svg><div class="font-black text-xl text-surface">Infrastructure</div></div></a>
-        <a class="category-card" href="#datasets"><img alt="Energy" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-energy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg><div class="font-black text-xl text-surface">Energy</div></div></a>
-        <a class="category-card" href="#datasets"><img alt="Demographics" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-demographics.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 6a3 3 0 0 1 0 5.6"/><path d="M21 20a6 6 0 0 0-4-5.6"/></svg><div class="font-black text-xl text-surface">Demographics</div></div></a>
-        <a class="category-card" href="#datasets"><img alt="Environment" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-environment.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C13 4 18 4 20 4c0 2 0 7-2.1 10.2A7 7 0 0 1 11 20Z"/><path d="M5 21c1.5-4 4-7 9-9"/></svg><div class="font-black text-xl text-surface">Environment</div></div></a>
+        <a class="category-card" href="datasets.html"><img alt="Governance" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/governance.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M6 10v8"/><path d="M10 10v8"/><path d="M14 10v8"/><path d="M18 10v8"/><path d="M12 3 4 8h16l-8-5Z"/></svg><div class="font-black text-xl text-surface">Governance</div></div></a>
+        <a class="category-card" href="datasets.html"><img alt="Infrastructure" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/infrastructure.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V6l6-3 6 3v15"/><path d="M10 9h0"/><path d="M14 9h0"/><path d="M10 13h0"/><path d="M14 13h0"/><path d="M10 21v-4h4v4"/></svg><div class="font-black text-xl text-surface">Infrastructure</div></div></a>
+        <a class="category-card" href="datasets.html"><img alt="Energy" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/energy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg><div class="font-black text-xl text-surface">Energy</div></div></a>
+        <a class="category-card" href="datasets.html"><img alt="Demographics" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/demographic.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 6a3 3 0 0 1 0 5.6"/><path d="M21 20a6 6 0 0 0-4-5.6"/></svg><div class="font-black text-xl text-surface">Demographics</div></div></a>
+        <a class="category-card" href="datasets.html"><img alt="Environment" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/environment.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C13 4 18 4 20 4c0 2 0 7-2.1 10.2A7 7 0 0 1 11 20Z"/><path d="M5 21c1.5-4 4-7 9-9"/></svg><div class="font-black text-xl text-surface">Environment</div></div></a>
         <!-- clones for seamless loop -->
-        <a class="category-card" href="#datasets" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-governance.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M6 10v8"/><path d="M10 10v8"/><path d="M14 10v8"/><path d="M18 10v8"/><path d="M12 3 4 8h16l-8-5Z"/></svg><div class="font-black text-xl text-surface">Governance</div></div></a>
-        <a class="category-card" href="#datasets" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-infrastructure.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V6l6-3 6 3v15"/><path d="M10 9h0"/><path d="M14 9h0"/><path d="M10 13h0"/><path d="M14 13h0"/><path d="M10 21v-4h4v4"/></svg><div class="font-black text-xl text-surface">Infrastructure</div></div></a>
-        <a class="category-card" href="#datasets" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-energy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg><div class="font-black text-xl text-surface">Energy</div></div></a>
-        <a class="category-card" href="#datasets" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-demographics.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 6a3 3 0 0 1 0 5.6"/><path d="M21 20a6 6 0 0 0-4-5.6"/></svg><div class="font-black text-xl text-surface">Demographics</div></div></a>
-        <a class="category-card" href="#datasets" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cat-environment.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C13 4 18 4 20 4c0 2 0 7-2.1 10.2A7 7 0 0 1 11 20Z"/><path d="M5 21c1.5-4 4-7 9-9"/></svg><div class="font-black text-xl text-surface">Environment</div></div></a>
+        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/governance.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M6 10v8"/><path d="M10 10v8"/><path d="M14 10v8"/><path d="M18 10v8"/><path d="M12 3 4 8h16l-8-5Z"/></svg><div class="font-black text-xl text-surface">Governance</div></div></a>
+        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/infrastructure.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V6l6-3 6 3v15"/><path d="M10 9h0"/><path d="M14 9h0"/><path d="M10 13h0"/><path d="M14 13h0"/><path d="M10 21v-4h4v4"/></svg><div class="font-black text-xl text-surface">Infrastructure</div></div></a>
+        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/energy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg><div class="font-black text-xl text-surface">Energy</div></div></a>
+        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/demographic.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 6a3 3 0 0 1 0 5.6"/><path d="M21 20a6 6 0 0 0-4-5.6"/></svg><div class="font-black text-xl text-surface">Demographics</div></div></a>
+        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/environment.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C13 4 18 4 20 4c0 2 0 7-2.1 10.2A7 7 0 0 1 11 20Z"/><path d="M5 21c1.5-4 4-7 9-9"/></svg><div class="font-black text-xl text-surface">Environment</div></div></a>
       </div>
     </div>
   </section>
+
+  <!-- STATS BAR -->
+  <section class="py-10 bg-surface-high/60 backdrop-blur-md border-y border-white/10">
+    <div class="max-w-container mx-auto px-4 md:px-margin-desktop">
+      <dl class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div class="flex flex-col items-center gap-1">
+          <dt id="stat-datasets" class="font-display impact-heading text-white text-4xl tabular-nums">—</dt>
+          <dd class="text-on-surface/60 text-xs uppercase tracking-widest font-mono">Public Datasets</dd>
+        </div>
+        <div class="flex flex-col items-center gap-1">
+          <dt id="stat-contributors" class="font-display impact-heading text-white text-4xl tabular-nums">—</dt>
+          <dd class="text-on-surface/60 text-xs uppercase tracking-widest font-mono">Contributors</dd>
+        </div>
+        <div class="flex flex-col items-center gap-1">
+          <dt class="font-display impact-heading text-white text-4xl tabular-nums">64</dt>
+          <dd class="text-on-surface/60 text-xs uppercase tracking-widest font-mono">Districts Covered</dd>
+        </div>
+        <div class="flex flex-col items-center gap-1">
+          <dt id="stat-downloads" class="font-display impact-heading text-white text-4xl tabular-nums">—</dt>
+          <dd class="text-on-surface/60 text-xs uppercase tracking-widest font-mono">Downloads</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- FEATURED DATASETS -->
+  <section id="datasets" class="py-16 md:py-24">
+    <div class="max-w-container mx-auto px-4 md:px-margin-desktop">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-5 mb-10">
+        <div class="space-y-2.5">
+          <span class="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-brand-red">Latest</span>
+          <h2 class="font-display impact-heading text-white text-[clamp(28px,4vw,40px)]">Featured Datasets</h2>
+        </div>
+        <a href="datasets.html" class="flex gap-2 items-center text-on-surface/85 hover:text-white font-bold group text-xs uppercase tracking-[0.14em]">
+          Browse all <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div id="featured-datasets" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="h-52 rounded-xl bg-surface-high animate-pulse"></div>
+        <div class="h-52 rounded-xl bg-surface-high animate-pulse"></div>
+        <div class="h-52 rounded-xl bg-surface-high animate-pulse"></div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <script>
@@ -512,5 +561,310 @@
 
   updateNav();
 </script>
+
+<!-- FOOTER -->
+<footer class="bg-surface-low border-t border-white/10 py-16">
+  <div class="max-w-container mx-auto px-4 md:px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-10">
+    <div class="md:col-span-1">
+      <span class="font-display font-black text-xl text-white mb-4 block">OpenDataBD</span>
+      <p class="text-on-surface/60 text-sm leading-relaxed">Empowering citizens through transparency and open data. Built for Bangladesh.</p>
+    </div>
+    <div>
+      <h5 class="text-white font-bold mb-4 text-sm uppercase tracking-widest">Explore</h5>
+      <ul class="space-y-2 text-on-surface/60 text-sm">
+        <li><a class="hover:text-brand-red transition-colors" href="datasets.html">Datasets</a></li>
+        <li><a class="hover:text-brand-red transition-colors" href="submit.html">Submit Data</a></li>
+        <li><a class="hover:text-brand-red transition-colors" href="api-docs.html">API Docs</a></li>
+        <li><a class="hover:text-brand-red transition-colors" href="research.html">Research</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="text-white font-bold mb-4 text-sm uppercase tracking-widest">Info</h5>
+      <ul class="space-y-2 text-on-surface/60 text-sm">
+        <li><a class="hover:text-brand-red transition-colors" href="about.html">About Us</a></li>
+        <li><a class="hover:text-brand-red transition-colors" href="news.html">News</a></li>
+        <li><a class="hover:text-brand-red transition-colors" href="#">Privacy Policy</a></li>
+        <li><a class="hover:text-brand-red transition-colors" href="#">Terms of Use</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="text-white font-bold mb-4 text-sm uppercase tracking-widest">Connect</h5>
+      <ul class="space-y-2 text-on-surface/60 text-sm">
+        <li><a class="hover:text-brand-red transition-colors" href="https://github.com/shahan24h/opendatabd.com" target="_blank">GitHub</a></li>
+        <li><a class="hover:text-brand-red transition-colors" href="#">Contact Support</a></li>
+        <li><a class="hover:text-brand-red transition-colors" href="#">Report a Bug</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="max-w-container mx-auto px-4 md:px-margin-desktop mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-on-surface/40 text-xs gap-4">
+    <span>© 2026 OpenDataBD — Empowering citizens through transparency.</span>
+    <span>Made with ♥ in Bangladesh</span>
+  </div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div id="auth-modal" class="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true">
+  <div class="bg-surface-container w-full max-w-md rounded-2xl shadow-2xl border border-white/10 overflow-hidden">
+    <div class="px-8 pt-8 pb-0">
+      <div class="flex items-center justify-between mb-6">
+        <span class="font-black text-base bg-brand-red text-white px-3 py-1 rounded-[3px]">OpenDataBD</span>
+        <button id="auth-modal-close" aria-label="Close" class="text-on-surface/50 hover:text-white p-1.5 rounded-full hover:bg-surface-high transition-colors">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="flex bg-surface-high rounded-xl p-1 mb-6">
+        <button id="tab-signin" class="flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all bg-surface-container text-white shadow">Sign In</button>
+        <button id="tab-signup" class="flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all text-on-surface/50">Sign Up</button>
+      </div>
+      <div id="auth-message" class="hidden text-sm px-4 py-3 rounded-xl mb-5"></div>
+
+      <!-- Sign In -->
+      <div id="form-signin">
+        <form id="signin-form" class="space-y-4" novalidate>
+          <div><label class="text-sm font-medium text-on-surface/70 block mb-1.5">Email</label>
+          <input id="signin-email" type="email" placeholder="you@example.com" autocomplete="email" required
+            class="w-full px-4 py-3 rounded-xl border border-white/10 bg-surface-high text-white text-sm placeholder:text-on-surface/30 focus:outline-none focus:ring-2 focus:ring-brand-red/40 focus:border-brand-red transition-colors"/></div>
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-sm font-medium text-on-surface/70">Password</label>
+              <button type="button" id="forgot-password-btn" class="text-xs text-brand-red hover:underline">Forgot password?</button>
+            </div>
+            <input id="signin-password" type="password" placeholder="••••••••" autocomplete="current-password" required
+              class="w-full px-4 py-3 rounded-xl border border-white/10 bg-surface-high text-white text-sm placeholder:text-on-surface/30 focus:outline-none focus:ring-2 focus:ring-brand-red/40 focus:border-brand-red transition-colors"/>
+          </div>
+          <button type="submit" class="w-full bg-brand-red text-white py-3 rounded-xl font-bold text-sm hover:bg-brand-red-hover transition-colors flex items-center justify-center gap-2">
+            <span id="signin-btn-text">Sign In</span>
+            <svg id="signin-spinner" class="hidden animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+          </button>
+        </form>
+        <div class="relative my-5"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/10"></div></div><div class="relative flex justify-center"><span class="bg-surface-container px-3 text-xs text-on-surface/40">or</span></div></div>
+        <button id="magic-link-btn" class="w-full py-3 rounded-xl border border-white/10 text-on-surface/60 text-sm font-medium hover:bg-surface-high hover:text-white transition-all flex items-center justify-center gap-2">✨ Send Magic Link</button>
+      </div>
+
+      <!-- Sign Up -->
+      <div id="form-signup" class="hidden">
+        <form id="signup-form" class="space-y-4" novalidate>
+          <div><label class="text-sm font-medium text-on-surface/70 block mb-1.5">Full Name</label>
+          <input id="signup-name" type="text" placeholder="Rahel Islam" autocomplete="name"
+            class="w-full px-4 py-3 rounded-xl border border-white/10 bg-surface-high text-white text-sm placeholder:text-on-surface/30 focus:outline-none focus:ring-2 focus:ring-brand-red/40 focus:border-brand-red transition-colors"/></div>
+          <div><label class="text-sm font-medium text-on-surface/70 block mb-1.5">Email</label>
+          <input id="signup-email" type="email" placeholder="you@example.com" autocomplete="email" required
+            class="w-full px-4 py-3 rounded-xl border border-white/10 bg-surface-high text-white text-sm placeholder:text-on-surface/30 focus:outline-none focus:ring-2 focus:ring-brand-red/40 focus:border-brand-red transition-colors"/></div>
+          <div><label class="text-sm font-medium text-on-surface/70 block mb-1.5">Password</label>
+          <input id="signup-password" type="password" placeholder="Min. 8 characters" autocomplete="new-password" required minlength="8"
+            class="w-full px-4 py-3 rounded-xl border border-white/10 bg-surface-high text-white text-sm placeholder:text-on-surface/30 focus:outline-none focus:ring-2 focus:ring-brand-red/40 focus:border-brand-red transition-colors"/></div>
+          <button type="submit" class="w-full bg-brand-red text-white py-3 rounded-xl font-bold text-sm hover:bg-brand-red-hover transition-colors flex items-center justify-center gap-2">
+            <span id="signup-btn-text">Create Account</span>
+            <svg id="signup-spinner" class="hidden animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+          </button>
+        </form>
+      </div>
+
+      <!-- Reset Password -->
+      <div id="form-reset" class="hidden">
+        <p class="text-sm text-on-surface/60 mb-5">Enter your email and we'll send a reset link.</p>
+        <form id="reset-form" class="space-y-4" novalidate>
+          <input id="reset-email" type="email" placeholder="you@example.com" required
+            class="w-full px-4 py-3 rounded-xl border border-white/10 bg-surface-high text-white text-sm placeholder:text-on-surface/30 focus:outline-none focus:ring-2 focus:ring-brand-red/40 focus:border-brand-red transition-colors"/>
+          <button type="submit" class="w-full bg-brand-red text-white py-3 rounded-xl font-bold text-sm hover:bg-brand-red-hover transition-colors">Send Reset Link</button>
+          <button type="button" id="back-to-signin" class="w-full text-on-surface/50 text-sm hover:text-white transition-colors">← Back to Sign In</button>
+        </form>
+      </div>
+      <p class="text-xs text-on-surface/40 text-center mt-6 mb-8">By continuing you agree to our <a href="#" class="text-brand-red hover:underline">Terms</a> and <a href="#" class="text-brand-red hover:underline">Privacy Policy</a>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH + DATA SCRIPTS -->
+<script type="module">
+import { initAuth, signIn, signUp, signOut, signInWithMagicLink, resetPassword } from './js/auth.js';
+
+// Modal helpers
+const modal = document.getElementById('auth-modal');
+const msgEl = document.getElementById('auth-message');
+const formSignIn = document.getElementById('form-signin');
+const formSignUp = document.getElementById('form-signup');
+const formReset  = document.getElementById('form-reset');
+const tabSignIn  = document.getElementById('tab-signin');
+const tabSignUp  = document.getElementById('tab-signup');
+
+window.openAuthModal  = () => modal.classList.remove('hidden');
+window.closeAuthModal = () => { modal.classList.add('hidden'); clearMsg(); };
+window.handleSignOut  = () => signOut();
+
+document.getElementById('auth-modal-close').onclick = closeAuthModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeAuthModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuthModal(); });
+
+function showMsg(text, type = 'error') {
+  msgEl.textContent = text;
+  msgEl.className = `text-sm px-4 py-3 rounded-xl mb-5 ${type === 'success' ? 'bg-brand-green/20 text-brand-green-soft' : 'bg-brand-red/20 text-brand-red'}`;
+  msgEl.classList.remove('hidden');
+}
+function clearMsg() { msgEl.classList.add('hidden'); }
+function setLoading(form, on) {
+  const map = { signin: ['Sign In','Signing in…'], signup: ['Create Account','Creating…'] };
+  const [off, on_] = map[form] ?? ['Submit','Sending…'];
+  const t = document.getElementById(`${form}-btn-text`);
+  const s = document.getElementById(`${form}-spinner`);
+  if (t) t.textContent = on ? on_ : off;
+  if (s) s.classList.toggle('hidden', !on);
+}
+
+function switchTab(tab) {
+  const active = 'bg-surface-container text-white shadow';
+  const inactive = 'text-on-surface/50';
+  tabSignIn.className = `flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all ${tab==='signin'?active:inactive}`;
+  tabSignUp.className = `flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all ${tab==='signup'?active:inactive}`;
+  formSignIn.classList.toggle('hidden', tab !== 'signin');
+  formSignUp.classList.toggle('hidden', tab !== 'signup');
+  formReset.classList.add('hidden');
+  clearMsg();
+}
+tabSignIn.onclick = () => switchTab('signin');
+tabSignUp.onclick = () => switchTab('signup');
+
+document.getElementById('signin-form').onsubmit = async e => {
+  e.preventDefault(); clearMsg(); setLoading('signin', true);
+  const { error } = await signIn(document.getElementById('signin-email').value, document.getElementById('signin-password').value);
+  setLoading('signin', false);
+  if (error) { showMsg(error.message); return; }
+  closeAuthModal();
+};
+
+document.getElementById('signup-form').onsubmit = async e => {
+  e.preventDefault(); clearMsg(); setLoading('signup', true);
+  const { error } = await signUp(document.getElementById('signup-email').value, document.getElementById('signup-password').value, document.getElementById('signup-name').value);
+  setLoading('signup', false);
+  if (error) { showMsg(error.message); return; }
+  showMsg('Check your email to confirm your account.', 'success');
+};
+
+document.getElementById('magic-link-btn').onclick = async () => {
+  const email = document.getElementById('signin-email').value.trim();
+  if (!email) { showMsg('Enter your email address above first.'); return; }
+  const { error } = await signInWithMagicLink(email);
+  if (error) { showMsg(error.message); return; }
+  showMsg('Magic link sent — check your inbox.', 'success');
+};
+
+document.getElementById('forgot-password-btn').onclick = () => { formSignIn.classList.add('hidden'); formReset.classList.remove('hidden'); clearMsg(); };
+document.getElementById('back-to-signin').onclick   = () => { formReset.classList.add('hidden'); formSignIn.classList.remove('hidden'); clearMsg(); };
+
+document.getElementById('reset-form').onsubmit = async e => {
+  e.preventDefault();
+  const result = await resetPassword(document.getElementById('reset-email').value);
+  if (result.error) { showMsg(result.error); return; }
+  showMsg(result.message, 'success');
+};
+
+// Auth state → show/hide user menu
+initAuth({
+  onSignIn(user) {
+    document.getElementById('auth-signin-btn')?.classList.add('hidden');
+    const menu = document.getElementById('auth-user-menu');
+    if (menu) {
+      menu.classList.remove('hidden');
+      menu.classList.add('flex');
+      const name = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+      document.getElementById('auth-user-name').textContent = name;
+      document.getElementById('auth-user-avatar').textContent = name[0].toUpperCase();
+    }
+  },
+  onSignOut() {
+    document.getElementById('auth-signin-btn')?.classList.remove('hidden');
+    const menu = document.getElementById('auth-user-menu');
+    if (menu) { menu.classList.add('hidden'); menu.classList.remove('flex'); }
+  }
+}).catch(err => console.error('[auth] init failed:', err));
+
+// Live data
+function fmt(n) {
+  if (n >= 1_000_000) return `${(n/1_000_000).toFixed(1)}M+`;
+  if (n >= 1_000) return `${(n/1_000).toFixed(1)}K+`;
+  return n.toString();
+}
+function esc(s) { return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function datasetCard(d) {
+  const fmt_ = Array.isArray(d.format) ? d.format[0] : d.format ?? '';
+  const date = d.created_at ? new Date(d.created_at).toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : '';
+  const action = (d.file_url || d.source_url) ? `<button onclick="handleDownload('${d.id}')" class="flex items-center gap-1 bg-brand-red text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-brand-red-hover transition-colors">${d.file_url?'Download':'View Source'}</button>` : '';
+  return `<article class="flex flex-col bg-surface-container border border-white/10 rounded-xl overflow-hidden hover:-translate-y-0.5 hover:border-brand-red/30 hover:shadow-lg transition-all duration-200">
+    <div class="p-5 flex-1 flex flex-col">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-surface-high text-on-surface/70">${esc(d.category??'—')}</span>
+        ${fmt_?`<span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-surface-high text-brand-green-soft">${esc(fmt_)}</span>`:''}
+      </div>
+      <a href="dataset-view.html?id=${esc(d.id)}" class="font-bold text-white mb-2 leading-snug hover:text-brand-red transition-colors block">${esc(d.title)}</a>
+      <p class="text-sm text-on-surface/60 mb-4 flex-1 line-clamp-2">${esc(d.description??'')}</p>
+      <div class="flex items-center gap-3 text-xs text-on-surface/50">
+        <span>⬇ ${(d.downloads??0).toLocaleString()}</span>
+        ${date?`<span>·</span><span>${esc(date)}</span>`:''}
+      </div>
+    </div>
+    <div class="px-5 py-3 border-t border-white/10 flex items-center justify-between bg-surface-high/40">
+      <span class="text-xs text-on-surface/50">${esc(d.source??'OpenDataBD')}</span>${action}
+    </div>
+  </article>`;
+}
+
+window.handleDownload = async function(id) {
+  const { getUser, getToken } = await import('./js/auth.js');
+  const user = getUser();
+  if (!user) { openAuthModal(); return; }
+  const res = await fetch(`/api/download/${id}`, { headers: { Authorization: `Bearer ${getToken()}` } });
+  if (res.status === 401) { openAuthModal(); return; }
+  if (!res.ok) return;
+  const { url, filename, isHosted } = await res.json();
+  if (!url) return;
+  if (isHosted) {
+    try {
+      const blob = await fetch(url).then(r=>r.blob());
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=blobUrl; a.download=filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(()=>URL.revokeObjectURL(blobUrl), 15000);
+    } catch { window.open(url,'_blank'); }
+  } else { window.open(url,'_blank'); }
+};
+
+const CAT_IDS = {
+  'Agriculture':'cat-count-agriculture','Climate & Weather':'cat-count-climate',
+  'Economy & Finance':'cat-count-economy','Education':'cat-count-education',
+  'Health':'cat-count-health','Environment':'cat-count-environment',
+  'Energy':'cat-count-energy','Infrastructure':'cat-count-infrastructure',
+  'Governance':'cat-count-governance','Demographics':'cat-count-demographics',
+};
+
+async function loadHomeData() {
+  try {
+    const [statsRes, datasetsRes] = await Promise.all([fetch('/api/stats'), fetch('/api/datasets?limit=3')]);
+    if (statsRes.ok) {
+      const { totalDatasets, totalContributors, totalDownloads, categoryCounts } = await statsRes.json();
+      const el = id => document.getElementById(id);
+      if (el('stat-datasets'))     el('stat-datasets').textContent     = fmt(totalDatasets);
+      if (el('stat-contributors')) el('stat-contributors').textContent = fmt(totalContributors);
+      if (el('stat-downloads'))    el('stat-downloads').textContent    = fmt(totalDownloads);
+      Object.entries(CAT_IDS).forEach(([cat, elId]) => {
+        const countEl = document.getElementById(elId);
+        if (countEl) { const n = categoryCounts?.[cat]??0; countEl.textContent = n===1?'1 dataset':`${n} datasets`; }
+      });
+    }
+    if (datasetsRes.ok) {
+      const { datasets } = await datasetsRes.json();
+      const grid = document.getElementById('featured-datasets');
+      if (grid) grid.innerHTML = datasets?.length ? datasets.map(datasetCard).join('') :
+        `<div class="col-span-full flex flex-col items-center py-16 text-center">
+          <p class="font-bold text-white mb-1">No datasets published yet</p>
+          <p class="text-sm text-on-surface/50 mb-4">Be the first to contribute.</p>
+          <a href="submit.html" class="bg-brand-red text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-brand-red-hover transition-colors">Submit a Dataset</a>
+        </div>`;
+    }
+  } catch(err) { console.error('[home] data load failed:', err); }
+}
+loadHomeData();
+</script>
+
 </body>
 </html>
