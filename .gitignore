@@ -19,3 +19,5 @@ npm-debug.log*
 
 # Local dev uploads
 uploads/
+.vercel
+.env*
