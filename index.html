@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>OpenDataBD — Open Data for Bangladesh</title>
+<title>OpenDataBD</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
@@ -277,9 +277,9 @@
 
       <!-- Text side -->
       <div class="flex-1 text-center lg:text-left space-y-6 z-20 order-2 lg:order-1">
-        <h1 class="font-display impact-heading text-white text-[clamp(36px,6vw,80px)]">Open Data for Bangladesh</h1>
+        <h1 class="font-display impact-heading text-white text-[clamp(36px,6vw,80px)]">Open DataBD</h1>
         <p class="font-body text-on-surface/80 max-w-xl mx-auto lg:mx-0 text-[clamp(15px,1.8vw,18px)] leading-relaxed">
-          Access public datasets across health, education, transport, and economy to drive civic transparency and innovation.
+          Make Bangladesh’s public data accessible to researchers worldwide for evidence-based analysis and civic innovation.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
           <a href="datasets.html" class="px-8 py-4 bg-brand-red text-white font-bold rounded-[5px] uppercase tracking-[0.14em] text-xs shadow-[0_4px_0_0_#92001c] hover:translate-y-[2px] hover:shadow-[0_2px_0_0_#92001c] active:translate-y-[4px] active:shadow-none active:bg-brand-red-deep transition-all text-center">Browse catalog</a>
@@ -294,7 +294,7 @@
         <div class="cube-face cube-face-front"><img alt="Coastal fishing boat" src="https://assets.opendatabd.com/assets/images/cube%20(1).jpg"/></div>
         <div class="cube-face cube-face-back"><img alt="Riverside nature" src="https://assets.opendatabd.com/assets/images/cube%20(2).jpg"/></div>
         <div class="cube-face cube-face-right"><img alt="River landscape" src="https://assets.opendatabd.com/assets/images/cube%20(3).jpg"/></div>
-        <div class="cube-face cube-face-left"><img alt="Traditional life" src="https://assets.opendatabd.com/assets/images/cube%20(4).jpg"/></div>
+        <div class="cube-face cube-face-left"><img alt="Traditional life" src="https://assets.opendatabd.com/assets/images/cube%20(10).jpg"/></div>
         <div class="cube-face cube-face-top"><img alt="Heritage monument" src="https://assets.opendatabd.com/assets/images/cube%20(5).jpg"/></div>
         <div class="cube-face cube-face-bottom"><img alt="Open landscape" src="https://assets.opendatabd.com/assets/images/cube%20(6).jpg"/></div>
       </div>
@@ -425,7 +425,7 @@
     a.addEventListener('click', function () { menu.classList.remove('active'); document.body.style.overflow = ''; });
   });
 
-  // Interactive 3D cube — drag to spin, inertia, idle auto-rotate
+  // Interactive 3D cube  drag to spin, inertia, idle auto-rotate
   (function () {
     var scene = document.getElementById('cube-scene');
     var cube = document.getElementById('cube');
@@ -575,12 +575,12 @@
     if (!ticking) {
       requestAnimationFrame(function () {
         if (currentY > lastScrollY && currentY > 80) {
-          // scrolling down — hide
+          // scrolling down  hide
           nearTop = false;
           navHovered = false;
           nav.classList.add('nav-hidden');
         } else {
-          // scrolling up — show
+          // scrolling up  show
           nav.classList.remove('nav-hidden');
         }
         lastScrollY = currentY;
@@ -644,7 +644,7 @@
     </div>
   </div>
   <div class="max-w-container mx-auto px-4 md:px-margin-desktop mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-on-surface/40 text-xs gap-4">
-    <span>© 2026 OpenDataBD — Empowering citizens through transparency.</span>
+    <span>© 2025 OpenDataBD  Empowering citizens through transparency.</span>
     <span>Made with ♥ in Bangladesh</span>
   </div>
 </footer>
@@ -792,7 +792,7 @@ document.getElementById('magic-link-btn').onclick = async () => {
   if (!email) { showMsg('Enter your email address above first.'); return; }
   const { error } = await signInWithMagicLink(email);
   if (error) { showMsg(error.message); return; }
-  showMsg('Magic link sent — check your inbox.', 'success');
+  showMsg('Magic link sent  check your inbox.', 'success');
 };
 
 document.getElementById('forgot-password-btn').onclick = () => { formSignIn.classList.add('hidden'); formReset.classList.remove('hidden'); clearMsg(); };
