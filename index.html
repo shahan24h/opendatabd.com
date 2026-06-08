@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>OpenDataBD Open Data for Bangladesh</title>
+<title>OpenDataBD — Open Data for Bangladesh</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
@@ -39,6 +39,8 @@
 </script>
 <style>
   :root { color-scheme: dark; }
+
+  *, *::before, *::after { box-sizing: border-box; }
 
   body {
     background-color: #0f1513;
@@ -79,7 +81,7 @@
 
   /* ---- 3D cube ---- */
   .scene {
-    --cube-size: clamp(220px, 32vw, 340px);
+    --cube-size: clamp(180px, 28vw, 320px);
     width: var(--cube-size);
     height: var(--cube-size);
     perspective: 1300px;
@@ -131,6 +133,7 @@
   .marquee-container {
     display: flex; flex-direction: column; gap: 1.5rem;
     overflow: hidden; width: 100%;
+    max-width: 100vw;
     -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
     mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
   }
@@ -150,8 +153,8 @@
   /* ---- category cards ---- */
   .category-card {
     position: relative;
-    width: clamp(220px, 22vw, 280px);
-    height: clamp(280px, 34vw, 360px);
+    width: clamp(160px, 22vw, 280px);
+    height: clamp(200px, 30vw, 340px);
     border-radius: 8px;
     overflow: hidden;
     flex-shrink: 0;
@@ -197,6 +200,30 @@
   ::-webkit-scrollbar-thumb { background: #3a4744; border-radius: 10px; }
   ::-webkit-scrollbar-thumb:hover { background: #DA291C; }
 
+  /* Auth state */
+  #auth-user-menu { display: none; }
+  #auth-user-menu.flex { display: flex; }
+  #auth-signin-btn.hidden { display: none !important; }
+
+  /* Responsive helpers */
+  @media (max-width: 640px) {
+    .scene { --cube-size: clamp(140px, 60vw, 220px) !important; }
+    .category-card { width: clamp(140px, 42vw, 200px); height: clamp(180px, 52vw, 260px); }
+  }
+  @media (max-width: 1024px) {
+    .marquee-container { gap: 1rem; }
+  }
+
+  /* Stats section spacing */
+  #stat-datasets, #stat-contributors, #stat-downloads {
+    line-height: 1;
+  }
+
+  /* Auth state: only show one at a time */
+  #auth-user-menu { display: none; }
+  #auth-user-menu.flex { display: flex; }
+  #auth-signin-btn.hidden { display: none !important; }
+
   @keyframes nudge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
   .nudge { animation: nudge 1.8s ease-in-out infinite; }
 
@@ -205,12 +232,12 @@
 </style>
 </head>
 <body class="selection:bg-brand-red selection:text-white">
+<div class="nav-reveal-zone" id="nav-reveal-zone"></div>
 <div class="void-bg"></div>
 <div class="grid-veil"></div>
 
 <!-- NAV -->
-<div class="nav-reveal-zone" id="nav-reveal-zone"></div>
-<nav class="nav-header fixed top-0 inset-x-0 z-[110] flex justify-between items-center px-4 md:px-margin-desktop py-3.5 bg-surface/55 backdrop-blur-xl border-b border-white/10">
+<nav class="nav-header fixed top-0 inset-x-0 z-[110] flex justify-between items-center px-4 md:px-margin-desktop py-3.5 bg-surface-low/90 backdrop-blur-xl border-b border-white/10">
   <div class="flex items-center gap-4 md:gap-12">
     <a class="px-4 md:px-5 py-2.5 bg-brand-red text-white font-black text-lg md:text-xl tracking-tight hover:bg-brand-red-hover transition-colors rounded-[3px]" href="#top">OpenDataBD</a>
     <div class="hidden lg:flex items-center gap-8">
@@ -245,8 +272,24 @@
 
 <main id="top" class="relative" data-screen-label="OpenDataBD home">
   <!-- HERO -->
-  <section class="min-h-screen flex flex-col items-center justify-center px-6 text-center pt-28 pb-16">
-    <div class="scene mb-12 md:mb-16" id="cube-scene">
+  <section class="min-h-screen flex flex-col justify-center px-6 pt-20 pb-16">
+    <div class="max-w-container mx-auto w-full flex flex-col lg:flex-row items-center gap-8 lg:gap-16 px-0">
+
+      <!-- Text side -->
+      <div class="flex-1 text-center lg:text-left space-y-6 z-20 order-2 lg:order-1">
+        <h1 class="font-display impact-heading text-white text-[clamp(36px,6vw,80px)]">Open Data for Bangladesh</h1>
+        <p class="font-body text-on-surface/80 max-w-xl mx-auto lg:mx-0 text-[clamp(15px,1.8vw,18px)] leading-relaxed">
+          Access public datasets across health, education, transport, and economy to drive civic transparency and innovation.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <a href="datasets.html" class="px-8 py-4 bg-brand-red text-white font-bold rounded-[5px] uppercase tracking-[0.14em] text-xs shadow-[0_4px_0_0_#92001c] hover:translate-y-[2px] hover:shadow-[0_2px_0_0_#92001c] active:translate-y-[4px] active:shadow-none active:bg-brand-red-deep transition-all text-center">Browse catalog</a>
+          <a href="submit.html" class="px-8 py-4 bg-transparent text-white font-bold rounded-[5px] uppercase tracking-[0.14em] text-xs border border-brand-green/70 shadow-[0_4px_0_0_#00543a] hover:translate-y-[2px] hover:shadow-[0_2px_0_0_#00543a] hover:bg-brand-green/10 active:translate-y-[4px] active:shadow-none transition-all text-center">Submit data</a>
+        </div>
+      </div>
+
+      <!-- Cube side -->
+      <div class="flex-1 flex justify-center order-1 lg:order-2">
+    <div class="scene" id="cube-scene">
       <div class="cube" id="cube">
         <div class="cube-face cube-face-front"><img alt="Coastal fishing boat" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube%20(1).jpg"/></div>
         <div class="cube-face cube-face-back"><img alt="Riverside nature" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube%20(2).jpg"/></div>
@@ -255,28 +298,20 @@
         <div class="cube-face cube-face-top"><img alt="Heritage monument" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube%20(5).jpg"/></div>
         <div class="cube-face cube-face-bottom"><img alt="Open landscape" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/cube%20(6).jpg"/></div>
       </div>
-      <div class="cube-shadow"></div>
+              <div class="cube-shadow"></div>
+      </div>
     </div>
+      </div> <!-- end cube side -->
+    </div> <!-- end two-col flex -->
 
-    <div class="max-w-5xl mx-auto space-y-6 z-20">
-      <h1 class="font-display impact-heading text-white text-[clamp(44px,8.5vw,92px)]">Open Data for Bangladesh</h1>
-      <p class="font-body text-on-surface/80 max-w-2xl mx-auto text-[clamp(15px,2vw,19px)] leading-relaxed">
-        Access public datasets across health, education, transport, and economy to drive civic transparency and innovation.
-      </p>
-    </div>
-
-    <a href="#explore" class="mt-14 md:mt-16 nudge text-brand-red" aria-label="Scroll to explore">
-      <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 6 7 7 7-7"/><path d="m5 13 7 7 7-7"/></svg>
-    </a>
-  </section>
-
-  <!-- ACTION BAR -->
-  <section class="py-12 bg-surface-low/70 backdrop-blur-md border-y border-white/10">
-    <div class="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center px-4">
-      <a href="datasets.html" class="w-full sm:w-auto px-10 md:px-14 py-4 md:py-5 bg-brand-red text-white font-bold rounded-[5px] uppercase tracking-[0.14em] text-xs shadow-[0_4px_0_0_#92001c] hover:translate-y-[2px] hover:shadow-[0_2px_0_0_#92001c] active:translate-y-[4px] active:shadow-none active:bg-brand-red-deep transition-all text-center">Browse catalog</a>
-      <a href="submit.html" class="w-full sm:w-auto px-10 md:px-14 py-4 md:py-5 bg-transparent text-white font-bold rounded-[5px] uppercase tracking-[0.14em] text-xs border border-brand-green/70 shadow-[0_4px_0_0_#00543a] hover:translate-y-[2px] hover:shadow-[0_2px_0_0_#00543a] hover:bg-brand-green/10 active:translate-y-[4px] active:shadow-none transition-all text-center">Submit data</a>
+    <div class="flex justify-center mt-12">
+      <a href="#explore" class="nudge text-brand-red" aria-label="Scroll to explore">
+        <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 6 7 7 7-7"/><path d="m5 13 7 7 7-7"/></svg>
+      </a>
     </div>
   </section>
+
+  
 
   <!-- BROWSE BY CATEGORY -->
   <section id="explore" class="py-16 md:py-24 overflow-hidden">
@@ -295,31 +330,31 @@
 
     <div class="marquee-container">
       <div class="marquee-wrapper" data-marquee-row data-dir="-1">
-        <a class="category-card" href="datasets.html"><img alt="Health" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/healthcare.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M12 8v6"/><path d="M9 11h6"/></svg><div class="font-black text-xl text-surface">Health</div></div></a>
-        <a class="category-card" href="datasets.html"><img alt="Agriculture" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/agriculture.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"/><path d="M12 20c0-5 0-8-3-10"/><path d="M12 14c0-3 2-5 6-5 0 3-2 5-6 5Z"/><path d="M12 12c0-3-2-5-6-5 0 3 2 5 6 5Z"/></svg><div class="font-black text-xl text-surface">Agriculture</div></div></a>
-        <a class="category-card" href="datasets.html"><img alt="Economy" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/economy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17 9 11l4 4 8-8"/><path d="M17 4h4v4"/></svg><div class="font-black text-xl text-surface">Economy</div></div></a>
-        <a class="category-card" href="datasets.html"><img alt="Education" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/education.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v4c0 1.3 2.7 3 6 3s6-1.7 6-3v-4"/></svg><div class="font-black text-xl text-surface">Education</div></div></a>
-        <a class="category-card" href="datasets.html"><img alt="Climate" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/climate.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M5 5l1.4 1.4"/><path d="M2 12h2"/><path d="M19 5l-1.4 1.4"/><circle cx="11" cy="9" r="3"/><path d="M7 19a4 4 0 0 1 .9-7.9 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 19H7Z"/></svg><div class="font-black text-xl text-surface">Climate</div></div></a>
+        <a class="category-card" href="datasets.html?category=Health"><img alt="Health" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/healthcare.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M12 8v6"/><path d="M9 11h6"/></svg><div class="font-black text-xl text-surface">Health</div></div></a>
+        <a class="category-card" href="datasets.html?category=Agriculture"><img alt="Agriculture" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/agriculture.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"/><path d="M12 20c0-5 0-8-3-10"/><path d="M12 14c0-3 2-5 6-5 0 3-2 5-6 5Z"/><path d="M12 12c0-3-2-5-6-5 0 3 2 5 6 5Z"/></svg><div class="font-black text-xl text-surface">Agriculture</div></div></a>
+        <a class="category-card" href="datasets.html?category=Economy+%26+Finance"><img alt="Economy" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/economy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17 9 11l4 4 8-8"/><path d="M17 4h4v4"/></svg><div class="font-black text-xl text-surface">Economy</div></div></a>
+        <a class="category-card" href="datasets.html?category=Education"><img alt="Education" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/education.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v4c0 1.3 2.7 3 6 3s6-1.7 6-3v-4"/></svg><div class="font-black text-xl text-surface">Education</div></div></a>
+        <a class="category-card" href="datasets.html?category=Climate+%26+Weather"><img alt="Climate" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/climate.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M5 5l1.4 1.4"/><path d="M2 12h2"/><path d="M19 5l-1.4 1.4"/><circle cx="11" cy="9" r="3"/><path d="M7 19a4 4 0 0 1 .9-7.9 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 19H7Z"/></svg><div class="font-black text-xl text-surface">Climate</div></div></a>
         <!-- clones for seamless loop -->
-        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/healthcare.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M12 8v6"/><path d="M9 11h6"/></svg><div class="font-black text-xl text-surface">Health</div></div></a>
-        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/agriculture.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"/><path d="M12 20c0-5 0-8-3-10"/><path d="M12 14c0-3 2-5 6-5 0 3-2 5-6 5Z"/><path d="M12 12c0-3-2-5-6-5 0 3 2 5 6 5Z"/></svg><div class="font-black text-xl text-surface">Agriculture</div></div></a>
-        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/economy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17 9 11l4 4 8-8"/><path d="M17 4h4v4"/></svg><div class="font-black text-xl text-surface">Economy</div></div></a>
-        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/education.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v4c0 1.3 2.7 3 6 3s6-1.7 6-3v-4"/></svg><div class="font-black text-xl text-surface">Education</div></div></a>
-        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/climate.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M5 5l1.4 1.4"/><path d="M2 12h2"/><path d="M19 5l-1.4 1.4"/><circle cx="11" cy="9" r="3"/><path d="M7 19a4 4 0 0 1 .9-7.9 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 19H7Z"/></svg><div class="font-black text-xl text-surface">Climate</div></div></a>
+        <a class="category-card" href="datasets.html?category=Health" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/healthcare.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M12 8v6"/><path d="M9 11h6"/></svg><div class="font-black text-xl text-surface">Health</div></div></a>
+        <a class="category-card" href="datasets.html?category=Agriculture" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/agriculture.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20h10"/><path d="M12 20c0-5 0-8-3-10"/><path d="M12 14c0-3 2-5 6-5 0 3-2 5-6 5Z"/><path d="M12 12c0-3-2-5-6-5 0 3 2 5 6 5Z"/></svg><div class="font-black text-xl text-surface">Agriculture</div></div></a>
+        <a class="category-card" href="datasets.html?category=Economy+%26+Finance" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/economy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17 9 11l4 4 8-8"/><path d="M17 4h4v4"/></svg><div class="font-black text-xl text-surface">Economy</div></div></a>
+        <a class="category-card" href="datasets.html?category=Education" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/education.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v4c0 1.3 2.7 3 6 3s6-1.7 6-3v-4"/></svg><div class="font-black text-xl text-surface">Education</div></div></a>
+        <a class="category-card" href="datasets.html?category=Climate+%26+Weather" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/climate.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M5 5l1.4 1.4"/><path d="M2 12h2"/><path d="M19 5l-1.4 1.4"/><circle cx="11" cy="9" r="3"/><path d="M7 19a4 4 0 0 1 .9-7.9 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 19H7Z"/></svg><div class="font-black text-xl text-surface">Climate</div></div></a>
       </div>
 
       <div class="marquee-wrapper" data-marquee-row data-dir="1">
-        <a class="category-card" href="datasets.html"><img alt="Governance" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/governance.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M6 10v8"/><path d="M10 10v8"/><path d="M14 10v8"/><path d="M18 10v8"/><path d="M12 3 4 8h16l-8-5Z"/></svg><div class="font-black text-xl text-surface">Governance</div></div></a>
-        <a class="category-card" href="datasets.html"><img alt="Infrastructure" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/infrastructure.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V6l6-3 6 3v15"/><path d="M10 9h0"/><path d="M14 9h0"/><path d="M10 13h0"/><path d="M14 13h0"/><path d="M10 21v-4h4v4"/></svg><div class="font-black text-xl text-surface">Infrastructure</div></div></a>
-        <a class="category-card" href="datasets.html"><img alt="Energy" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/energy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg><div class="font-black text-xl text-surface">Energy</div></div></a>
-        <a class="category-card" href="datasets.html"><img alt="Demographics" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/demographic.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 6a3 3 0 0 1 0 5.6"/><path d="M21 20a6 6 0 0 0-4-5.6"/></svg><div class="font-black text-xl text-surface">Demographics</div></div></a>
-        <a class="category-card" href="datasets.html"><img alt="Environment" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/environment.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C13 4 18 4 20 4c0 2 0 7-2.1 10.2A7 7 0 0 1 11 20Z"/><path d="M5 21c1.5-4 4-7 9-9"/></svg><div class="font-black text-xl text-surface">Environment</div></div></a>
+        <a class="category-card" href="datasets.html?category=Governance"><img alt="Governance" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/governance.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M6 10v8"/><path d="M10 10v8"/><path d="M14 10v8"/><path d="M18 10v8"/><path d="M12 3 4 8h16l-8-5Z"/></svg><div class="font-black text-xl text-surface">Governance</div></div></a>
+        <a class="category-card" href="datasets.html?category=Infrastructure"><img alt="Infrastructure" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/infrastructure.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V6l6-3 6 3v15"/><path d="M10 9h0"/><path d="M14 9h0"/><path d="M10 13h0"/><path d="M14 13h0"/><path d="M10 21v-4h4v4"/></svg><div class="font-black text-xl text-surface">Infrastructure</div></div></a>
+        <a class="category-card" href="datasets.html?category=Energy"><img alt="Energy" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/energy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg><div class="font-black text-xl text-surface">Energy</div></div></a>
+        <a class="category-card" href="datasets.html?category=Demographics"><img alt="Demographics" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/demographic.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 6a3 3 0 0 1 0 5.6"/><path d="M21 20a6 6 0 0 0-4-5.6"/></svg><div class="font-black text-xl text-surface">Demographics</div></div></a>
+        <a class="category-card" href="datasets.html?category=Environment"><img alt="Environment" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/environment.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C13 4 18 4 20 4c0 2 0 7-2.1 10.2A7 7 0 0 1 11 20Z"/><path d="M5 21c1.5-4 4-7 9-9"/></svg><div class="font-black text-xl text-surface">Environment</div></div></a>
         <!-- clones for seamless loop -->
-        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/governance.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M6 10v8"/><path d="M10 10v8"/><path d="M14 10v8"/><path d="M18 10v8"/><path d="M12 3 4 8h16l-8-5Z"/></svg><div class="font-black text-xl text-surface">Governance</div></div></a>
-        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/infrastructure.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V6l6-3 6 3v15"/><path d="M10 9h0"/><path d="M14 9h0"/><path d="M10 13h0"/><path d="M14 13h0"/><path d="M10 21v-4h4v4"/></svg><div class="font-black text-xl text-surface">Infrastructure</div></div></a>
-        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/energy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg><div class="font-black text-xl text-surface">Energy</div></div></a>
-        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/demographic.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 6a3 3 0 0 1 0 5.6"/><path d="M21 20a6 6 0 0 0-4-5.6"/></svg><div class="font-black text-xl text-surface">Demographics</div></div></a>
-        <a class="category-card" href="datasets.html" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/environment.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C13 4 18 4 20 4c0 2 0 7-2.1 10.2A7 7 0 0 1 11 20Z"/><path d="M5 21c1.5-4 4-7 9-9"/></svg><div class="font-black text-xl text-surface">Environment</div></div></a>
+        <a class="category-card" href="datasets.html?category=Governance" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/governance.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M6 10v8"/><path d="M10 10v8"/><path d="M14 10v8"/><path d="M18 10v8"/><path d="M12 3 4 8h16l-8-5Z"/></svg><div class="font-black text-xl text-surface">Governance</div></div></a>
+        <a class="category-card" href="datasets.html?category=Infrastructure" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/infrastructure.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V6l6-3 6 3v15"/><path d="M10 9h0"/><path d="M14 9h0"/><path d="M10 13h0"/><path d="M14 13h0"/><path d="M10 21v-4h4v4"/></svg><div class="font-black text-xl text-surface">Infrastructure</div></div></a>
+        <a class="category-card" href="datasets.html?category=Energy" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/energy.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg><div class="font-black text-xl text-surface">Energy</div></div></a>
+        <a class="category-card" href="datasets.html?category=Demographics" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/demographic.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 6a3 3 0 0 1 0 5.6"/><path d="M21 20a6 6 0 0 0-4-5.6"/></svg><div class="font-black text-xl text-surface">Demographics</div></div></a>
+        <a class="category-card" href="datasets.html?category=Environment" aria-hidden="true"><img alt="" src="https://pub-0a767f013aed40a9afaf5083c8155b6d.r2.dev/assets/images/environment.jpg"/><div class="overlay"></div><div class="content"><svg class="mb-3 mx-auto w-12 h-12 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C13 4 18 4 20 4c0 2 0 7-2.1 10.2A7 7 0 0 1 11 20Z"/><path d="M5 21c1.5-4 4-7 9-9"/></svg><div class="font-black text-xl text-surface">Environment</div></div></a>
       </div>
     </div>
   </section>
@@ -327,7 +362,7 @@
   <!-- STATS BAR -->
   <section class="py-10 bg-surface-high/60 backdrop-blur-md border-y border-white/10">
     <div class="max-w-container mx-auto px-4 md:px-margin-desktop">
-      <dl class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <dl class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-center divide-x-0 md:divide-x divide-white/10">
         <div class="flex flex-col items-center gap-1">
           <dt id="stat-datasets" class="font-display impact-heading text-white text-4xl tabular-nums">—</dt>
           <dd class="text-on-surface/60 text-xs uppercase tracking-widest font-mono">Public Datasets</dd>
@@ -390,7 +425,7 @@
     a.addEventListener('click', function () { menu.classList.remove('active'); document.body.style.overflow = ''; });
   });
 
-  // Interactive 3D cube drag to spin, inertia, idle auto-rotate
+  // Interactive 3D cube — drag to spin, inertia, idle auto-rotate
   (function () {
     var scene = document.getElementById('cube-scene');
     var cube = document.getElementById('cube');
@@ -513,35 +548,49 @@
     });
   })();
 
-  // Nav: auto-hide; reveal on hover near top of screen (or when scrolled to very top)
+  // Nav: auto-hide on scroll down, reveal on hover near top or scroll up
   var nav = document.querySelector('.nav-header');
   var revealZone = document.getElementById('nav-reveal-zone');
-  var navHovered = false, nearTop = false, atPageTop = true, hideTimer = null;
+  var lastScrollY = 0, ticking = false;
+  var navHovered = false, nearTop = false, hideTimer = null;
 
   function updateNav() {
-    // visible if: pointer near the top edge, hovering the nav itself, or page is at the very top
-    var show = navHovered || nearTop || atPageTop;
+    var atTop = window.scrollY < 10;
+    var show = navHovered || nearTop || atTop;
     nav.classList.toggle('nav-hidden', !show);
-    if (window.scrollY > 24) {
-      nav.classList.add('bg-surface-low/85');
-      nav.classList.remove('bg-surface/55');
-    } else {
-      nav.classList.add('bg-surface/55');
-      nav.classList.remove('bg-surface-low/85');
-    }
+    nav.style.background = window.scrollY > 24 ? 'rgba(11,16,15,0.95)' : 'rgba(11,16,15,0.75)';
   }
 
   function armHide() {
     clearTimeout(hideTimer);
-    hideTimer = setTimeout(function () {
-      nearTop = false;
-      updateNav();
-    }, 600);
+    hideTimer = setTimeout(function () { nearTop = false; updateNav(); }, 700);
   }
 
-  // Cursor anywhere within the top band reveals the nav
+  // Hide nav when scrolling down, show when scrolling up
+  window.addEventListener('scroll', function () {
+    var currentY = window.scrollY;
+    if (!ticking) {
+      requestAnimationFrame(function () {
+        if (currentY > lastScrollY && currentY > 80) {
+          // scrolling down — hide
+          nearTop = false;
+          navHovered = false;
+          nav.classList.add('nav-hidden');
+        } else {
+          // scrolling up — show
+          nav.classList.remove('nav-hidden');
+        }
+        lastScrollY = currentY;
+        updateNav();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // Hover near top edge → reveal
   window.addEventListener('mousemove', function (e) {
-    if (e.clientY <= 80) {
+    if (e.clientY <= 72) {
       nearTop = true;
       clearTimeout(hideTimer);
       updateNav();
@@ -553,11 +602,6 @@
   revealZone.addEventListener('mouseenter', function () { nearTop = true; clearTimeout(hideTimer); updateNav(); });
   nav.addEventListener('mouseenter', function () { navHovered = true; clearTimeout(hideTimer); updateNav(); });
   nav.addEventListener('mouseleave', function () { navHovered = false; armHide(); });
-
-  window.addEventListener('scroll', function () {
-    atPageTop = window.scrollY < 8;
-    updateNav();
-  }, { passive: true });
 
   updateNav();
 </script>
@@ -597,7 +641,7 @@
     </div>
   </div>
   <div class="max-w-container mx-auto px-4 md:px-margin-desktop mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-on-surface/40 text-xs gap-4">
-    <span>© 2025 OpenDataBD  Empowering citizens through transparency.</span>
+    <span>© 2026 OpenDataBD — Empowering citizens through transparency.</span>
     <span>Made with ♥ in Bangladesh</span>
   </div>
 </footer>
@@ -745,7 +789,7 @@ document.getElementById('magic-link-btn').onclick = async () => {
   if (!email) { showMsg('Enter your email address above first.'); return; }
   const { error } = await signInWithMagicLink(email);
   if (error) { showMsg(error.message); return; }
-  showMsg('Magic link sent  check your inbox.', 'success');
+  showMsg('Magic link sent — check your inbox.', 'success');
 };
 
 document.getElementById('forgot-password-btn').onclick = () => { formSignIn.classList.add('hidden'); formReset.classList.remove('hidden'); clearMsg(); };
