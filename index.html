@@ -489,8 +489,10 @@
       function wrap() { if (!half) return; while (x <= -half) x += half; while (x > 0) x -= half; }
       function apply() { row.style.transform = 'translateX(' + x + 'px)'; }
 
+      var downTime = 0;
       function down(e) {
         dragging = true; moved = false;
+        downTime = Date.now();
         row.classList.add('dragging');
         var p = e.touches ? e.touches[0] : e;
         downX = lastX = prevX = p.clientX;
@@ -505,7 +507,7 @@
         var dx = p.clientX - lastX;
         prevX = lastX; lastX = p.clientX;
         x += dx;
-        if (Math.abs(p.clientX - downX) > 4) moved = true;
+        if (Math.abs(p.clientX - downX) > 10) moved = true;
         wrap(); apply();
       }
       function up() {
@@ -522,7 +524,8 @@
       window.addEventListener('pointercancel', up);
       // Suppress the click/navigation that follows an actual drag
       row.addEventListener('click', function (e) {
-        if (moved) { e.preventDefault(); e.stopPropagation(); }
+        var wasDrag = moved && (Date.now() - downTime > 180);
+        if (wasDrag) { e.preventDefault(); e.stopPropagation(); }
       }, true);
 
       var imgs = row.querySelectorAll('img');
