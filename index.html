@@ -200,6 +200,29 @@
   ::-webkit-scrollbar-thumb { background: #3a4744; border-radius: 10px; }
   ::-webkit-scrollbar-thumb:hover { background: #DA291C; }
 
+  /* CSS marquee animations — run on compositor, reliable on all devices */
+  @keyframes marquee-left {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @keyframes marquee-right {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+  }
+  .marquee-wrapper[data-dir="-1"] {
+    animation: marquee-left 28s linear infinite;
+  }
+  .marquee-wrapper[data-dir="1"] {
+    animation: marquee-right 32s linear infinite;
+  }
+  .marquee-wrapper.dragging,
+  .marquee-wrapper.drag-paused {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-wrapper { animation: none !important; }
+  }
+
   /* Auth state */
   #auth-user-menu { display: none; }
   #auth-user-menu.flex { display: flex; }
@@ -473,81 +496,69 @@
     requestAnimationFrame(loop);
   })();
 
-  // Category rows: grab & drag to move, with gentle auto-drift + inertia
+  // Category rows: CSS auto-drift + pointer drag to scrub
   (function () {
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     document.querySelectorAll('[data-marquee-row]').forEach(function (row) {
-      var dir = parseFloat(row.getAttribute('data-dir')) || -1;
-      var half = 0;                       // width of one (non-cloned) set
-      var x = dir < 0 ? 0 : -1;           // current offset (set after measure)
-      var vel = 0;                        // drag-thrown velocity (px/frame)
-      var auto = reduce ? 0 : dir * 0.35; // idle drift speed
-      var dragging = false, moved = false;
-      var lastX = 0, prevX = 0, downX = 0;
+      var dir    = parseFloat(row.getAttribute('data-dir')) || -1;
+      var startX = 0, dragOffset = 0, baseOffset = 0;
+      var dragging = false, moved = false, downTime = 0;
 
-      function measure() { half = row.scrollWidth / 2; if (half && x === -1) x = -half; }
-      function wrap() { if (!half) return; while (x <= -half) x += half; while (x > 0) x -= half; }
-      function apply() { row.style.transform = 'translateX(' + x + 'px)'; }
+      function getAnimProgress() {
+        // Get current visual translateX from computed style
+        var mat = window.getComputedStyle(row).transform;
+        if (!mat || mat === 'none') return 0;
+        var m = mat.match(/matrix\(([^)]+)\)/);
+        return m ? parseFloat(m[1].split(',')[4]) : 0;
+      }
 
-      var downTime = 0;
       function down(e) {
-        dragging = true; moved = false;
-        downTime = Date.now();
-        row.classList.add('dragging');
+        dragging = true; moved = false; downTime = Date.now();
         var p = e.touches ? e.touches[0] : e;
-        downX = lastX = prevX = p.clientX;
-        vel = 0;
+        startX = p.clientX;
+        baseOffset = getAnimProgress();
+        dragOffset = 0;
+        row.classList.add('dragging');
+        row.style.transform = 'translateX(' + baseOffset + 'px)';
         if (e.pointerId !== undefined && row.setPointerCapture) {
-          try { row.setPointerCapture(e.pointerId); } catch (err) {}
+          try { row.setPointerCapture(e.pointerId); } catch(err) {}
         }
       }
+
       function move(e) {
         if (!dragging) return;
         var p = e.touches ? e.touches[0] : e;
-        var dx = p.clientX - lastX;
-        prevX = lastX; lastX = p.clientX;
-        x += dx;
-        if (Math.abs(p.clientX - downX) > 10) moved = true;
-        wrap(); apply();
+        dragOffset = p.clientX - startX;
+        if (Math.abs(dragOffset) > 8) moved = true;
+        row.style.transform = 'translateX(' + (baseOffset + dragOffset) + 'px)';
       }
+
       function up() {
         if (!dragging) return;
         dragging = false;
         row.classList.remove('dragging');
-        vel = (lastX - prevX);            // fling momentum
-        vel = Math.max(-40, Math.min(40, vel));
+        // Resume CSS animation — snap back to animation cleanly
+        row.style.transform = '';
       }
 
       row.addEventListener('pointerdown', down);
       row.addEventListener('pointermove', move);
       window.addEventListener('pointerup', up);
       window.addEventListener('pointercancel', up);
-      // Suppress the click/navigation that follows an actual drag
+
+      // Fallback touch events for older mobile browsers
+      row.addEventListener('touchstart', function(e) { down(e); }, { passive: true });
+      row.addEventListener('touchmove',  function(e) { move(e); }, { passive: true });
+      row.addEventListener('touchend',   up);
+
+      // Suppress link click after real drag
       row.addEventListener('click', function (e) {
         var wasDrag = moved && (Date.now() - downTime > 180);
         if (wasDrag) { e.preventDefault(); e.stopPropagation(); }
       }, true);
 
-      var imgs = row.querySelectorAll('img');
-      var loaded = 0;
-      imgs.forEach(function (im) {
-        if (im.complete) { loaded++; }
-        else { im.addEventListener('load', function () { measure(); }); }
-      });
-      measure();
-      window.addEventListener('resize', function () { half = 0; x = dir < 0 ? -1 : -1; measure(); });
-
-      function frame() {
-        if (!half) measure();
-        if (!dragging) {
-          x += vel + auto;
-          vel *= 0.92;
-          if (Math.abs(vel) < 0.05) vel = 0;
-          wrap(); apply();
-        }
-        requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
+      // Pause on hover (desktop), resume on leave
+      row.addEventListener('mouseenter', function () { row.classList.add('drag-paused'); });
+      row.addEventListener('mouseleave', function () { if (!dragging) row.classList.remove('drag-paused'); });
     });
   })();
 
