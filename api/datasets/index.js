@@ -19,6 +19,8 @@ function minioClient() {
     region: 'us-east-1',
     endpoint: MINIO_ENDPOINT,
     forcePathStyle: true,
+    // MinIO does not require AWS checksum-mode metadata for HEAD requests.
+    responseChecksumValidation: 'WHEN_REQUIRED',
     credentials: {
       accessKeyId: MINIO_ACCESS_KEY,
       secretAccessKey: MINIO_SECRET_KEY,
