@@ -8,6 +8,7 @@
 | Auth        | Supabase Auth                |
 | Database    | Supabase Postgres            |
 | Email       | Resend                       |
+| File storage| Self-hosted MinIO             |
 | Deployment  | Vercel (GitHub integration)  |
 
 ---
@@ -42,7 +43,19 @@
 
 ---
 
-## 3 · Local development
+## 3 · MinIO
+
+1. Deploy MinIO with a private bucket named `opendatabd-datasets`.
+2. Expose only the S3 API through `https://storage.opendatabd.com`; keep the console private.
+3. Create a restricted application user with access only to that bucket.
+4. Enable versioning and allow CORS from `https://opendatabd.com` and `https://www.opendatabd.com`.
+5. Run `supabase/migrations/003_add_minio_object_metadata.sql` in Supabase SQL Editor.
+
+The application stores object keys in Supabase and generates five-minute signed upload/download URLs. Never expose MinIO credentials in browser code.
+
+---
+
+## 4 · Local development
 
 ```bash
 # Install Vercel CLI (once)
@@ -66,7 +79,7 @@ Pages available at:
 
 ---
 
-## 4 · Deploy to Vercel
+## 5 · Deploy to Vercel
 
 ### First deployment
 
@@ -84,6 +97,10 @@ Go to **Vercel Dashboard → Project → Settings → Environment Variables** an
 SUPABASE_URL
 SUPABASE_ANON_KEY
 SUPABASE_SERVICE_ROLE_KEY
+MINIO_ENDPOINT
+MINIO_ACCESS_KEY
+MINIO_SECRET_KEY
+MINIO_BUCKET
 RESEND_API_KEY
 RESEND_FROM
 APP_URL
@@ -100,7 +117,7 @@ Set each for **Production**, **Preview**, and **Development** environments.
 
 ---
 
-## 5 · API reference
+## 6 · API reference
 
 | Method | Endpoint                    | Auth | Description               |
 |--------|-----------------------------|------|---------------------------|
@@ -114,7 +131,7 @@ Set each for **Production**, **Preview**, and **Development** environments.
 
 ---
 
-## 6 · Project structure
+## 7 · Project structure
 
 ```
 opendatabd.com/
