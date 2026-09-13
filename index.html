@@ -847,7 +847,8 @@ function esc(s) { return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;'
 function datasetCard(d) {
   const fmt_ = Array.isArray(d.format) ? d.format[0] : d.format ?? '';
   const date = d.created_at ? new Date(d.created_at).toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : '';
-  const action = (d.file_url || d.source_url) ? `<button onclick="handleDownload('${d.id}')" class="flex items-center gap-1 bg-brand-red text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-brand-red-hover transition-colors">${d.file_url?'Download':'View Source'}</button>` : '';
+  const isHosted = !!(d.object_key || d.file_url);
+  const action = (isHosted || d.source_url) ? `<button onclick="handleDownload('${d.id}')" class="flex items-center gap-1 bg-brand-red text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-brand-red-hover transition-colors">${isHosted?'Download':'View Source'}</button>` : '';
   return `<article class="flex flex-col bg-surface-container border border-white/10 rounded-xl overflow-hidden hover:-translate-y-0.5 hover:border-brand-red/30 hover:shadow-lg transition-all duration-200">
     <div class="p-5 flex-1 flex flex-col">
       <div class="flex items-center justify-between mb-3">

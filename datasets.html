@@ -286,10 +286,11 @@ function datasetCard(d) {
     ? new Date(d.created_at).toLocaleDateString('en-GB', { month:'short', year:'numeric' }) : '';
 
   let action = '';
-  if (d.file_url || d.source_url) {
-    const label  = d.file_url ? 'Download' : 'View Source';
-    const icon   = d.file_url ? 'download'  : 'open_in_new';
-    const btnCls = d.file_url
+  if (d.object_key || d.file_url || d.source_url) {
+    const isHosted = !!(d.object_key || d.file_url);
+    const label  = isHosted ? 'Download' : 'View Source';
+    const icon   = isHosted ? 'download'  : 'open_in_new';
+    const btnCls = isHosted
       ? 'bg-secondary text-on-secondary hover:bg-secondary-container'
       : 'border border-outline-variant text-on-surface-variant hover:bg-surface-container';
     action = `<button onclick="handleDownload('${d.id}')"

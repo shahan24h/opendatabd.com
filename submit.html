@@ -347,7 +347,8 @@ tailwind.config = {
 <script type="module">
 import { initAuth, signIn, signUp, signOut, getUser, getToken } from './js/auth.js';
 
-let uploadedFileUrl = null;
+let uploadedFile = null;
+let uploadInProgress = false;
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
 async function boot() {
@@ -433,12 +434,12 @@ function processFile(file) {
   document.getElementById('file-size').textContent = formatBytes(file.size);
   info.classList.remove('hidden');
   document.getElementById('upload-success').classList.add('hidden');
-  uploadedFileUrl = null;
+  uploadedFile = null;
   uploadFile(file);
 }
 
 window.clearFile = () => {
-  uploadedFileUrl = null;
+  uploadedFile = null;
   document.getElementById('file-input').value = '';
   document.getElementById('file-info').classList.add('hidden');
   document.getElementById('upload-progress').classList.add('hidden');
@@ -450,6 +451,7 @@ async function uploadFile(file) {
   document.getElementById('upload-progress').classList.remove('hidden');
   document.getElementById('upload-success').classList.add('hidden');
   setProgress(0, 'Requesting upload URL…');
+  uploadInProgress = true;
 
   // 1. Get presigned URL
   const presignRes = await fetch('/api/upload/presign', {
@@ -459,6 +461,7 @@ async function uploadFile(file) {
   });
 
   if (!presignRes.ok) {
+    uploadInProgress = false;
     const err = await presignRes.json().catch(() => ({}));
     const msg = typeof err.error === 'string'
       ? err.error
@@ -468,7 +471,7 @@ async function uploadFile(file) {
     return;
   }
 
-  const { uploadUrl, publicUrl } = await presignRes.json();
+  const { uploadUrl, objectKey, originalFilename, contentType, size } = await presignRes.json();
   setProgress(10, 'Uploading…');
 
   // 2. Upload directly to R2 via XHR (supports progress events)
@@ -483,17 +486,19 @@ async function uploadFile(file) {
       xhr.ontimeout = () => reject(new Error('Upload timed out. Try again.'));
       xhr.timeout = 120000; // 2 min timeout
       xhr.open('PUT', uploadUrl);
-      xhr.setRequestHeader('Content-Type', file.type);
+      xhr.setRequestHeader('Content-Type', contentType);
       xhr.send(file);
     });
   } catch (err) {
+    uploadInProgress = false;
     document.getElementById('upload-progress').classList.add('hidden');
     showFormError(err.message ?? 'File upload failed. Try again.');
     return;
   }
 
   setProgress(100, 'Complete');
-  uploadedFileUrl = publicUrl;
+  uploadInProgress = false;
+  uploadedFile = { objectKey, originalFilename, contentType, size };
   document.getElementById('upload-progress').classList.add('hidden');
   document.getElementById('upload-success').classList.remove('hidden');
 }
@@ -520,6 +525,7 @@ document.getElementById('submit-form').onsubmit = async e => {
   if (!category)    return showFormError('Please select a category.');
   if (!format)      return showFormError('Please select a format.');
   if (!source)      return showFormError('Source organization is required.');
+  if (uploadInProgress) return showFormError('Please wait for the file upload to finish.');
 
   setSubmitting(true);
   const token = getToken();
@@ -535,7 +541,9 @@ document.getElementById('submit-form').onsubmit = async e => {
       format: [format],
       source,
       source_url: document.getElementById('f-source-url').value.trim() || null,
-      file_url:   uploadedFileUrl,
+      object_key:       uploadedFile?.objectKey ?? null,
+      original_filename: uploadedFile?.originalFilename ?? null,
+      content_type:       uploadedFile?.contentType ?? null,
       license:    document.getElementById('f-license').value,
       division:   document.getElementById('f-division').value,
       tags,
@@ -565,7 +573,7 @@ window.resetForm = () => {
   document.getElementById('submit-form').classList.remove('hidden');
   document.getElementById('success-state').classList.add('hidden');
   clearFile();
-  uploadedFileUrl = null;
+  uploadedFile = null;
 };
 
 function setSubmitting(on) {

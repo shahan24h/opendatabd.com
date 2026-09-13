@@ -345,24 +345,25 @@ function renderDataset(d) {
 function renderDownload(d) {
   const section = document.getElementById('download-section');
   const hint    = document.getElementById('signin-hint');
-  const hasFile = !!(d.file_url || d.source_url);
+  const isHosted = !!(d.object_key || d.file_url);
+  const hasFile = !!(isHosted || d.source_url);
 
   if (!hasFile) {
     section.innerHTML = `<p class="text-sm text-on-surface-variant text-center py-2">No file available yet.</p>`;
     return;
   }
 
-  const label = d.file_url ? 'Download file' : 'View source';
-  const icon  = d.file_url ? 'download' : 'open_in_new';
+  const label = isHosted ? 'Download file' : 'View source';
+  const icon  = isHosted ? 'download' : 'open_in_new';
 
   if (user) {
     section.innerHTML = `
-      <button id="download-btn" onclick="doDownload('${d.id}', ${!!d.file_url})"
+      <button id="download-btn" onclick="doDownload('${d.id}', ${isHosted})"
         class="w-full flex items-center justify-center gap-2 bg-secondary text-on-secondary py-3.5 rounded-xl font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95">
         <span class="material-symbols-outlined" style="font-size:20px;">${icon}</span>${label}
       </button>
       <p class="text-xs text-on-surface-variant text-center mt-3">
-        ${d.file_url ? 'Hosted on OpenDataBD · ' : ''}${d.license ?? 'Open license'}
+        ${isHosted ? 'Hosted on OpenDataBD · ' : ''}${d.license ?? 'Open license'}
       </p>`;
   } else {
     section.innerHTML = `
