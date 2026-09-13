@@ -461,6 +461,7 @@ async function uploadFile(file) {
   });
 
   if (!presignRes.ok) {
+    uploadInProgress = false;
     const err = await presignRes.json().catch(() => ({}));
     const msg = typeof err.error === 'string'
       ? err.error
