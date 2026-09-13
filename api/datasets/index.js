@@ -28,6 +28,22 @@ function minioClient() {
   });
 }
 
+async function headObjectWithRetry(client, input) {
+  const delays = [0, 250, 750];
+
+  for (let attempt = 0; attempt < delays.length; attempt += 1) {
+    if (delays[attempt]) {
+      await new Promise(resolve => setTimeout(resolve, delays[attempt]));
+    }
+
+    try {
+      return await client.send(new HeadObjectCommand(input));
+    } catch (err) {
+      if (attempt === delays.length - 1) throw err;
+    }
+  }
+}
+
 function validHttpUrl(value) {
   if (!value?.trim()) return true;
   try {
@@ -119,10 +135,10 @@ export default async function handler(req, res) {
       }
 
       try {
-        const head = await client.send(new HeadObjectCommand({
+        const head = await headObjectWithRetry(client, {
           Bucket: bucket,
           Key: object_key,
-        }));
+        });
 
         const actualSize = Number(head.ContentLength);
         if (!Number.isFinite(actualSize) || actualSize <= 0 || actualSize > MAX_BYTES) {
