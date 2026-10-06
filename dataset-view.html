@@ -48,6 +48,7 @@ tailwind.config = {
   .skeleton { background:linear-gradient(90deg,#eceef0 25%,#e0e3e5 50%,#eceef0 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; }
   @keyframes shimmer { 0%{background-position:200% 0}100%{background-position:-200% 0} }
 </style>
+  <link rel="icon" type="image/png" href="/assets/favicon-O.png">
 </head>
 <body class="bg-background text-on-surface font-body-md min-h-screen">
 
@@ -55,7 +56,7 @@ tailwind.config = {
 <nav class="w-full sticky top-0 z-50 bg-surface-container-lowest border-b border-outline-variant/30 shadow-sm">
   <div class="max-w-container-max mx-auto px-margin-desktop flex items-center justify-between h-20">
     <div class="flex items-center gap-gutter">
-      <a href="/" class="font-bold text-base bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg hover:bg-secondary-container transition-colors duration-200 shadow-sm"><img src="assets/OpendataBD.svg" alt="OpenDataBD" class="h-10 w-auto" /></a>
+      <a href="/" class="font-bold text-base bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg hover:bg-secondary-container transition-colors duration-200 shadow-sm">OpenDataBD</a>
       <div class="hidden md:flex items-center gap-1 ml-unit-lg">
         <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/datasets">Datasets</a>
         <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/api-docs">API Docs</a>
@@ -392,7 +393,7 @@ function renderDownload(d) {
     section.innerHTML = `
       <div class="space-y-3">
         ${hostedFiles.map((file, index) => `
-          <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low border border-outline-variant/50">
+          <div class="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-surface-container-low border border-outline-variant/50">
             <span class="material-symbols-outlined text-secondary">
               description
             </span>
@@ -410,7 +411,7 @@ function renderDownload(d) {
             <button
               type="button"
               onclick="doDownload('${d.id}', ${file.id ? `'${file.id}'` : 'null'}, true, this)"
-              class="shrink-0 flex items-center gap-1.5 bg-secondary text-on-secondary px-3 py-2 rounded-lg text-sm font-semibold hover:bg-secondary-container transition-colors active:scale-95">
+              class="w-full flex items-center justify-center gap-1.5 mt-2 bg-secondary text-on-secondary px-3 py-2 rounded-lg text-sm font-semibold hover:bg-secondary-container transition-colors active:scale-95">
               <span class="material-symbols-outlined" style="font-size:18px;">
                 download
               </span>
