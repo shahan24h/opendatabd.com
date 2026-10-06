@@ -7,7 +7,7 @@
     "node": ">=18.x"
   },
   "scripts": {
-    "dev": "vercel dev",
+    "dev:vercel": "vercel dev",
     "deploy": "vercel --prod"
   },
   "dependencies": {

@@ -60,7 +60,7 @@ tailwind.config = {
 <nav class="w-full sticky top-0 z-50 bg-surface-container-lowest border-b border-outline-variant/30 shadow-sm">
   <div class="max-w-container-max mx-auto px-margin-desktop flex items-center justify-between h-20">
     <div class="flex items-center gap-gutter">
-      <a href="/" class="font-bold text-base bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg hover:bg-secondary-container transition-colors duration-200 active:scale-95 shadow-sm">OpenDataBD</a>
+      <a href="/" class="font-bold text-base bg-secondary text-on-secondary px-unit-md py-unit-sm rounded-lg hover:bg-secondary-container transition-colors duration-200 active:scale-95 shadow-sm"><img src="assets/OpendataBD.svg" alt="OpenDataBD" class="h-10 w-auto" /></a>
       <div class="hidden md:flex items-center gap-1 ml-unit-lg">
         <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/">Datasets</a>
         <a class="px-4 py-2 rounded-full text-sm text-on-surface-variant hover:bg-secondary hover:text-on-secondary transition-colors duration-200" href="/api-docs">API Docs</a>
@@ -254,22 +254,13 @@ tailwind.config = {
         <span class="material-symbols-outlined text-4xl text-outline mb-3 block" style="font-variation-settings:'FILL' 0;">upload_file</span>
         <p class="font-medium text-on-surface text-sm mb-1">Drop your file here or <span class="text-secondary">browse</span></p>
         <p class="text-xs text-on-surface-variant">CSV · TSV · JSON · XLS · XLSX · ODS · PDF · DOC · DOCX · ODT · GeoJSON · XML · TXT · DTA · SAV · RDS · ZIP · Max 50 MB</p>
-        <input id="file-input" type="file" class="hidden"
+        <input id="file-input" type="file" multiple class="hidden"
           accept=".csv,.tsv,.json,.xls,.xlsx,.ods,.pdf,.doc,.docx,.odt,.geojson,.xml,.txt,.dta,.sav,.rds,.rdata,.zip"
           onchange="handleFileSelect(event)" />
       </div>
 
-      <!-- File selected info -->
-      <div id="file-info" class="hidden flex items-center gap-3 px-4 py-3 bg-surface-container-low rounded-xl border border-outline-variant/50">
-        <span class="material-symbols-outlined text-secondary" style="font-variation-settings:'FILL' 1;">description</span>
-        <div class="flex-1 min-w-0">
-          <p id="file-name" class="text-sm font-medium text-on-surface truncate"></p>
-          <p id="file-size" class="text-xs text-on-surface-variant"></p>
-        </div>
-        <button type="button" onclick="clearFile()" class="text-on-surface-variant hover:text-secondary transition-colors">
-          <span class="material-symbols-outlined" style="font-size:20px;">close</span>
-        </button>
-      </div>
+      <!-- Selected files -->
+      <div id="file-list" class="hidden space-y-2"></div>
 
       <!-- Progress bar -->
       <div id="upload-progress" class="hidden space-y-2">
@@ -347,8 +338,13 @@ tailwind.config = {
 <script type="module">
 import { initAuth, signIn, signUp, signOut, getUser, getToken } from './js/auth.js';
 
-let uploadedFile = null;
+let selectedFiles = [];
+let uploadedFiles = [];
 let uploadInProgress = false;
+
+const MAX_FILES = 20;
+const MAX_FILE_BYTES = 50 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 500 * 1024 * 1024;
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
 async function boot() {
@@ -418,89 +414,234 @@ document.getElementById('signup-form').onsubmit = async e => {
 };
 
 // ── File upload ───────────────────────────────────────────────────────────────
-window.handleDragOver = e => { e.preventDefault(); document.getElementById('dropzone').classList.add('drop-active'); };
-window.handleDragLeave = () => document.getElementById('dropzone').classList.remove('drop-active');
+window.handleDragOver = e => {
+  e.preventDefault();
+  document.getElementById('dropzone').classList.add('drop-active');
+};
+
+window.handleDragLeave = () => {
+  document.getElementById('dropzone').classList.remove('drop-active');
+};
+
 window.handleDrop = e => {
   e.preventDefault();
   document.getElementById('dropzone').classList.remove('drop-active');
-  const file = e.dataTransfer.files[0];
-  if (file) processFile(file);
-};
-window.handleFileSelect = e => { const file = e.target.files[0]; if (file) processFile(file); };
 
-function processFile(file) {
-  const info = document.getElementById('file-info');
-  document.getElementById('file-name').textContent = file.name;
-  document.getElementById('file-size').textContent = formatBytes(file.size);
-  info.classList.remove('hidden');
-  document.getElementById('upload-success').classList.add('hidden');
-  uploadedFile = null;
-  uploadFile(file);
+  const files = Array.from(e.dataTransfer.files || []);
+  if (files.length > 0) processFiles(files);
+};
+
+window.handleFileSelect = e => {
+  const files = Array.from(e.target.files || []);
+  if (files.length > 0) processFiles(files);
+};
+
+function renderFileList() {
+  const list = document.getElementById('file-list');
+  list.replaceChildren();
+  list.classList.toggle('hidden', selectedFiles.length === 0);
+
+  selectedFiles.forEach((file, index) => {
+    const row = document.createElement('div');
+    row.className =
+      'flex items-center gap-3 px-4 py-3 bg-surface-container-low rounded-xl border border-outline-variant/50';
+
+    const icon = document.createElement('span');
+    icon.className = 'material-symbols-outlined text-secondary';
+    icon.style.fontVariationSettings = "'FILL' 1";
+    icon.textContent = 'description';
+
+    const details = document.createElement('div');
+    details.className = 'flex-1 min-w-0';
+
+    const name = document.createElement('p');
+    name.className = 'text-sm font-medium text-on-surface truncate';
+    name.textContent = file.name;
+
+    const size = document.createElement('p');
+    size.className = 'text-xs text-on-surface-variant';
+    size.textContent = formatBytes(file.size);
+
+    const status = document.createElement('span');
+    status.className = 'text-xs font-medium text-on-surface-variant';
+
+    if (index < uploadedFiles.length) {
+      status.textContent = 'Uploaded';
+    } else if (uploadInProgress && index === uploadedFiles.length) {
+      status.textContent = 'Uploading';
+    } else {
+      status.textContent = 'Waiting';
+    }
+
+    details.append(name, size);
+    row.append(icon, details, status);
+    list.append(row);
+  });
 }
 
-window.clearFile = () => {
-  uploadedFile = null;
+function clearFiles() {
+  selectedFiles = [];
+  uploadedFiles = [];
+  uploadInProgress = false;
+
   document.getElementById('file-input').value = '';
-  document.getElementById('file-info').classList.add('hidden');
+  document.getElementById('file-list').replaceChildren();
+  document.getElementById('file-list').classList.add('hidden');
   document.getElementById('upload-progress').classList.add('hidden');
   document.getElementById('upload-success').classList.add('hidden');
-};
+}
 
-async function uploadFile(file) {
-  const token = getToken();
-  document.getElementById('upload-progress').classList.remove('hidden');
-  document.getElementById('upload-success').classList.add('hidden');
-  setProgress(0, 'Requesting upload URL…');
+window.clearFile = clearFiles;
+
+async function processFiles(files) {
+  clearFormError();
+
+  if (uploadInProgress) {
+    return showFormError('Please wait for the current upload to finish.');
+  }
+
+  if (files.length > MAX_FILES) {
+    document.getElementById('file-input').value = '';
+    return showFormError(`You can upload a maximum of ${MAX_FILES} files.`);
+  }
+
+  const oversizedFile = files.find(file => file.size > MAX_FILE_BYTES);
+  if (oversizedFile) {
+    document.getElementById('file-input').value = '';
+    return showFormError(`"${oversizedFile.name}" exceeds the 50 MB limit.`);
+  }
+
+  const totalBytes = files.reduce((total, file) => total + file.size, 0);
+  if (totalBytes > MAX_TOTAL_BYTES) {
+    document.getElementById('file-input').value = '';
+    return showFormError('The combined upload exceeds the 500 MB limit.');
+  }
+
+  selectedFiles = files;
+  uploadedFiles = [];
   uploadInProgress = true;
 
-  // 1. Get presigned URL
+  document.getElementById('upload-progress').classList.remove('hidden');
+  document.getElementById('upload-success').classList.add('hidden');
+  renderFileList();
+
+  const token = getToken();
+
+  try {
+    for (let index = 0; index < selectedFiles.length; index += 1) {
+      const file = selectedFiles[index];
+      renderFileList();
+
+      const uploaded = await uploadSingleFile(
+        file,
+        token,
+        index,
+        selectedFiles.length
+      );
+
+      uploadedFiles.push(uploaded);
+      renderFileList();
+    }
+
+    setProgress(100, 'Complete');
+    document.getElementById('upload-progress').classList.add('hidden');
+
+    const success = document.getElementById('upload-success');
+    success.textContent = `${uploadedFiles.length} file${uploadedFiles.length === 1 ? '' : 's'} uploaded successfully`;
+    success.classList.remove('hidden');
+  } catch (err) {
+    document.getElementById('upload-progress').classList.add('hidden');
+    showFormError(err.message ?? 'File upload failed. Try again.');
+  } finally {
+    uploadInProgress = false;
+    renderFileList();
+  }
+}
+
+async function uploadSingleFile(file, token, fileIndex, totalFiles) {
+  setProgress(
+    (fileIndex / totalFiles) * 100,
+    `Requesting upload URL for ${file.name}`
+  );
+
   const presignRes = await fetch('/api/upload/presign', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ contentType: file.type, size: file.size, filename: file.name }),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      contentType: file.type,
+      size: file.size,
+      filename: file.name,
+    }),
   });
 
   if (!presignRes.ok) {
-    uploadInProgress = false;
     const err = await presignRes.json().catch(() => ({}));
-    const msg = typeof err.error === 'string'
-      ? err.error
-      : err.error?.message ?? 'Upload failed. Try again.';
-    showFormError(msg);
-    document.getElementById('upload-progress').classList.add('hidden');
-    return;
+    const message =
+      typeof err.error === 'string'
+        ? err.error
+        : err.error?.message ?? `Could not prepare "${file.name}" for upload`;
+
+    throw new Error(message);
   }
 
-  const { uploadUrl, objectKey, originalFilename, contentType, size } = await presignRes.json();
-  setProgress(10, 'Uploading…');
+  const {
+    uploadUrl,
+    objectKey,
+    originalFilename,
+    contentType,
+    size,
+  } = await presignRes.json();
 
-  // 2. Upload directly to R2 via XHR (supports progress events)
-  try {
-    await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.upload.onprogress = e => {
-        if (e.lengthComputable) setProgress(10 + (e.loaded / e.total) * 85, 'Uploading…');
-      };
-      xhr.onload = () => xhr.status < 300 ? resolve() : reject(new Error(`Upload failed (${xhr.status})`));
-      xhr.onerror = () => reject(new Error('Upload blocked — CORS not configured on storage bucket.'));
-      xhr.ontimeout = () => reject(new Error('Upload timed out. Try again.'));
-      xhr.timeout = 120000; // 2 min timeout
-      xhr.open('PUT', uploadUrl);
-      xhr.setRequestHeader('Content-Type', contentType);
-      xhr.send(file);
-    });
-  } catch (err) {
-    uploadInProgress = false;
-    document.getElementById('upload-progress').classList.add('hidden');
-    showFormError(err.message ?? 'File upload failed. Try again.');
-    return;
-  }
+  await new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
 
-  setProgress(100, 'Complete');
-  uploadInProgress = false;
-  uploadedFile = { objectKey, originalFilename, contentType, size };
-  document.getElementById('upload-progress').classList.add('hidden');
-  document.getElementById('upload-success').classList.remove('hidden');
+    xhr.upload.onprogress = event => {
+      if (!event.lengthComputable) return;
+
+      const completedFraction =
+        (fileIndex + event.loaded / event.total) / totalFiles;
+
+      setProgress(
+        completedFraction * 100,
+        `Uploading ${fileIndex + 1} of ${totalFiles}: ${file.name}`
+      );
+    };
+
+    xhr.onload = () => {
+      if (xhr.status < 300) {
+        resolve();
+      } else {
+        reject(new Error(`Upload failed for "${file.name}" (${xhr.status})`));
+      }
+    };
+
+    xhr.onerror = () => {
+      reject(
+        new Error(
+          `Upload blocked for "${file.name}" — check the storage CORS configuration.`
+        )
+      );
+    };
+
+    xhr.ontimeout = () => {
+      reject(new Error(`Upload timed out for "${file.name}". Try again.`));
+    };
+
+    xhr.timeout = 120000;
+    xhr.open('PUT', uploadUrl);
+    xhr.setRequestHeader('Content-Type', contentType);
+    xhr.send(file);
+  });
+
+  return {
+    objectKey,
+    originalFilename,
+    contentType,
+    size,
+  };
 }
 
 function setProgress(pct, label) {
@@ -525,7 +666,9 @@ document.getElementById('submit-form').onsubmit = async e => {
   if (!category)    return showFormError('Please select a category.');
   if (!format)      return showFormError('Please select a format.');
   if (!source)      return showFormError('Source organization is required.');
-  if (uploadInProgress) return showFormError('Please wait for the file upload to finish.');
+    if (selectedFiles.length !== uploadedFiles.length) {
+    return showFormError('One or more files did not upload successfully. Please select the files again.');
+  }
 
   setSubmitting(true);
   const token = getToken();
@@ -541,9 +684,11 @@ document.getElementById('submit-form').onsubmit = async e => {
       format: [format],
       source,
       source_url: document.getElementById('f-source-url').value.trim() || null,
-      object_key:       uploadedFile?.objectKey ?? null,
-      original_filename: uploadedFile?.originalFilename ?? null,
-      content_type:       uploadedFile?.contentType ?? null,
+      files: uploadedFiles.map(file => ({
+        object_key: file.objectKey,
+        original_filename: file.originalFilename,
+        content_type: file.contentType,
+      })),
       license:    document.getElementById('f-license').value,
       division:   document.getElementById('f-division').value,
       tags,
@@ -572,8 +717,7 @@ window.resetForm = () => {
   document.getElementById('submit-form').reset();
   document.getElementById('submit-form').classList.remove('hidden');
   document.getElementById('success-state').classList.add('hidden');
-  clearFile();
-  uploadedFile = null;
+  clearFiles();
 };
 
 function setSubmitting(on) {

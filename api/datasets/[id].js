@@ -34,6 +34,15 @@ export default async function handler(req, res) {
       .single();
 
     if (error || !data) return res.status(404).json({ error: 'Dataset not found.' });
+        const { data: files, error: filesError } = await supabaseAdmin
+      .from('dataset_files')
+      .select('id, object_key, original_filename, content_type, file_size_bytes, created_at')
+      .eq('dataset_id', id)
+      .order('created_at', { ascending: true });
+
+    if (filesError) {
+      return res.status(500).json({ error: filesError.message });
+    }
 
     supabaseAdmin
       .from('datasets')
@@ -42,7 +51,10 @@ export default async function handler(req, res) {
       .then(() => {})
       .catch(() => {});
 
-    return res.json(data);
+        return res.json({
+      ...data,
+      files: files ?? [],
+    });
   }
 
   if (req.method === 'DELETE') {
@@ -60,21 +72,46 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'You can only delete your own datasets.' });
     }
 
-    if (dataset.object_key) {
+    const { data: datasetFiles, error: filesFetchError } = await supabaseAdmin
+      .from('dataset_files')
+      .select('object_key')
+      .eq('dataset_id', id);
+
+    if (filesFetchError) {
+      return res.status(500).json({ error: filesFetchError.message });
+    }
+
+    const objectKeys = [
+      dataset.object_key,
+      ...(datasetFiles ?? []).map(file => file.object_key),
+    ].filter(Boolean);
+
+    const uniqueObjectKeys = [...new Set(objectKeys)];
+
+    if (uniqueObjectKeys.length > 0) {
       const client = minioClient();
       const bucket = process.env.MINIO_BUCKET;
+
       if (!client || !bucket) {
         return res.status(500).json({ error: 'Storage not configured.' });
       }
 
       try {
-        await client.send(new DeleteObjectCommand({
-          Bucket: bucket,
-          Key: dataset.object_key,
-        }));
+        await Promise.all(
+          uniqueObjectKeys.map(objectKey =>
+            client.send(
+              new DeleteObjectCommand({
+                Bucket: bucket,
+                Key: objectKey,
+              })
+            )
+          )
+        );
       } catch (err) {
         console.error('[MinIO] object deletion failed:', err.message);
-        return res.status(502).json({ error: 'Dataset file could not be removed.' });
+        return res.status(502).json({
+          error: 'One or more dataset files could not be removed.',
+        });
       }
     }
 
