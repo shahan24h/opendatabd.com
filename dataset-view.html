@@ -342,72 +342,213 @@ function renderDataset(d) {
 }
 
 // ── Download section ──────────────────────────────────────────────────────────
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
 function renderDownload(d) {
   const section = document.getElementById('download-section');
-  const hint    = document.getElementById('signin-hint');
-  const isHosted = !!(d.object_key || d.file_url);
-  const hasFile = !!(isHosted || d.source_url);
+  const hint = document.getElementById('signin-hint');
 
-  if (!hasFile) {
-    section.innerHTML = `<p class="text-sm text-on-surface-variant text-center py-2">No file available yet.</p>`;
+  const hostedFiles = Array.isArray(d.files) && d.files.length
+    ? d.files
+    : d.object_key
+      ? [{
+          id: null,
+          original_filename: d.original_filename || d.title || 'Dataset file',
+          content_type: d.content_type,
+          file_size_bytes: d.file_size_bytes,
+        }]
+      : [];
+
+  const hasExternalFile = !hostedFiles.length && !!(d.file_url || d.source_url);
+
+  hint.classList.add('hidden');
+
+  if (!hostedFiles.length && !hasExternalFile) {
+    section.innerHTML = `
+      <p class="text-sm text-on-surface-variant text-center py-2">
+        No file available yet.
+      </p>`;
     return;
   }
 
-  const label = isHosted ? 'Download file' : 'View source';
-  const icon  = isHosted ? 'download' : 'open_in_new';
-
-  if (user) {
-    section.innerHTML = `
-      <button id="download-btn" onclick="doDownload('${d.id}', ${isHosted})"
-        class="w-full flex items-center justify-center gap-2 bg-secondary text-on-secondary py-3.5 rounded-xl font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95">
-        <span class="material-symbols-outlined" style="font-size:20px;">${icon}</span>${label}
-      </button>
-      <p class="text-xs text-on-surface-variant text-center mt-3">
-        ${isHosted ? 'Hosted on OpenDataBD · ' : ''}${d.license ?? 'Open license'}
-      </p>`;
-  } else {
+  if (!user) {
     section.innerHTML = `
       <button onclick="openAuthModal()"
         class="w-full flex items-center justify-center gap-2 bg-surface-container text-on-surface-variant py-3.5 rounded-xl font-semibold hover:bg-surface-container-high transition-colors duration-200 border border-outline-variant/50">
-        <span class="material-symbols-outlined" style="font-size:20px;">lock</span>Sign in to ${label.toLowerCase()}
+        <span class="material-symbols-outlined" style="font-size:20px;">lock</span>
+        Sign in to download
       </button>`;
     hint.classList.remove('hidden');
-  }
-}
-
-// ── Download handler ──────────────────────────────────────────────────────────
-window.doDownload = async function(id, isHosted) {
-  const btn = document.getElementById('download-btn');
-  if (btn) { btn.disabled = true; btn.innerHTML = `<span class="material-symbols-outlined animate-spin" style="font-size:20px;">progress_activity</span>Preparing…`; }
-
-  const res = await fetch(`/api/download/${id}`, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
-
-  if (res.status === 401) { openAuthModal(); return; }
-  if (!res.ok) {
-    if (btn) { btn.disabled = false; btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:20px;">download</span>Try again`; }
     return;
   }
 
-  const { url, filename } = await res.json();
-  if (!url) return;
+  if (hostedFiles.length) {
+    section.innerHTML = `
+      <div class="space-y-3">
+        ${hostedFiles.map((file, index) => `
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low border border-outline-variant/50">
+            <span class="material-symbols-outlined text-secondary">
+              description
+            </span>
 
-  if (isHosted) {
-    try {
-      const blob = await fetch(url).then(r => r.blob());
-      const blobUrl = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = blobUrl; a.download = filename;
-      document.body.appendChild(a); a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
-    } catch { window.open(url, '_blank'); }
-  } else {
-    window.open(url, '_blank');
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-on-surface truncate">
+                ${escapeHtml(file.original_filename || `Dataset file ${index + 1}`)}
+              </p>
+
+              <p class="text-xs text-on-surface-variant">
+                ${formatFileSize(file.file_size_bytes)}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onclick="doDownload('${d.id}', ${file.id ? `'${file.id}'` : 'null'}, true, this)"
+              class="shrink-0 flex items-center gap-1.5 bg-secondary text-on-secondary px-3 py-2 rounded-lg text-sm font-semibold hover:bg-secondary-container transition-colors active:scale-95">
+              <span class="material-symbols-outlined" style="font-size:18px;">
+                download
+              </span>
+              Download
+            </button>
+          </div>
+        `).join('')}
+
+        <p class="text-xs text-on-surface-variant text-center pt-1">
+          Hosted on OpenDataBD · ${escapeHtml(d.license || 'Open license')}
+        </p>
+      </div>`;
+    return;
   }
 
-  if (btn) { btn.disabled = false; btn.innerHTML = `<span class="material-symbols-outlined" style="font-size:20px;">check_circle</span>Downloaded`; }
+  section.innerHTML = `
+    <button type="button" onclick="doDownload('${d.id}', null, false, this)"
+      class="w-full flex items-center justify-center gap-2 bg-secondary text-on-secondary py-3.5 rounded-xl font-semibold hover:bg-secondary-container transition-colors duration-200 active:scale-95">
+      <span class="material-symbols-outlined" style="font-size:20px;">
+        open_in_new
+      </span>
+      View source
+    </button>
+
+    <p class="text-xs text-on-surface-variant text-center mt-3">
+      ${escapeHtml(d.license || 'Open license')}
+    </p>`;
+}
+
+function formatFileSize(bytes) {
+  const size = Number(bytes);
+
+  if (!Number.isFinite(size) || size <= 0) return 'File';
+
+  const units = ['B', 'KB', 'MB', 'GB'];
+  const unitIndex = Math.min(
+    Math.floor(Math.log(size) / Math.log(1024)),
+    units.length - 1
+  );
+
+  const value = size / Math.pow(1024, unitIndex);
+  return `${value.toFixed(unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
+}
+
+// ── Download handler ──────────────────────────────────────────────────────────
+window.doDownload = async function(id, fileId, isHosted, btn) {
+  const originalHtml = btn?.innerHTML;
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `
+      <span class="material-symbols-outlined animate-spin" style="font-size:18px;">
+        progress_activity
+      </span>
+      Preparing…`;
+  }
+
+  try {
+    const query = fileId
+      ? `?file_id=${encodeURIComponent(fileId)}`
+      : '';
+
+    const res = await fetch(`/api/download/${id}${query}`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+
+    if (res.status === 401) {
+      openAuthModal();
+      throw new Error('Please sign in to download.');
+    }
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || 'Download could not be prepared.');
+    }
+
+    const { url, filename } = await res.json();
+
+    if (!url) {
+      throw new Error('No download URL was returned.');
+    }
+
+    if (isHosted) {
+      try {
+        const fileResponse = await fetch(url);
+
+        if (!fileResponse.ok) {
+          throw new Error('File download failed.');
+        }
+
+        const blob = await fileResponse.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+
+        anchor.href = blobUrl;
+        anchor.download = filename || 'dataset';
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+      } catch {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+    } else {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+
+    if (btn) {
+      btn.innerHTML = `
+        <span class="material-symbols-outlined" style="font-size:18px;">
+          check_circle
+        </span>
+        Downloaded`;
+    }
+  } catch (error) {
+    console.error('[download]', error);
+
+    if (btn) {
+      btn.innerHTML = `
+        <span class="material-symbols-outlined" style="font-size:18px;">
+          refresh
+        </span>
+        Try again`;
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+
+      if (originalHtml) {
+        setTimeout(() => {
+          btn.innerHTML = originalHtml;
+        }, 2000);
+      }
+    }
+  }
 };
 
 function showError() {

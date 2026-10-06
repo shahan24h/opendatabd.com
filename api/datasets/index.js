@@ -5,6 +5,8 @@ import { supabaseAdmin, verifyAuth } from '../../lib/supabase.js';
 import { resend, FROM, datasetSubmittedEmail } from '../../lib/resend.js';
 
 const MAX_BYTES = 50 * 1024 * 1024;
+const MAX_FILES = 20;
+const MAX_TOTAL_BYTES = 500 * 1024 * 1024;
 
 function minioClient() {
   const {
@@ -105,6 +107,7 @@ export default async function handler(req, res) {
       license,
       division,
       tags,
+      files,
       object_key,
       original_filename,
       content_type,
@@ -116,46 +119,113 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'source_url must be a valid http/https URL.' });
     }
 
-    let storedObject = null;
+    const requestedFiles = Array.isArray(files)
+      ? files
+      : object_key
+        ? [{
+            object_key,
+            original_filename,
+            content_type,
+          }]
+        : [];
 
-    if (object_key) {
-      const expectedPrefix = `datasets/${user.id}/`;
-      if (
-        typeof object_key !== 'string' ||
-        !object_key.startsWith(expectedPrefix) ||
-        object_key.includes('..')
-      ) {
-        return res.status(400).json({ error: 'Invalid uploaded object key.' });
-      }
+    if (requestedFiles.length > MAX_FILES) {
+      return res.status(400).json({
+        error: `A maximum of ${MAX_FILES} files is allowed per submission.`,
+      });
+    }
 
+    const storedFiles = [];
+    const seenObjectKeys = new Set();
+
+    if (requestedFiles.length > 0) {
       const client = minioClient();
       const bucket = process.env.MINIO_BUCKET;
+
       if (!client || !bucket) {
         return res.status(500).json({ error: 'Storage not configured.' });
       }
 
-      try {
-        const head = await headObjectWithRetry(client, {
-          Bucket: bucket,
-          Key: object_key,
-        });
+      const expectedPrefix = `datasets/${user.id}/`;
+      let totalBytes = 0;
 
-        const actualSize = Number(head.ContentLength);
-        if (!Number.isFinite(actualSize) || actualSize <= 0 || actualSize > MAX_BYTES) {
-          return res.status(400).json({ error: 'Uploaded file exceeds the 50 MB limit.' });
+      for (const requestedFile of requestedFiles) {
+        const requestedObjectKey =
+          requestedFile?.object_key ?? requestedFile?.objectKey;
+
+        const requestedOriginalFilename =
+          requestedFile?.original_filename ??
+          requestedFile?.originalFilename ??
+          'dataset';
+
+        const requestedContentType =
+          requestedFile?.content_type ??
+          requestedFile?.contentType ??
+          'application/octet-stream';
+
+        if (
+          typeof requestedObjectKey !== 'string' ||
+          !requestedObjectKey.startsWith(expectedPrefix) ||
+          requestedObjectKey.includes('..') ||
+          seenObjectKeys.has(requestedObjectKey)
+        ) {
+          return res.status(400).json({
+            error: 'One or more uploaded object keys are invalid.',
+          });
         }
 
-        storedObject = {
-          object_key,
-          original_filename: String(original_filename || 'dataset').slice(0, 255),
-          content_type: String(head.ContentType || content_type || 'application/octet-stream').slice(0, 255),
-          file_size_bytes: actualSize,
-        };
-      } catch (err) {
-        console.error('[MinIO] uploaded object verification failed:', err.message);
-        return res.status(400).json({ error: 'Uploaded file could not be verified.' });
+        seenObjectKeys.add(requestedObjectKey);
+
+        try {
+          const head = await headObjectWithRetry(client, {
+            Bucket: bucket,
+            Key: requestedObjectKey,
+          });
+
+          const actualSize = Number(head.ContentLength);
+
+          if (
+            !Number.isFinite(actualSize) ||
+            actualSize <= 0 ||
+            actualSize > MAX_BYTES
+          ) {
+            return res.status(400).json({
+              error: `Each uploaded file must be no larger than ${MAX_BYTES / 1024 / 1024} MB.`,
+            });
+          }
+
+          totalBytes += actualSize;
+
+          if (totalBytes > MAX_TOTAL_BYTES) {
+            return res.status(400).json({
+              error: `The combined upload must be no larger than ${MAX_TOTAL_BYTES / 1024 / 1024} MB.`,
+            });
+          }
+
+          storedFiles.push({
+            object_key: requestedObjectKey,
+            original_filename: String(requestedOriginalFilename).slice(0, 255),
+            content_type: String(
+              head.ContentType ||
+              requestedContentType ||
+              'application/octet-stream'
+            ).slice(0, 255),
+            file_size_bytes: actualSize,
+          });
+        } catch (err) {
+          console.error(
+            '[MinIO] uploaded object verification failed:',
+            err.message
+          );
+
+          return res.status(400).json({
+            error: `Uploaded file "${String(requestedOriginalFilename).slice(0, 100)}" could not be verified.`,
+          });
+        }
       }
     }
+
+    const storedObject = storedFiles[0] ?? null;
 
     const { data, error } = await supabaseAdmin
       .from('datasets')
@@ -178,6 +248,36 @@ export default async function handler(req, res) {
       .single();
 
     if (error) return res.status(500).json({ error: error.message });
+        if (storedFiles.length > 0) {
+      const fileRows = storedFiles.map(file => ({
+        dataset_id: data.id,
+        uploaded_by: user.id,
+        object_key: file.object_key,
+        original_filename: file.original_filename,
+        content_type: file.content_type,
+        file_size_bytes: file.file_size_bytes,
+      }));
+
+      const { error: filesError } = await supabaseAdmin
+        .from('dataset_files')
+        .insert(fileRows);
+
+      if (filesError) {
+        console.error(
+          '[Supabase] dataset file metadata insert failed:',
+          filesError.message
+        );
+
+        await supabaseAdmin
+          .from('datasets')
+          .delete()
+          .eq('id', data.id);
+
+        return res.status(500).json({
+          error: 'Dataset file information could not be saved.',
+        });
+      }
+    }
 
     const name = user.user_metadata?.full_name || user.email.split('@')[0];
     resend.emails
@@ -189,7 +289,10 @@ export default async function handler(req, res) {
       })
       .catch(err => console.error('[resend] dataset email failed:', err.message));
 
-    return res.status(201).json({ dataset: data });
+    return res.status(201).json({
+      dataset: data,
+      files: storedFiles,
+    });
   }
 
   return res.status(405).end();

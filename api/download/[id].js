@@ -38,7 +38,7 @@ export default async function handler(req, res) {
   const user = await verifyAuth(req.headers.authorization);
   if (!user) return res.status(401).json({ error: 'Sign in to download datasets.' });
 
-  const { id } = req.query;
+  const { id, file_id } = req.query;
   const { data: dataset, error } = await supabaseAdmin
     .from('datasets')
     .select('id, title, file_url, source_url, object_key, original_filename, status, downloads, format')
@@ -48,22 +48,64 @@ export default async function handler(req, res) {
   if (error || !dataset || dataset.status !== 'active') {
     return res.status(404).json({ error: 'Dataset not found.' });
   }
+    let hostedFile = null;
+
+  if (file_id) {
+    const { data: requestedFile, error: requestedFileError } =
+      await supabaseAdmin
+        .from('dataset_files')
+        .select('id, object_key, original_filename, content_type, file_size_bytes')
+        .eq('id', file_id)
+        .eq('dataset_id', id)
+        .maybeSingle();
+
+    if (requestedFileError || !requestedFile) {
+      return res.status(404).json({
+        error: 'Dataset file not found.',
+      });
+    }
+
+    hostedFile = requestedFile;
+  } else {
+    const { data: firstFile, error: firstFileError } =
+      await supabaseAdmin
+        .from('dataset_files')
+        .select('id, object_key, original_filename, content_type, file_size_bytes')
+        .eq('dataset_id', id)
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+    if (firstFileError) {
+      return res.status(500).json({
+        error: firstFileError.message,
+      });
+    }
+
+    hostedFile = firstFile;
+  }
 
   let url;
   let filename;
   let isHosted = false;
 
-  if (dataset.object_key) {
+    const hostedObjectKey = hostedFile?.object_key || dataset.object_key;
+  const hostedFilename =
+    hostedFile?.original_filename ||
+    dataset.original_filename ||
+    dataset.title;
+
+  if (hostedObjectKey) {
     const client = minioClient();
     const bucket = process.env.MINIO_BUCKET;
     if (!client || !bucket) {
       return res.status(500).json({ error: 'Storage not configured.' });
     }
 
-    filename = safeFilename(dataset.original_filename || dataset.title);
+        filename = safeFilename(hostedFilename);
     const command = new GetObjectCommand({
       Bucket: bucket,
-      Key: dataset.object_key,
+      Key: hostedObjectKey,
       ResponseContentDisposition: `attachment; filename="${filename}"`,
     });
     url = await getSignedUrl(client, command, { expiresIn: 300 });
