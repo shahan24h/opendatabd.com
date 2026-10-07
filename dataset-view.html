@@ -248,6 +248,7 @@ function safeUrl(url) {
 // ── Boot ──────────────────────────────────────────────────────────────────────
 await initAuth();
 const user = getUser();
+let currentDataset = null;
 
 const id = new URLSearchParams(location.search).get('id');
 if (!id) { showError(); } else { await loadDataset(id); }
@@ -261,6 +262,7 @@ async function loadDataset(id) {
 }
 
 function renderDataset(d) {
+  currentDataset = d;
   document.title = `${d.title} — OpenDataBD`;
 
   // ── Badges ────────────────────────────────────────────────────────────────
@@ -331,7 +333,9 @@ function renderDataset(d) {
     Array.isArray(value) ? value.length > 0 : Boolean(value)
   );
 
-  document.getElementById('details-list').innerHTML = details
+  const isOwner = user?.id === d.submitted_by;
+
+  const detailRows = details
     .map(([label, value, type]) => type === 'links'
       ? `
         <div class="space-y-3">
@@ -355,9 +359,92 @@ function renderDataset(d) {
     )
     .join('<div class="border-t border-outline-variant/30"></div>');
 
+  const publicationEditor = isOwner
+    ? `
+      <div class="border-t border-outline-variant/30 pt-4 space-y-3">
+        <button type="button"
+          onclick="togglePublicationEditor()"
+          class="w-full px-3 py-2 rounded-lg border border-secondary text-secondary text-sm font-semibold hover:bg-secondary-fixed transition-colors">
+          ${publicationUrls.length ? 'Edit publication links' : 'Add publication links'}
+        </button>
+
+        <div id="publication-editor" class="hidden space-y-3">
+          <label for="publication-links-input"
+            class="block text-xs text-on-surface-variant">
+            Enter one DOI or publication URL per line
+          </label>
+
+          <textarea id="publication-links-input" rows="5"
+            class="w-full px-3 py-2 rounded-lg border border-outline-variant bg-surface-container-low text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 resize-y"
+            placeholder="10.1234/example&#10;https://journal.example/article">${esc(publicationUrls.join('\n'))}</textarea>
+
+          <p id="publication-editor-message"
+            class="hidden text-xs px-3 py-2 rounded-lg"></p>
+
+          <button type="button"
+            id="save-publication-links"
+            onclick="savePublicationLinks()"
+            class="w-full px-3 py-2 rounded-lg bg-secondary text-on-secondary text-sm font-semibold hover:bg-secondary-container transition-colors">
+            Save publication links
+          </button>
+        </div>
+      </div>`
+    : '';
+
+  document.getElementById('details-list').innerHTML =
+    detailRows + publicationEditor;
+
   document.getElementById('skeleton-view').classList.add('hidden');
   document.getElementById('dataset-view').classList.remove('hidden');
 }
+window.togglePublicationEditor = function() {
+  document.getElementById('publication-editor')?.classList.toggle('hidden');
+};
+
+window.savePublicationLinks = async function() {
+  if (!currentDataset || !user) return;
+
+  const input = document.getElementById('publication-links-input');
+  const button = document.getElementById('save-publication-links');
+  const message = document.getElementById('publication-editor-message');
+
+  const doiUrls = input.value
+    .split(/\r?\n/)
+    .map(value => value.trim())
+    .filter(Boolean);
+
+  button.disabled = true;
+  button.textContent = 'Saving…';
+  message.classList.add('hidden');
+
+  try {
+    const response = await fetch(`/api/datasets/${currentDataset.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      },
+      body: JSON.stringify({ doi_urls: doiUrls }),
+    });
+
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(result.error || 'Publication links could not be updated.');
+    }
+
+    currentDataset.doi_urls = result.dataset.doi_urls;
+    renderDataset(currentDataset);
+  } catch (error) {
+    message.textContent = error.message || 'Publication links could not be updated.';
+    message.className =
+      'text-xs px-3 py-2 rounded-lg bg-error-container text-on-error-container';
+    message.classList.remove('hidden');
+
+    button.disabled = false;
+    button.textContent = 'Save publication links';
+  }
+};
 
 // ── Download section ──────────────────────────────────────────────────────────
 function escapeHtml(value) {
