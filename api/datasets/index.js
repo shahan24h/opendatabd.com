@@ -55,6 +55,28 @@ function validHttpUrl(value) {
     return false;
   }
 }
+function normalizeDoiUrl(value) {
+  if (!value?.trim()) return null;
+
+  const input = value.trim();
+
+  // Convert a bare DOI into a standard DOI link.
+  if (/^10\.\d{4,9}\/\S+$/i.test(input)) {
+    return `https://doi.org/${input}`;
+  }
+
+  // Also allow complete DOI, journal, or publication links.
+  try {
+    const url = new URL(input);
+    if (url.protocol === 'http:' || url.protocol === 'https:') {
+      return input;
+    }
+  } catch {
+    // Invalid URL.
+  }
+
+  return null;
+}
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
@@ -104,6 +126,7 @@ export default async function handler(req, res) {
       format,
       source,
       source_url,
+      doi_urls,
       license,
       division,
       tags,
@@ -117,6 +140,35 @@ export default async function handler(req, res) {
     if (!category?.trim()) return res.status(400).json({ error: 'Category is required.' });
     if (!validHttpUrl(source_url)) {
       return res.status(400).json({ error: 'source_url must be a valid http/https URL.' });
+    }
+    const requestedDoiUrls = doi_urls ?? [];
+
+    if (!Array.isArray(requestedDoiUrls)) {
+      return res.status(400).json({
+        error: 'DOI and publication links must be provided as a list.',
+      });
+    }
+
+    if (requestedDoiUrls.length > 20) {
+      return res.status(400).json({
+        error: 'A maximum of 20 DOI or publication links is allowed.',
+      });
+    }
+
+    if (requestedDoiUrls.some(value =>
+      typeof value !== 'string' || value.length > 2048
+    )) {
+      return res.status(400).json({
+        error: 'Each DOI or publication link must be valid and no longer than 2,048 characters.',
+      });
+    }
+
+    const normalizedDoiUrls = requestedDoiUrls.map(normalizeDoiUrl);
+
+    if (normalizedDoiUrls.some(value => !value)) {
+      return res.status(400).json({
+        error: 'Enter only valid DOI or http/https publication links.',
+      });
     }
 
     const requestedFiles = Array.isArray(files)
@@ -236,6 +288,7 @@ export default async function handler(req, res) {
         format: Array.isArray(format) ? format : format ? [format] : [],
         source: source?.trim() ?? null,
         source_url: source_url?.trim() ?? null,
+	doi_urls: normalizedDoiUrls,
         file_url: null,
         license: license?.trim() ?? 'Open Data',
         division: division?.trim() ?? null,
