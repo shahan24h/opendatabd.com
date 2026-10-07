@@ -313,31 +313,44 @@ function renderDataset(d) {
   renderDownload(d);
 
   // ── Details sidebar ───────────────────────────────────────────────────────
+    const publicationUrls = Array.isArray(d.doi_urls)
+    ? d.doi_urls.map(value =>
+        /^10\./i.test(value) ? `https://doi.org/${value}` : value
+      )
+    : [];
+
   const details = [
-    ['Category',  d.category],
-    ['Format',    formats.join(', ')],
-    ['License',   d.license],
-    ['Division',  d.division],
-    ['Row count', d.rows_count?.toLocaleString()],
-    ['File size', d.file_size],
-  ].filter(([, v]) => v);
+    ['Category',           d.category],
+    ['Format',             formats.join(', ')],
+    ['License',            d.license],
+    ['Division',           d.division],
+    ['Row count',          d.rows_count?.toLocaleString()],
+    ['File size',          d.file_size],
+    ['DOI / Publications', publicationUrls, 'links'],
+  ].filter(([, value]) =>
+    Array.isArray(value) ? value.length > 0 : Boolean(value)
+  );
 
   document.getElementById('details-list').innerHTML = details
-    .map(([label, val]) => `
-      <div class="flex items-start justify-between gap-2">
+    .map(([label, value, type]) => `
+      <div class="flex items-start justify-between gap-3">
         <span class="text-on-surface-variant shrink-0">${esc(label)}</span>
-        <span class="font-medium text-on-surface text-right">${esc(val)}</span>
+        ${type === 'links'
+          ? `<div class="flex flex-col items-end gap-1">
+              ${value.map((url, index) => `
+                <a href="${esc(url)}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-medium text-secondary text-right hover:underline whitespace-nowrap">
+                  Publication ${index + 1}
+                </a>
+              `).join('')}
+             </div>`
+          : `<span class="font-medium text-on-surface text-right">${esc(value)}</span>`
+        }
       </div>`)
-    .join('<div class="border-t border-outline-variant/30"></div>');
+        .join('<div class="border-t border-outline-variant/30"></div>');
 
-  // ── Back link: if referred from category, go back to that list ────────────
-  const ref = document.referrer;
-  if (ref && ref.includes('/datasets')) {
-    const backLink = document.getElementById('back-link');
-    backLink.href = ref;
-  }
-
-  // Show
   document.getElementById('skeleton-view').classList.add('hidden');
   document.getElementById('dataset-view').classList.remove('hidden');
 }
