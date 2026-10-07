@@ -22,7 +22,26 @@ function minioClient() {
     },
   });
 }
+function normalizeDoiUrl(value) {
+  if (!value?.trim()) return null;
 
+  const input = value.trim();
+
+  if (/^10\.\d{4,9}\/\S+$/i.test(input)) {
+    return `https://doi.org/${input}`;
+  }
+
+  try {
+    const url = new URL(input);
+    if (url.protocol === 'http:' || url.protocol === 'https:') {
+      return input;
+    }
+  } catch {
+    // Invalid URL.
+  }
+
+  return null;
+}
 export default async function handler(req, res) {
   const { id } = req.query;
 
@@ -55,6 +74,74 @@ export default async function handler(req, res) {
       ...data,
       files: files ?? [],
     });
+  }
+  if (req.method === 'PATCH') {
+    const user = await verifyAuth(req.headers.authorization);
+    if (!user) {
+      return res.status(401).json({ error: 'Sign in to update publication links.' });
+    }
+
+    const { data: dataset, error: fetchError } = await supabaseAdmin
+      .from('datasets')
+      .select('id, submitted_by')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !dataset) {
+      return res.status(404).json({ error: 'Dataset not found.' });
+    }
+
+    if (dataset.submitted_by !== user.id) {
+      return res.status(403).json({
+        error: 'You can only update your own datasets.',
+      });
+    }
+
+    const requestedDoiUrls = req.body?.doi_urls ?? [];
+
+    if (!Array.isArray(requestedDoiUrls)) {
+      return res.status(400).json({
+        error: 'DOI and publication links must be provided as a list.',
+      });
+    }
+
+    if (requestedDoiUrls.length > 20) {
+      return res.status(400).json({
+        error: 'A maximum of 20 DOI or publication links is allowed.',
+      });
+    }
+
+    if (requestedDoiUrls.some(value =>
+      typeof value !== 'string' || value.length > 2048
+    )) {
+      return res.status(400).json({
+        error: 'Each DOI or publication link must be valid and no longer than 2,048 characters.',
+      });
+    }
+
+    const normalizedDoiUrls = requestedDoiUrls.map(normalizeDoiUrl);
+
+    if (normalizedDoiUrls.some(value => !value)) {
+      return res.status(400).json({
+        error: 'Enter only valid DOI or http/https publication links.',
+      });
+    }
+
+    const { data: updatedDataset, error: updateError } = await supabaseAdmin
+      .from('datasets')
+      .update({
+        doi_urls: normalizedDoiUrls,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+      .select('id, doi_urls, updated_at')
+      .single();
+
+    if (updateError) {
+      return res.status(500).json({ error: updateError.message });
+    }
+
+    return res.json({ dataset: updatedDataset });
   }
 
   if (req.method === 'DELETE') {
