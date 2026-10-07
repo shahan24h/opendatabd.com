@@ -332,24 +332,28 @@ function renderDataset(d) {
   );
 
   document.getElementById('details-list').innerHTML = details
-    .map(([label, value, type]) => `
-      <div class="flex items-start justify-between gap-3">
-        <span class="text-on-surface-variant shrink-0">${esc(label)}</span>
-        ${type === 'links'
-          ? `<div class="flex flex-col items-end gap-1">
-              ${value.map((url, index) => `
-                <a href="${esc(url)}"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="font-medium text-secondary text-right hover:underline whitespace-nowrap">
-                  Publication ${index + 1}
-                </a>
-              `).join('')}
-             </div>`
-          : `<span class="font-medium text-on-surface text-right">${esc(value)}</span>`
-        }
-      </div>`)
-        .join('<div class="border-t border-outline-variant/30"></div>');
+    .map(([label, value, type]) => type === 'links'
+      ? `
+        <div class="space-y-3">
+          <span class="text-on-surface-variant">${esc(label)}</span>
+          <div class="space-y-2">
+            ${value.map(url => `
+              <a href="${esc(url)}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block w-full px-3 py-2 rounded-lg bg-surface-container-low text-sm font-medium text-secondary hover:bg-surface-container hover:underline break-all transition-colors">
+                ${esc(url)}
+              </a>
+            `).join('')}
+          </div>
+        </div>`
+      : `
+        <div class="flex items-start justify-between gap-3">
+          <span class="text-on-surface-variant shrink-0">${esc(label)}</span>
+          <span class="font-medium text-on-surface text-right">${esc(value)}</span>
+        </div>`
+    )
+    .join('<div class="border-t border-outline-variant/30"></div>');
 
   document.getElementById('skeleton-view').classList.add('hidden');
   document.getElementById('dataset-view').classList.remove('hidden');
